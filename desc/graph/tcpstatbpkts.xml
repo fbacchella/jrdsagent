@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+	<name>TcpStatBroadcastPaquets</name>
+	<graphName>tcpstatbrdpkts</graphName>
+	<graphTitle>TCP Broadcast Paquets on {1}</graphTitle>
+	<verticalLabel>paquets/s</verticalLabel>
+	<lowerLimit>NaN</lowerLimit>
+	<add>
+		<name>OutBcastPkts</name>
+		<graphType>line</graphType>
+		<legend>Broadcast paquets send</legend>
+	</add>
+	<add>
+		<name>InBcastPkts</name>
+		<reversed>true</reversed>
+		<graphType>line</graphType>
+		<legend>Broadcast paquets received</legend>
+	</add>
+	<hosttree>
+		<pathelement>HOST</pathelement>
+		<pathelement>NETWORK</pathelement>
+		<pathelement>TCP</pathelement>
+		<pathstring>TCP Broadcast paquets</pathstring>
+	</hosttree>
+	<viewtree>
+		<pathelement>NETWORK</pathelement>
+		<pathelement>TCP</pathelement>
+		<pathstring>TCP Broadcast paquets</pathstring>
+		<pathelement>HOST</pathelement>
+	</viewtree>
+</graphdesc>

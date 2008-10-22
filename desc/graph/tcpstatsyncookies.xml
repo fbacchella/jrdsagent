@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+	<name>TcpStatSynCookies</name>
+	<graphName>tcpstatsyncookies</graphName>
+	<graphTitle>TCP SYN cookies on {1}</graphTitle>
+	<verticalLabel>cookies/s</verticalLabel>
+	<lowerLimit>NaN</lowerLimit>
+	<add>
+		<legend>Cookies sent</legend>
+	</add>
+	<add>
+		<name>SyncookiesSent</name>
+		<graphType>line</graphType>
+		<legend>Number of cookies sent</legend>
+	</add>
+	<add>
+		<legend>Cookies received</legend>
+	</add>
+	<add>
+		<name>SyncookiesRecv</name>
+		<reversed>true</reversed>
+		<graphType>line</graphType>
+		<legend>Number of cookies received</legend>
+	</add>
+	<add>
+		<name>SyncookiesFailed</name>
+		<reversed>true</reversed>
+		<graphType>line</graphType>
+		<legend>Number of failed cookies</legend>
+	</add>
+	<hosttree>
+		<pathelement>HOST</pathelement>
+		<pathelement>NETWORK</pathelement>
+		<pathelement>TCP</pathelement>
+		<pathstring>TCP SYN cookies activity</pathstring>
+	</hosttree>
+	<viewtree>
+		<pathelement>NETWORK</pathelement>
+		<pathelement>TCP</pathelement>
+		<pathstring>TCP SYN cookies activity</pathstring>
+		<pathelement>HOST</pathelement>
+	</viewtree>
+</graphdesc>
