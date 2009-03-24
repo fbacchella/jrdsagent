@@ -16,7 +16,19 @@ import jrds.HostsList;
 public class JRDSSocketFactory extends RMISocketFactory {
 	public ServerSocket createServerSocket(int port) throws IOException {
 		final int timeout = HostsList.getRootGroup().getTimeout();;
-		ServerSocket s = new ServerSocket(port);
+		ServerSocket s = new ServerSocket(port) {
+
+			/* (non-Javadoc)
+			 * @see java.net.ServerSocket#accept()
+			 */
+			@Override
+			public Socket accept() throws IOException {
+				Socket accepted = super.accept();
+				accepted.setTcpNoDelay(true);
+				return accepted;
+			}
+			
+		};
 		s.setSoTimeout(timeout * 1000);
 		return s;
 	}
@@ -36,6 +48,7 @@ public class JRDSSocketFactory extends RMISocketFactory {
 			}
 		};
 		s.setSoTimeout(timeout * 1000);
+		s.setTcpNoDelay(true);
 		return s;
 	}
 

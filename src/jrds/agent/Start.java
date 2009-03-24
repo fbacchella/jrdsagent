@@ -10,6 +10,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class Start implements Serializable {
+	static int port = 2002;
+
 	/**
 	 * @param args
 	 * @throws RemoteException 
@@ -17,7 +19,16 @@ public class Start implements Serializable {
 	 * @throws MalformedURLException 
 	 */
 	public static void main(String[] args) throws RemoteException, MalformedURLException, AlreadyBoundException {
-		
+		String portProp = System.getProperty("jrds.port");
+		if(portProp != null) {
+			try {
+				int tryPort = Integer.parseInt(portProp);
+				if(tryPort !=0)
+					port = tryPort;
+			} catch (NumberFormatException e) {
+			}
+		}
+
 		if (System.getSecurityManager() == null)
 			System.setSecurityManager ( new RMISecurityManager() {
 				public void checkAccept(String host, int port) {}
@@ -29,24 +40,15 @@ public class Start implements Serializable {
 				public void checkRead(String file, Object context) {}
 				public void checkRead(String file) {}
 			});
-		RProbe dispatcher = new RProbeImpl();
-		
-		Registry registry = LocateRegistry.createRegistry(2002);
+		RProbe dispatcher = new RProbeImpl(port + 1);
+
+		Registry registry = LocateRegistry.createRegistry(port);
 		registry.bind(RProbe.NAME, dispatcher);
-		Thread myThread = Thread.currentThread();
-		//Awfull pseudo-daemon code
-		while(true) {
-			Thread[] allThreads = new Thread[Thread.activeCount() * 2 ];
-			myThread.getThreadGroup().enumerate(allThreads, true);
-			for(int i = 0; i < allThreads.length; i++) {
-				if(allThreads[i] != null && allThreads[i] != myThread) {
-					try {
-						allThreads[i].join();
-					} catch (InterruptedException e) {
-					}
-				}
-			}
+		//Make it wait on himself to wait forever
+		try {
+			Thread.currentThread().join();
+			System.out.print("joined");
+		} catch (InterruptedException e) {
 		}
-		
 	}
 }

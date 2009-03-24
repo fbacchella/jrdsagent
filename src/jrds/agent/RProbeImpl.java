@@ -25,6 +25,10 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
 		super();
 	}
 
+	public RProbeImpl(int port) throws RemoteException {
+		super(port);
+	}
+
 	public Map query(String name) throws RemoteException {
 		Map retValue = new HashMap(0);
 		LProbe p = (LProbe) probeMap.get(name);
