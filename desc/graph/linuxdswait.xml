@@ -16,11 +16,11 @@
     <name>w</name>
   </add>
   <add>
-    <name>waittm</name>
+    <name>wwaittm</name>
   </add>
   <add>
     <name>await</name>
-    <rpn>waittm, r, w, +, 1000, *, /</rpn>
+    <rpn>wwaittm, r, w, +, 1000, *, /</rpn>
     <graphType>line</graphType>
     <color>blue</color>
     <legend>Average wait time</legend>
