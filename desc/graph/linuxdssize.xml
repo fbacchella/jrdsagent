@@ -21,18 +21,18 @@
     <name>wsec</name>
   </add>
   <add>
-    <name>diskIOBLKRSZ</name>
-    <rpn>rsec, 512, *, r, /</rpn>
-    <graphType>line</graphType>
-    <color>green</color>
-    <legend>Average requests size on read</legend>
-  </add>
-  <add>
     <name>diskIOBLKWSZ</name>
     <rpn>wsec, 512, *, w, /</rpn>
     <graphType>line</graphType>
     <color>blue</color>
     <legend>Average requests size on write</legend>
+  </add>
+  <add>
+    <name>diskIOBLKRSZ</name>
+    <rpn>rsec, 512, *, r, /</rpn>
+    <graphType>line</graphType>
+    <color>green</color>
+    <legend>Average requests size on read</legend>
   </add>
   <hosttree>
     <pathelement>HOST</pathelement>

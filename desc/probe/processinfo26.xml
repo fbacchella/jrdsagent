@@ -2,7 +2,7 @@
 <!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
 <probedesc>
 	<name>ProcessInfo26</name>
-	<probeName>pi26-{1}</probeName>
+	<probeName>pi26-${index}</probeName>
 	<probeClass>jrds.probe.ProcessInfo</probeClass>
 	<specific name="remote">jrds.agent.linux.ProcessInfo26</specific>
 	<ds>
