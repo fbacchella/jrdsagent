@@ -6,17 +6,16 @@ import java.util.List;
 public class RMIIndexed extends RMI implements IndexedProbe {
 	private String index;
 	private String label;
-	public RMIIndexed(String indexKey) {
-		super();
+
+	public void configure(String indexKey) {
 		this.index = indexKey;
-		List l = new ArrayList(1);
+		List<String> l = new ArrayList<String>(1);
 		l.add(indexKey);
 		setArgs(l);
 	}
-	public RMIIndexed(Integer port, Boolean local) {
-		super();
+	public void configure(Integer port, Boolean local) {
 		this.index = port.toString();
-		List l = new ArrayList (2);
+		List<Comparable<?>> l = new ArrayList<Comparable<?>> (2);
 		l.add(port);
 		l.add(local);
 		setArgs(l);

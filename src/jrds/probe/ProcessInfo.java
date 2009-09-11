@@ -6,8 +6,8 @@ public class ProcessInfo extends RMIIndexed {
 	private String indexName;
 	private long uptime = 0;
 
-	public ProcessInfo(String indexName, String pattern) {
-		super(pattern);
+	public void configure(String indexName, String pattern) {
+		super.configure(pattern);
 		this.indexName = indexName;
 	}
 	public String getIndexName() {
