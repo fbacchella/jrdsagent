@@ -7,26 +7,28 @@ import java.util.List;
 import java.util.Map;
 
 import jrds.Probe;
-import jrds.RdsHost;
 import jrds.agent.RProbe;
 
 import org.apache.log4j.Logger;
 
 public class RMI extends Probe {
 	static final private Logger logger = Logger.getLogger(RMI.class);
-	static final private int PORT = 2002;
+	private int port = 2002;
 	List<?> args = new ArrayList<Object>(0);
 	private String remoteName = null;
 
 	RMIStarter localstarter = null;
 
 	/* (non-Javadoc)
-	 * @see jrds.Probe#setHost(jrds.RdsHost)
+	 * @see jrds.Probe#configure()
 	 */
-	@Override
-	public void setHost(RdsHost monitoredHost) {
-		super.setHost(monitoredHost);
-		localstarter = (RMIStarter) new RMIStarter(monitoredHost, PORT).register(monitoredHost);
+	public void configure(Integer port) {
+		this.port = port.intValue();
+		configure();
+	}
+
+	public void configure() {
+		localstarter = (RMIStarter) new RMIStarter(getHost(), port).register(getHost());
 	}
 
 	protected RProbe init() {
@@ -37,7 +39,14 @@ public class RMI extends Probe {
 				remoteName = rp.prepare(getPd().getSpecific("remote"), args);
 		} catch (RemoteException e) {
 			rp = null;
-			logger.error("Remote exception on server with probe " + this + ": " + e.getCause());
+			if(logger.isDebugEnabled()) {
+				Throwable root = e.getCause().getCause();
+				if(root == null)
+					root = e.getCause();
+				logger.error("Remote exception on server with probe " + this + ": " + root, root);
+			}
+			else
+				logger.error("Remote exception on server with probe " + this + ": " + e.getCause());
 		}
 		return rp;
 	}
@@ -50,7 +59,14 @@ public class RMI extends Probe {
 				if(rp != null)
 					retValues = rp.query(remoteName);
 			} catch (RemoteException e) {
-				logger.error("Remote exception on server with probe " + this + ": " + e.getCause());
+				if(logger.isDebugEnabled()) {
+					Throwable root = e.getCause().getCause();
+					if(root == null)
+						root = e.getCause();
+					logger.error("Remote exception on server with probe " + this + ": " + root, root);
+				}
+				else
+					logger.error("Remote exception on server with probe " + this + ": " + e.getCause());
 			}
 		}
 		return retValues;
@@ -74,4 +90,5 @@ public class RMI extends Probe {
 	public long getUptime() {
 		return localstarter.getUptime();
 	}
+
 }

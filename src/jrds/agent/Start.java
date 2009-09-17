@@ -2,6 +2,8 @@ package jrds.agent;
 
 import java.io.FileDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RMISecurityManager;
@@ -40,7 +42,7 @@ public class Start implements Serializable {
 				public void checkRead(String file, Object context) {}
 				public void checkRead(String file) {}
 			});
-		RProbe dispatcher = new RProbeImpl(port + 1);
+		RProbe dispatcher = new RProbeImpl(port);
 
 		Registry registry = LocateRegistry.createRegistry(port);
 		registry.bind(RProbe.NAME, dispatcher);
@@ -51,4 +53,33 @@ public class Start implements Serializable {
 		} catch (InterruptedException e) {
 		}
 	}
+	
+	/**
+	 * A function from jrds.Util
+	 * @param toParse
+	 * @param numberClass
+	 * @param defaultVal
+	 * @return
+	 */
+	public static Number parseStringNumber(String toParse, Class<? extends Number> numberClass, Number defaultVal) {
+		if(toParse == null || "".equals(toParse))
+			return defaultVal;
+		if(! (Number.class.isAssignableFrom(numberClass))) {
+			return defaultVal;
+		}
+
+		try {
+			Constructor<? extends Number> c = numberClass.getConstructor(String.class);
+			Number n = c.newInstance(toParse);
+			return n;
+		} catch (SecurityException e) {
+		} catch (NoSuchMethodException e) {
+		} catch (IllegalArgumentException e) {
+		} catch (InstantiationException e) {
+		} catch (IllegalAccessException e) {
+		} catch (InvocationTargetException e) {
+		}
+		return defaultVal;
+	}
+
 }

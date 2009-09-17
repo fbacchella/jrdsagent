@@ -6,6 +6,9 @@
 	<graphTitle>Average memory usage for {2}</graphTitle>
 	<verticalLabel>Bytes</verticalLabel>
 	<lowerLimit>0</lowerLimit>
+	<unit>
+		<binary />
+	</unit>
 	<add>
 		<name>count</name>
 	</add>

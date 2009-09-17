@@ -145,9 +145,7 @@ public class ProcessInfo26  implements LProbe {
 			String retValue = new String(content);
 			return retValue.trim();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return "";
 	}
