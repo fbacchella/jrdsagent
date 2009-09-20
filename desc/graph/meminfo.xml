@@ -88,16 +88,16 @@
 		<name>SwapFree</name>
 	</add>
 	<add>
-		<name>SwapCached</name>
-		<graphType>stack</graphType>
-		<color>blue</color>
-		<legend>Memory in both RAM and swap</legend>
-	</add>
-	<add>
 		<rpn>SwapTotal, SwapCached, -, SwapFree,-</rpn>
 		<graphType>stack</graphType>
 		<color>red</color>
 		<legend>Other Swap used</legend>
+	</add>
+s	<add>
+		<name>SwapCached</name>
+		<graphType>stack</graphType>
+		<color>blue</color>
+		<legend>Memory in both RAM and swap</legend>
 	</add>
 	<hosttree>
 		<pathelement>HOST</pathelement>

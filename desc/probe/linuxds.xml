@@ -2,7 +2,7 @@
 <!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
 <probedesc>
   <name>Diskstats</name>
-  <probeName>ds-{1}</probeName>
+  <probeName>ds-${index}</probeName>
   <probeClass>jrds.probe.RMIIndexed</probeClass>
   <specific name="remote">jrds.agent.linux.Diskstats</specific>
   <ds>
