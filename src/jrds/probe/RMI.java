@@ -6,36 +6,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jrds.ConnectedProbe;
 import jrds.Probe;
 import jrds.agent.RProbe;
 
 import org.apache.log4j.Logger;
 
-public class RMI extends Probe {
+public class RMI extends Probe implements ConnectedProbe {
 	static final private Logger logger = Logger.getLogger(RMI.class);
-	private int port = 2002;
 	List<?> args = new ArrayList<Object>(0);
 	private String remoteName = null;
+	private String connectionName = RMIConnection.class.getName();
 
-	RMIStarter localstarter = null;
-
-	/* (non-Javadoc)
-	 * @see jrds.Probe#configure()
-	 */
-	public void configure(Integer port) {
-		this.port = port.intValue();
-		configure();
+	public boolean configure() {
+		RMIConnection cnx = (RMIConnection) getStarters().find(connectionName);
+		if(cnx == null) {
+			logger.error("No RMI connection configured for " + this + " with name " + connectionName);
+			return false;
+		}
+		return true;
 	}
-
-	public void configure() {
-		localstarter = (RMIStarter) new RMIStarter(getHost(), port).register(getHost());
-	}
-
+	
 	protected RProbe init() {
+		RMIConnection cnx = (RMIConnection) getStarters().find(connectionName);
+		if(cnx == null) {
+			logger.warn("No connection found for " + this + " with name " + getConnectionName());
+		}
+		if( !cnx.isStarted()) {
+			return null;
+		}
+		//Uptime is collected only once, by the connexion
+		setUptime(cnx.getUptime());
+
 		RProbe rp = null;
 		try {
-			rp = (RProbe) localstarter.getRp();
-			if( ! rp.exist(remoteName))
+			rp = (RProbe) cnx.getConnection();
+			if( rp != null && ! rp.exist(remoteName))
 				remoteName = rp.prepare(getPd().getSpecific("remote"), args);
 		} catch (RemoteException e) {
 			rp = null;
@@ -53,21 +59,19 @@ public class RMI extends Probe {
 
 	public Map<?,?> getNewSampleValues() {
 		Map<?,?> retValues = new HashMap<Object, Object>(0);
-		if(localstarter.isStarted()) {
-			RProbe rp = init();
-			try {
-				if(rp != null)
-					retValues = rp.query(remoteName);
-			} catch (RemoteException e) {
-				if(logger.isDebugEnabled()) {
-					Throwable root = e.getCause().getCause();
-					if(root == null)
-						root = e.getCause();
-					logger.error("Remote exception on server with probe " + this + ": " + root, root);
-				}
-				else
-					logger.error("Remote exception on server with probe " + this + ": " + e.getCause());
+		RProbe rp = init();
+		try {
+			if(rp != null)
+				retValues = rp.query(remoteName);
+		} catch (RemoteException e) {
+			if(logger.isDebugEnabled()) {
+				Throwable root = e.getCause().getCause();
+				if(root == null)
+					root = e.getCause();
+				logger.error("Remote exception on server with probe " + this + ": " + root, root);
 			}
+			else
+				logger.error("Remote exception on server with probe " + this + ": " + e.getCause());
 		}
 		return retValues;
 	}
@@ -79,16 +83,16 @@ public class RMI extends Probe {
 	public void setArgs(List<?> l) {
 		this.args = l;
 	}
-	public boolean isCollectRunning() {
-		return super.isCollectRunning() && localstarter.isStarted();
-	}
 
 	public String getSourceType() {
 		return "JRDS Agent";
 	}
 
-	public long getUptime() {
-		return localstarter.getUptime();
+	public String getConnectionName() {
+		return connectionName;
 	}
-
+	
+	public void setConnectionName(String connectionName) {
+		this.connectionName = connectionName;
+	}
 }
