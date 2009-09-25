@@ -12,7 +12,7 @@ import jrds.agent.RProbe;
 
 import org.apache.log4j.Logger;
 
-public class RMI extends Probe implements ConnectedProbe {
+public class RMI extends Probe<String, Number> implements ConnectedProbe {
 	static final private Logger logger = Logger.getLogger(RMI.class);
 	List<?> args = new ArrayList<Object>(0);
 	private String remoteName = null;
@@ -57,8 +57,8 @@ public class RMI extends Probe implements ConnectedProbe {
 		return rp;
 	}
 
-	public Map<?,?> getNewSampleValues() {
-		Map<?,?> retValues = new HashMap<Object, Object>(0);
+	public Map<String, Number> getNewSampleValues() {
+		Map<String, Number> retValues = new HashMap<String, Number>(0);
 		RProbe rp = init();
 		try {
 			if(rp != null)

@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 import java.util.Map;
 
 public interface LProbe {
-	public Map query()  throws RemoteException;
+	public Map<String, Number> query()  throws RemoteException;
 	
 	/**
 	 * Used to generate an uniq name for the local instance of the probe

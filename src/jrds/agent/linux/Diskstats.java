@@ -17,8 +17,8 @@ public class Diskstats implements LProbe {
 		this.disk = disk;
 	}
 
-	public Map query() throws RemoteException {
-		Map retValues = new HashMap();
+	public Map<String, Number> query() throws RemoteException {
+		Map<String, Number> retValues = new HashMap<String, Number>();
 		try {
 			BufferedReader r = new BufferedReader(new FileReader(STATFILE));
 			String line;

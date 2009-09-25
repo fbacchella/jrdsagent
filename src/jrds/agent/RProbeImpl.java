@@ -17,7 +17,7 @@ import java.util.Map;
 public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializable {
 	static final long serialVersionUID = -7914792289084645089L;
 
-	final private Map probeMap = new HashMap();
+	final private Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
 	final private long startime = System.currentTimeMillis();
 	final private String UPTIMEFILE = "/proc/uptime";
 
@@ -29,9 +29,9 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
 		super(port);
 	}
 
-	public Map query(String name) throws RemoteException {
-		Map retValue = new HashMap(0);
-		LProbe p = (LProbe) probeMap.get(name);
+	public Map<String,Number> query(String name) throws RemoteException {
+		Map<String,Number> retValue = new HashMap<String,Number>(0);
+		LProbe p =  probeMap.get(name);
 		if(p != null)
 			retValue = p.query();
 		else
@@ -39,7 +39,7 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
 		return retValue;
 	}
 
-	public String prepare(String name, List args) throws RemoteException {
+	public String prepare(String name, List<?> args) throws RemoteException {
 		String iname = null;
 		LProbe p = null;
 		try {

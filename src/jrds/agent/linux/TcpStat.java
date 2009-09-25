@@ -14,8 +14,8 @@ public class TcpStat implements LProbe {
 	String SNMPFILE = "/proc/net/snmp";
 
 
-	public Map query() throws RemoteException {
-		Map retValues = new HashMap();
+	public Map<String, Number> query() throws RemoteException {
+		Map<String, Number> retValues = new HashMap<String, Number>();
 		try {
 			queryFile(SNMPFILE, "Tcp:", retValues);
 			queryFile(STATFILE, "TcpExt:", retValues);
@@ -25,7 +25,7 @@ public class TcpStat implements LProbe {
 		return retValues;
 	}
 
-	public void queryFile(String file, String prefix, Map retValues) throws IOException {
+	public void queryFile(String file, String prefix, Map<String, Number> retValues) throws IOException {
 		BufferedReader r = new BufferedReader(new FileReader(file));
 		String line;
 

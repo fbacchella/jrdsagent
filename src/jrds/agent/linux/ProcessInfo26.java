@@ -86,7 +86,7 @@ public class ProcessInfo26  implements LProbe {
 		return "pi26-" + cmdFilter.toString();
 	}
 
-	public Map query() throws RemoteException {
+	public Map<String, Number> query() throws RemoteException {
 		Map<String, Number> retValues = new HashMap<String, Number>();
 		int count = 0;
 		long mostRecentTick = 0;

@@ -17,9 +17,9 @@ public class ProcessInfo extends RMIIndexed {
 	 * @see jrds.probe.RMI#getNewSampleValues()
 	 */
 	@Override
-	public Map getNewSampleValues() {
-		Map retValues = super.getNewSampleValues();
-		uptime = ((Number)retValues.get("uptime")).longValue();
+	public Map<String, Number> getNewSampleValues() {
+		Map<String, Number> retValues = super.getNewSampleValues();
+		uptime = retValues.get("uptime").longValue();
 		
 		retValues.remove("uptime");
 		return retValues;

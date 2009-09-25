@@ -10,8 +10,8 @@ public class TestProbe implements LProbe {
 		return "TestProbe";
 	}
 
-	public Map query() throws RemoteException {
-		Map m = new HashMap(1);
+	public Map<String,Number> query() throws RemoteException {
+		Map<String,Number> m = new HashMap<String,Number>(1);
 		m.put("time", new Double(System.currentTimeMillis()));
 		return m;
 	}
