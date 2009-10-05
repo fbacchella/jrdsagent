@@ -2,7 +2,7 @@
 <!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
 <probedesc>
   <name>TcpQueue</name>
-  <probeName>tcpq:{1}</probeName>
+  <probeName>tcpq:${index}</probeName>
   <probeClass>jrds.probe.RMIIndexed</probeClass>
   <specific name="remote">jrds.agent.linux.TcpQueue</specific>
   <ds>

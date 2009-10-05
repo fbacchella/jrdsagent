@@ -2,7 +2,7 @@
 <!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
 <probedesc>
   <name>IfStat</name>
-  <probeName>ifstat:{1}</probeName>
+  <probeName>ifstat:${index}</probeName>
   <probeClass>jrds.probe.RMIIndexed</probeClass>
   <specific name="remote">jrds.agent.linux.IfStat</specific>
   <ds>
