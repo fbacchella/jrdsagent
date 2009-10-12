@@ -10,7 +10,6 @@ import java.lang.reflect.Constructor;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +34,7 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
 		if(p != null)
 			retValue = p.query();
 		else
-			System.err.println(name + " not found");
+			throw new RemoteException("Remote probe " + name + " not found");
 		return retValue;
 	}
 
@@ -43,23 +42,22 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
 		String iname = null;
 		LProbe p = null;
 		try {
-			Class probeClass = Class.forName(name);
-			Class[] argsType = new Class[args.size()];
+			Class<?> probeClass = Class.forName(name);
+			Class<?>[] argsType = new Class[args.size()];
 			Object[] argsVal = new Object[args.size()];
 			int index = 0;
-			for(Iterator i = args.iterator(); i.hasNext() ; index++) {
-				Object thisarg = i.next();
+			for(Object thisarg: args) {
 				argsType[index] = thisarg.getClass();
 				argsVal[index] = thisarg;
 			}
-			Constructor theConst = probeClass.getConstructor(argsType);
+			Constructor<?> theConst = probeClass.getConstructor(argsType);
 			if(theConst != null) {
 				p = (LProbe) theConst.newInstance(argsVal);
 				iname = p.getName();
 				probeMap.put(iname, p);
 			}
 		} catch (Exception e) {
-			throw new RemoteException("name", e);
+			throw new RemoteException("Error while preparing " + name, e);
 		}
 		return iname;
 	}

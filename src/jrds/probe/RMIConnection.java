@@ -13,7 +13,7 @@ import jrds.starter.Resolver;
 import jrds.starter.SocketFactory;
 import jrds.starter.Starter;
 
-public class RMIConnection extends Connection {
+public class RMIConnection extends Connection<RProbe> {
 	static final private Logger logger = Logger.getLogger(RMIConnection.class);
 	private int port = 2002;
 	private Registry registry = null;
@@ -27,7 +27,7 @@ public class RMIConnection extends Connection {
 	}
 
 	@Override
-	public Object getConnection() {
+	public RProbe getConnection() {
 		return rp;
 	}
 
