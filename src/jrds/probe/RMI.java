@@ -26,9 +26,13 @@ public class RMI extends ProbeConnected<String, Number, RMIConnection> {
 			remoteName = rp.prepare(getPd().getSpecific("remote"), args);
 			retValues = rp.query(remoteName);
 		} catch (RemoteException e) {
-			Throwable root = e.getCause().getCause();
-			if(root == null)
-				root = e.getCause();
+			Throwable root = e;
+			while(root.getCause() != null) {
+				root = root.getCause();
+			}
+			//e.getCause().getCause();
+			//if(root == null)
+			//	root = e.getCause();
 			log(Level.ERROR, root, "Remote exception on server: %s", root);
 
 		}
