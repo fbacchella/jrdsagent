@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
+<probedesc>
+	<name>SystemInfoBean</name>
+	<probeName>sysinfo</probeName>
+	<probeClass>jrds.probe.RMI</probeClass>
+	<specific name="remote">jrds.agent.jmx.SystemInfo</specific>
+	<ds>
+		<dsName>CVM</dsName>
+		<dsType>Gauge</dsType>
+	</ds>
+	<ds>
+		<dsName>FPM</dsName>
+		<dsType>Gauge</dsType>
+	</ds>
+	<ds>
+		<dsName>FSS</dsName>
+		<dsType>Gauge</dsType>
+	</ds>
+	<ds>
+		<dsName>LA</dsName>
+		<dsType>Gauge</dsType>
+	</ds>
+	<ds>
+		<dsName>TPM</dsName>
+		<dsType>Gauge</dsType>
+	</ds>
+	<ds>
+		<dsName>TSS</dsName>
+		<dsType>Gauge</dsType>
+	</ds>
+	<graphs>
+		<name>SystemInfoBeanMemory</name>
+		<name>SystemInfoBeanLoadAverage</name>
+	</graphs>
+</probedesc>

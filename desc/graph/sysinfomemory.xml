@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+	<name>SystemInfoBeanMemory</name>
+	<graphName>sysinfomemory</graphName>
+	<graphTitle>Memory Usage on ${host}</graphTitle>
+	<verticalLabel>bytes</verticalLabel>
+	<add>
+		<name>FPM</name>
+	</add>
+	<add>
+		<name>FSS</name>
+	</add>
+	<add>
+		<name>TPM</name>
+	</add>
+	<add>
+		<name>TSS</name>
+	</add>
+	<add>
+		<rpn>TPM, FPM, -</rpn>
+		<graphType>area</graphType>
+		<legend>Used physical memory</legend>
+		
+	</add>
+	<add>
+		<rpn>FPM</rpn>
+		<graphType>stack</graphType>
+		<legend>Free physical memory</legend>
+		
+	</add>
+	<add>
+		<name>name</name>
+		<rpn>TSS, FSS, -</rpn>
+		<graphType>stack</graphType>
+		<legend>Used swap size</legend>
+	</add>
+	<add>
+		<name>CVM</name>
+		<graphType>line</graphType>
+		<color>black</color>
+		<legend>Commited virtual memory</legend>
+	</add>
+	<hosttree>
+		<pathelement>HOST</pathelement>
+		<pathelement>SYSTEM</pathelement>
+		<pathelement>MEMORY</pathelement>
+		<pathstring>Memory usage</pathstring>
+	</hosttree>
+	<viewtree>
+		<pathelement>SYSTEM</pathelement>
+		<pathelement>MEMORY</pathelement>
+		<pathstring>Memory usage</pathstring>
+		<pathelement>HOST</pathelement>
+	</viewtree>
+</graphdesc>

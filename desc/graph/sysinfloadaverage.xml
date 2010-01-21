@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+	<name>SystemInfoBeanLoadAverage</name>
+	<graphName>sysinfola</graphName>
+	<graphTitle>CPU Load on ${host}</graphTitle>
+	<verticalLabel>CPU wait queue length</verticalLabel>
+	<add>
+		<name>LA</name>
+		<graphType>line</graphType>
+		<legend>Load Average</legend>
+		
+	</add>
+	<hosttree>
+		<pathelement>HOST</pathelement>
+		<pathelement>SYSTEM</pathelement>
+		<pathelement>LOAD</pathelement>
+		<pathstring>CPU Load</pathstring>
+	</hosttree>
+	<viewtree>
+		<pathelement>SYSTEM</pathelement>
+		<pathelement>LOAD</pathelement>
+		<pathstring>CPU Load</pathstring>
+		<pathelement>HOST</pathelement>
+	</viewtree>
+</graphdesc>
