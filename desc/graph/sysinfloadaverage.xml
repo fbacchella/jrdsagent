@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
-	<name>SystemInfoBeanLoadAverage</name>
+	<name>SystemInfoMXBeanLoadAverage</name>
 	<graphName>sysinfola</graphName>
 	<graphTitle>CPU Load on ${host}</graphTitle>
 	<verticalLabel>CPU wait queue length</verticalLabel>

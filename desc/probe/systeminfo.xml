@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
 <probedesc>
-	<name>SystemInfoBean</name>
+	<name>SystemInfoMXBean</name>
 	<probeName>sysinfo</probeName>
 	<probeClass>jrds.probe.RMI</probeClass>
 	<specific name="remote">jrds.agent.jmx.SystemInfo</specific>
@@ -30,7 +30,7 @@
 		<dsType>Gauge</dsType>
 	</ds>
 	<graphs>
-		<name>SystemInfoBeanMemory</name>
-		<name>SystemInfoBeanLoadAverage</name>
+		<name>SystemInfoMXBeanMemory</name>
+		<name>SystemInfoMXBeanLoadAverage</name>
 	</graphs>
 </probedesc>
