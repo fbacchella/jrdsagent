@@ -30,11 +30,7 @@ public class RMI extends ProbeConnected<String, Number, RMIConnection> {
 			while(root.getCause() != null) {
 				root = root.getCause();
 			}
-			//e.getCause().getCause();
-			//if(root == null)
-			//	root = e.getCause();
 			log(Level.ERROR, root, "Remote exception on server: %s", root);
-
 		}
 		return retValues;
 	}

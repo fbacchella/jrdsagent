@@ -5,16 +5,15 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import org.apache.log4j.Logger;
-
 import jrds.agent.RProbe;
 import jrds.starter.Connection;
 import jrds.starter.Resolver;
 import jrds.starter.SocketFactory;
 import jrds.starter.Starter;
 
+import org.apache.log4j.Level;
+
 public class RMIConnection extends Connection<RProbe> {
-	static final private Logger logger = Logger.getLogger(RMIConnection.class);
 	private int port = 2002;
 	private Registry registry = null;
 	private RProbe rp = null;
@@ -34,9 +33,10 @@ public class RMIConnection extends Connection<RProbe> {
 	@Override
 	public long setUptime() {
 		try {
+			log(Level.TRACE, "uptime: %d", rp.getUptime());
 			return rp.getUptime();
 		} catch (RemoteException e) {
-			logger.error("Remote exception on server " + getHostName() + ": " + e.getCause());
+			log(Level.ERROR, e, "Remote exception on server %s: %s", getHostName(), e.getCause());
 			return 0;
 		}
 	}
@@ -44,20 +44,22 @@ public class RMIConnection extends Connection<RProbe> {
 	@Override
 	public boolean startConnection() {
 		String hostName = getHostName();
-		if(logger.isDebugEnabled()) 
-			logger.debug("Starting RMIStarter for " + hostName + ":" + port);
-		Starter resolver = getLevel().find(Resolver.makeKey(hostName));
+		log(Level.DEBUG, "Starting RMIStarter for %s:%d", hostName, port);
+		Starter resolver = getLevel().find(Resolver.class);
 		boolean started = false;
 		if(resolver.isStarted()) {
 			try {
 				SocketFactory sf = (SocketFactory) getLevel().find(SocketFactory.class);
+				log(Level.TRACE, "locate registry for %s:%d", hostName, port);
 				registry = LocateRegistry.getRegistry(hostName, port, new JRDSSocketFactory(sf));
+				log(Level.TRACE, "lookup  probe %s", RProbe.NAME);
 				rp = (RProbe) registry.lookup(RProbe.NAME);
+				log(Level.TRACE, "done: %s", rp);
 				started = true;
 			} catch (RemoteException e) {
-				logger.error("Remote exception on server " + hostName + ": " + e.getCause());
+				log(Level.ERROR, e, "Remote exception on server %s: %s", hostName, e.getCause());
 			} catch (NotBoundException e) {
-				logger.error("Unattended exception: ", e);
+				log(Level.ERROR, e, "Unexpected exception: %s", e);
 			}
 		}
 		return started;
@@ -65,8 +67,7 @@ public class RMIConnection extends Connection<RProbe> {
 
 	@Override
 	public void stopConnection() {
-		if(logger.isDebugEnabled()) 
-			logger.debug("Stopping RMIStarter for " + getHostName() + ":" + port);
+		log(Level.DEBUG, "Stopping RMIStarter for %s:%d", getHostName(), port);
 		rp = null;
 		registry = null;
 	}

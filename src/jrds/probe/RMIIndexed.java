@@ -7,23 +7,31 @@ public class RMIIndexed extends RMI implements IndexedProbe {
 	private String index;
 	private String label;
 
-	public void configure(String indexKey) {
+	public Boolean configure(String indexKey) {
+		if(!configure()) {
+			return false;
+		}
 		this.index = indexKey;
 		List<Object> l = new ArrayList<Object>(1);
 		l.add(indexKey);
 		setArgs(l);
+		return true;
 	}
 
-	public void configure(Integer port, String indexKey) {
-		configure(indexKey);
+	public Boolean configure(Integer port, String indexKey) {
+		return configure(indexKey);
 	}
 	
-	public void configure(Integer port, Boolean local) {
+	public Boolean configure(Integer port, Boolean local) {
+		if(!configure()) {
+			return false;
+		}
 		this.index = port.toString();
 		List<Comparable<?>> l = new ArrayList<Comparable<?>> (2);
 		l.add(port);
 		l.add(local);
 		setArgs(l);
+		return true;
 	}
 
 	public String getIndexName() {

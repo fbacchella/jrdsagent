@@ -6,13 +6,15 @@ public class ProcessInfo extends RMIIndexed {
 	private String indexName;
 	private long uptime = 0;
 
-	public void configure(String indexName, String pattern) {
-		super.configure(pattern);
+	public Boolean configure(String indexName, String pattern) {
 		this.indexName = indexName;
+		return configure(pattern);
 	}
+	
 	public String getIndexName() {
 		return indexName;
 	}
+	
 	/* (non-Javadoc)
 	 * @see jrds.probe.RMI#getNewSampleValues()
 	 */
@@ -24,6 +26,7 @@ public class ProcessInfo extends RMIIndexed {
 		retValues.remove("uptime");
 		return retValues;
 	}
+	
 	/* (non-Javadoc)
 	 * @see jrds.probe.RMI#getUptime()
 	 */
