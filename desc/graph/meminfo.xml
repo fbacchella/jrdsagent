@@ -27,6 +27,12 @@
 		<legend>Part of Slab, that might be reclaimed</legend>		
 	</add>
 	<add>
+		<rpn>Slab, SReclaimable,- , SUnreclaim, -</rpn>
+		<graphType>stack</graphType>
+		<color>red</color>
+		<legend>Other part of Slab</legend>		
+	</add>
+	<add>
 		<name>MemTotal</name>
 	</add>
 	<add>
