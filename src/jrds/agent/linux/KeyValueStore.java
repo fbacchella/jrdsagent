@@ -55,7 +55,7 @@ public class KeyValueStore implements LProbe {
 				String value = m.group(2);
 				Matcher unitMatcher = unitPattern.matcher(value);
 				if(unitMatcher.matches()) {
-					Number n = jrds.Util.parseStringNumber(unitMatcher.group(1), Double.class, 0);
+					Number n = jrds.Util.parseStringNumber(unitMatcher.group(1), 0.0);
 					if(unitMatcher.groupCount() == 3) {
 						String unit = unitMatcher.group(3);
 						jrds.Util.SiPrefix sp = jrds.Util.SiPrefix.valueOf(unit);

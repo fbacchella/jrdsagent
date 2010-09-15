@@ -19,7 +19,6 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
 	final private Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
 	final private long startime = System.currentTimeMillis();
 	final private String UPTIMEFILE = "/proc/uptime";
-
 	public RProbeImpl() throws RemoteException {
 		super();
 	}
@@ -38,9 +37,7 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
 		return retValue;
 	}
 
-	public String prepare(String name, List<?> args) throws RemoteException {
-		String iname = null;
-		LProbe p = null;
+	private LProbe getLProbe(String name, List<?> args) throws RemoteException {
 		try {
 			Class<?> probeClass = Class.forName(name);
 			Class<?>[] argsType = new Class[args.size()];
@@ -51,14 +48,25 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
 				argsVal[index] = thisarg;
 			}
 			Constructor<?> theConst = probeClass.getConstructor(argsType);
-			if(theConst != null) {
-				p = (LProbe) theConst.newInstance(argsVal);
-				iname = p.getName();
-				probeMap.put(iname, p);
-			}
+			return (LProbe) theConst.newInstance(argsVal);
 		} catch (Exception e) {
 			throw new RemoteException("Error while preparing " + name, e);
 		}
+	}
+
+	public String prepare(String name, List<?> args) throws RemoteException {
+		LProbe p = getLProbe(name, args);
+		String iname = p.getName();
+		probeMap.put(iname, p);
+		return iname;
+	}
+
+	public String prepare(String name, File statFile, List<?> args)
+	throws RemoteException {
+		LProbe p = getLProbe(name, args);
+		p.setStatFile(statFile);
+		String iname = p.getName();
+		probeMap.put(iname, p);
 		return iname;
 	}
 
@@ -82,4 +90,5 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
 		}
 		return uptime;
 	}
+
 }

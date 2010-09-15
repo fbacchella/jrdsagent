@@ -8,7 +8,7 @@ import java.util.Map;
 
 import jrds.agent.LProbe;
 
-public class TcpQueue implements LProbe {
+public class TcpQueue extends LProbe {
 	String STATFILE = "/proc/net/tcp";
 	int port;
 	boolean local;

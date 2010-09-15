@@ -9,7 +9,7 @@ import java.util.Map;
 
 import jrds.agent.LProbe;
 
-public class TcpStat implements LProbe {
+public class TcpStat extends LProbe {
 	String STATFILE = "/proc/net/netstat";
 	String SNMPFILE = "/proc/net/snmp";
 

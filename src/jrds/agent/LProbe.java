@@ -1,10 +1,17 @@
 package jrds.agent;
 
+import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Map;
 
-public interface LProbe {
-	public Map<String, Number> query()  throws RemoteException;
+public abstract class LProbe {
+	private File statFile;
+
+	public LProbe() {
+		super();
+	}
+
+	public abstract Map<String, Number> query()  throws RemoteException;
 	
 	/**
 	 * Used to generate an uniq name for the local instance of the probe
@@ -12,5 +19,20 @@ public interface LProbe {
 	 * persistent accross reboot
 	 * @return the probe instance name
 	 */
-	public String getName()  throws RemoteException;
+	public abstract String getName()  throws RemoteException;
+	
+	/**
+	 * @return the statFile
+	 */
+	protected File getStatFile() {
+		return statFile;
+	}
+
+	/**
+	 * @param statFile the statFile to set
+	 */
+	public void setStatFile(File statFile) {
+		this.statFile = statFile;
+	}
+
 }

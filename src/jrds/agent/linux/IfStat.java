@@ -8,7 +8,7 @@ import java.util.Map;
 
 import jrds.agent.LProbe;
 
-public class IfStat implements LProbe {
+public class IfStat extends LProbe {
 	String STATFILE = "/proc/net/dev";
 	String ifName;
 

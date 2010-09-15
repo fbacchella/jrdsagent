@@ -8,7 +8,7 @@ import java.util.Map;
 
 import jrds.agent.LProbe;
 
-public class Diskstats implements LProbe {
+public class Diskstats extends LProbe {
 	static final String STATFILE = "/proc/diskstats";
 	String disk;
 	static final int offset = 2;

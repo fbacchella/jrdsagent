@@ -2,8 +2,8 @@
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
   <name>LinuxDiskstatOps</name>
-  <graphName>op-{2}</graphName>
-  <graphTitle>I/O operations on disk {2} on {1}</graphTitle>
+  <graphName>op-${index}</graphName>
+  <graphTitle>I/O operations on disk ${index} on ${host}</graphTitle>
   <verticalLabel>operations/s</verticalLabel>
   <add>
     <legend>write operations (up graph)</legend>
@@ -14,12 +14,6 @@
     <color>blue</color>
     <legend>Number of write accesses</legend>
   </add>
-  <!--<add>
-    <name>wrqm</name>
-    <graphType>line</graphType>
-    <color>navy</color>
-    <legend>Number of write request merged</legend>
-  </add>-->
   <add>
     <legend>read operations (down graph)</legend>
   </add>
@@ -30,13 +24,6 @@
     <color>green</color>
     <legend>Number of read accesses</legend>
   </add>
-  <!--<add>
-    <name>rrqm</name>
-    <reversed>true</reversed>
-    <graphType>line</graphType>
-    <color>teal</color>
-    <legend>Number of read request merged</legend>
-  </add>-->
   <hosttree>
     <pathelement>HOST</pathelement>
     <pathelement>DISK</pathelement>

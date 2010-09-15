@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc" >
+<graphdesc>
+	<name>NFS3all</name>
+	<graphName>nfs3all</graphName>
+	<graphTitle>All NFS3 client activity ${host}</graphTitle>
+	<verticalLabel>operations/s</verticalLabel>
+	<add>
+		<name>proc3.getattr</name>
+		<graphType>area</graphType>
+		<legend>Number of getattr</legend>
+	</add>
+	<add>
+		<name>proc3.access</name>
+		<graphType>stack</graphType>
+		<legend>Number of access</legend>
+	</add>
+	<add>
+		<name>proc3.write</name>
+		<graphType>stack</graphType>
+		<legend>Number of write</legend>
+	</add>
+	<add>
+		<name>proc3.read</name>
+		<graphType>stack</graphType>
+		<legend>Number of read</legend>
+	</add>
+	<add>
+		<name>proc3.readdirplus</name>
+		<graphType>stack</graphType>
+		<legend>Number of readdirplus</legend>
+	</add>
+	<hosttree>
+		<pathelement>HOST</pathelement>
+		<pathelement>DISK</pathelement>
+		<pathelement>DISKACTIVITY</pathelement>
+		<pathstring>NFS 3</pathstring>
+		<pathstring>All NFS3 activity</pathstring>
+	</hosttree>
+	<viewtree>
+		<pathelement>DISK</pathelement>
+		<pathelement>DISKACTIVITY</pathelement>
+		<pathstring>NFS activity</pathstring>
+		<pathstring>All NFS3 activity</pathstring>
+		<pathelement>HOST</pathelement>
+	</viewtree>
+</graphdesc>

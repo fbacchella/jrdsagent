@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 import jrds.agent.LProbe;
 
-public class ProcessInfo26  implements LProbe {
+public class ProcessInfo26  extends LProbe {
 	static final private int USER_HZ = 100; 
 	//See fs/proc/array.c
 	static final String[] statKey = {

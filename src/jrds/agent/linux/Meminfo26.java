@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import jrds.agent.LProbe;
 import jrds.agent.Start;
 
-public class Meminfo26 implements LProbe {
+public class Meminfo26 extends LProbe {
 	private static final String STATFILE = "/proc/meminfo";
 	private static final Pattern linePattern = Pattern.compile("(\\w+):\\s*(\\d+).*");
 
