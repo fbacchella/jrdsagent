@@ -62,8 +62,7 @@
 		<name>proc3.link</name>
 	</add>
 	<add>
-		<rpn>proc3.create, proc3.mkdir, +, proc3.symlink, +, proc3.mknod, +,
-			proc3.link, +</rpn>
+		<rpn>proc3.create, proc3.mkdir, +, proc3.symlink, +, proc3.mknod, +, proc3.link, +</rpn>
 		<graphType>stack</graphType>
 		<legend>Create an object</legend>
 	</add>
