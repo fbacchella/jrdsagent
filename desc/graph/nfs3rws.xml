@@ -26,16 +26,14 @@
 	</add>
 	<hosttree>
 		<pathelement>HOST</pathelement>
-		<pathelement>DISK</pathelement>
-		<pathelement>DISKACTIVITY</pathelement>
-		<pathstring>NFS 3</pathstring>
+		<pathelement>SERVICES</pathelement>
+		<pathstring>NFS 3 Server activity</pathstring>
 		<pathstring>Read/Write operations</pathstring>
 	</hosttree>
 	<viewtree>
-		<pathelement>DISK</pathelement>
-		<pathelement>DISKACTIVITY</pathelement>
-		<pathstring>NFS activity</pathstring>
-		<pathstring>NFS 3 Read/Write operations</pathstring>
+		<pathelement>SERVICES</pathelement>
+		<pathstring>NFS 3 Server activity</pathstring>
+		<pathstring>Read/Write operations</pathstring>
 		<pathelement>HOST</pathelement>
 	</viewtree>
 </graphdesc>

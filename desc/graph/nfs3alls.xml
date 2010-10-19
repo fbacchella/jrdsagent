@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc" >
 <graphdesc>
-	<name>NFS3all</name>
-	<graphName>nfs3all</graphName>
+	<name>NFS3allServer</name>
+	<graphName>nfs3alls</graphName>
 	<graphTitle>All NFS3 client activity ${host}</graphTitle>
 	<verticalLabel>operations/s</verticalLabel>
 	<add>
@@ -62,7 +62,8 @@
 		<name>proc3.link</name>
 	</add>
 	<add>
-		<rpn>proc3.create, proc3.mkdir, +, proc3.symlink, +, proc3.mknod, +, proc3.link, +</rpn>
+		<rpn>proc3.create, proc3.mkdir, +, proc3.symlink, +, proc3.mknod, +,
+			proc3.link, +</rpn>
 		<graphType>stack</graphType>
 		<legend>Create an object</legend>
 	</add>
@@ -92,16 +93,14 @@
 	</add>
 	<hosttree>
 		<pathelement>HOST</pathelement>
-		<pathelement>DISK</pathelement>
-		<pathelement>DISKACTIVITY</pathelement>
-		<pathstring>NFS 3</pathstring>
-		<pathstring>All NFS3 activity</pathstring>
+		<pathelement>SERVICES</pathelement>
+		<pathstring>NFS 3 Server activity</pathstring>
+		<pathstring>All activity</pathstring>
 	</hosttree>
 	<viewtree>
-		<pathelement>DISK</pathelement>
-		<pathelement>DISKACTIVITY</pathelement>
-		<pathstring>NFS activity</pathstring>
-		<pathstring>All NFS3 activity</pathstring>
+		<pathelement>SERVICES</pathelement>
+		<pathstring>NFS 3 Server activity</pathstring>
+		<pathstring>All activity</pathstring>
 		<pathelement>HOST</pathelement>
 	</viewtree>
 </graphdesc>

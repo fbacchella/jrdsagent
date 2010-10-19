@@ -5,6 +5,7 @@
 	<probeName>meminfo</probeName>
 	<probeClass>jrds.probe.RMI</probeClass>
 	<specific name="remote">jrds.agent.linux.Meminfo26</specific>
+	<specific name="statFile">/proc/meminfo</specific>
 	<ds>
 		<dsName>MemTotal</dsName>
 		<dsType>gauge</dsType>
@@ -147,5 +148,6 @@
 	</ds>
 	<graphs>
 		<name>MeminfoRAM</name>
+		<name>MeminfoRAMCommitted</name>
 	</graphs>
 </probedesc>
