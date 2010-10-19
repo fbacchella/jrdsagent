@@ -132,7 +132,7 @@
 		<collect>proc3.23</collect>
 	</ds>
 	<graphs>
-		<name>NFS3rw</name>
-		<name>NFS3all</name>
+		<name>NFS3rwClient</name>
+		<name>NFS3allClient</name>
 	</graphs>
 </probedesc>

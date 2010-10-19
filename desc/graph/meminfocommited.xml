@@ -64,7 +64,6 @@
 		<pathelement>HOST</pathelement>
 		<pathelement>SYSTEM</pathelement>
 		<pathelement>MEMORY</pathelement>
-		<pathstring>RAM Memory usage</pathstring>
 		<pathstring>Committed Memory informations</pathstring>
 	</hosttree>
 	<viewtree>

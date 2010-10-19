@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc" >
 <graphdesc>
-	<name>NFS3rw</name>
+	<name>NFS3rwServer</name>
 	<graphName>nfs3rw</graphName>
 	<graphTitle>NFS 3 read/write on ${host}</graphTitle>
 	<verticalLabel>operations/s</verticalLabel>

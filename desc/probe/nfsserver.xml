@@ -145,7 +145,7 @@
 	</ds>
 
 	<graphs>
-		<name>NFS3rw</name>
-		<name>NFS3all</name>
+		<name>NFS3rwServer</name>
+		<name>NFS3allServer</name>
 	</graphs>
 </probedesc>
