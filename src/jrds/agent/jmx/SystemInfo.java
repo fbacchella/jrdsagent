@@ -16,7 +16,7 @@ import jrds.agent.LProbe;
  * @author bacchell
  *
  */
-public class SystemInfo implements LProbe{
+public class SystemInfo extends LProbe {
 	
 	private enum OSBEAN {
 		CVM  {

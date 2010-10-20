@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestProbe implements LProbe {
+public class TestProbe extends LProbe {
 
 	public String getName() throws RemoteException {
 		return "TestProbe";

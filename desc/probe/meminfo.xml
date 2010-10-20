@@ -148,6 +148,6 @@
 	</ds>
 	<graphs>
 		<name>MeminfoRAM</name>
-		<name>MeminfoRAMCommitted</name>
+		<name>MeminfoAnonymous</name>
 	</graphs>
 </probedesc>

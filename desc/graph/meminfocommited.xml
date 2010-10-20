@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
-	<name>MeminfoRAMCommitted</name>
+	<name>MeminfoAnonymous</name>
 	<graphName>meminforamcommited</graphName>
-	<graphTitle>Meminfo commited on ${host}</graphTitle>
+	<graphTitle>Anonymous memory on ${host}</graphTitle>
 	<unit>
 		<binary />
 	</unit>
@@ -19,13 +19,13 @@
 		<rpn>SwapTotal, SwapCached, -, SwapFree, -</rpn>
 		<graphType>area</graphType>
 		<color>red</color>
-		<legend>Swap used</legend>
+		<legend>Anonymous pages in swap</legend>
 	</add>
 	<add>
 		<name>SwapCached</name>
 		<graphType>stack</graphType>
 		<color>blue</color>
-		<legend>Memory in both RAM and swap</legend>
+		<legend>Anonymous pages both in swap and RAM</legend>
 	</add>
 
 	<add>
@@ -44,32 +44,29 @@
 		<name>MemFree</name>
 	</add>
 	<add>
-		<legend>Other memory</legend>
-	</add>
-	<add>
 		<rpn>MemTotal, Buffers, -, Cached, -, MemFree, -, Slab, -, SwapCached, -</rpn>
 		<graphType>stack</graphType>
 		<color>green</color>
-		<legend>Used memory not in swap</legend>
+		<legend>Anonymous pages in RAM</legend>
 	</add>
 
 	<add>
 		<dsName>Committed_AS</dsName>
 		<graphType>line</graphType>
 		<color>black</color>
-		<legend>Commited memory</legend>
+		<legend>Committed memory</legend>
 	</add>
 
 	<hosttree>
 		<pathelement>HOST</pathelement>
 		<pathelement>SYSTEM</pathelement>
 		<pathelement>MEMORY</pathelement>
-		<pathstring>Committed Memory informations</pathstring>
+		<pathstring>Anonymous Memory informations</pathstring>
 	</hosttree>
 	<viewtree>
 		<pathelement>SYSTEM</pathelement>
 		<pathelement>MEMORY</pathelement>
-		<pathstring>Committed Memory informations</pathstring>
+		<pathstring>Anonymous Memory informations</pathstring>
 		<pathelement>HOST</pathelement>
 	</viewtree>
 </graphdesc>
