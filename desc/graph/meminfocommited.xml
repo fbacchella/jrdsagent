@@ -19,10 +19,13 @@
 		<name>SwapCached</name>
 	</add>
 	<add>
-		<rpn>SwapTotal, SwapCached, -, SwapFree, -</rpn>
+		<name>AnonPages</name>
+	</add>
+	<add>
+		<rpn>AnonPages, SwapCached, -</rpn>
 		<graphType>area</graphType>
-		<color>red</color>
-		<legend>Anonymous pages in swap</legend>
+		<color>green</color>
+		<legend>Anonymous pages in RAM</legend>
 	</add>
 	<add>
 		<name>SwapCached</name>
@@ -30,13 +33,13 @@
 		<color>blue</color>
 		<legend>Anonymous pages both in swap and RAM</legend>
 	</add>
-
 	<add>
-		<dsName>AnonPages</dsName>
+		<rpn>SwapTotal, SwapCached, -, SwapFree, -</rpn>
 		<graphType>stack</graphType>
-		<color>green</color>
-		<legend>Anonymous pages in RAM</legend>
+		<color>red</color>
+		<legend>Anonymous pages in swap</legend>
 	</add>
+
 
 	<add>
 		<dsName>Committed_AS</dsName>

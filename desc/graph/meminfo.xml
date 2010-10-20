@@ -23,7 +23,7 @@
 	<add>
 		<name>SReclaimable</name>
 		<graphType>stack</graphType>
-		<color>navy</color>
+		<color>magenta</color>
 		<legend>Part of Slab, that might be reclaimed</legend>		
 	</add>
 	<add>
@@ -45,37 +45,55 @@
 		<name>MemFree</name>
 	</add>
 	<add>
+		<name>AnonPages</name>
+	</add>
+	<add>
+		<name>Mapped</name>
+	</add>
+	<add>
 		<legend>Other memory</legend>
 	</add>
 	<add>
-		<rpn>MemTotal, Buffers, -, Cached, -, MemFree, -, Slab, -</rpn>
+		<dsName>AnonPages</dsName>
 		<graphType>stack</graphType>
 		<color>green</color>
-		<legend>Used memory</legend>
+		<legend>Anonymous pages</legend>
+	</add>
+	<add>
+		<rpn>MemTotal, Buffers, -, Cached, -, MemFree, -, Slab, -, AnonPages, -</rpn>
+		<graphType>stack</graphType>
+		<color>olive</color>
+		<legend>Other used pages</legend>
+	</add>
+	<add>
+		<name>Dirty</name>
+	</add>
+	<add>
+		<name>Writeback</name>
+	</add>
+	<add>
+		<dsName>Mapped</dsName>
+		<graphType>stack</graphType>
+		<color>cyan</color>
+		<legend>Memory mapped files in the pagecache</legend>
+	</add>
+	<add>
+		<rpn>Dirty, Writeback, +</rpn>
+		<graphType>stack</graphType>
+		<color>blue</color>
+		<legend>Dirty pages in the pagecache</legend>
+	</add>
+	<add>
+		<rpn>Cached, Dirty, -, Writeback, -, Mapped, -</rpn>
+		<graphType>stack</graphType>
+		<color>teal</color>
+		<legend>Other pages in the pagecache</legend>
 	</add>
 	<add>
 		<name>Buffers</name>
 		<graphType>stack</graphType>
 		<color>orange</color>
 		<legend>Memory in buffer cache</legend>
-	</add>
-	<add>
-		<name>Dirty</name>
-		<graphType>stack</graphType>
-		<color>olive</color>
-		<legend>Dirty Memory in the pagecache</legend>
-	</add>
-	<add>
-		<name>Writeback</name>
-		<graphType>stack</graphType>
-		<color>aqua</color>
-		<legend>Dirty Memory written to the disk</legend>
-	</add>
-	<add>
-		<rpn>Cached, Dirty, -, Writeback, -</rpn>
-		<graphType>stack</graphType>
-		<color>magenta</color>
-		<legend>Memory in the pagecache</legend>
 	</add>
 	<add>
 		<name>MemFree</name>
