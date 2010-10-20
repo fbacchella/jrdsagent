@@ -16,6 +16,9 @@
 		<name>SwapFree</name>
 	</add>
 	<add>
+		<name>SwapCached</name>
+	</add>
+	<add>
 		<rpn>SwapTotal, SwapCached, -, SwapFree, -</rpn>
 		<graphType>area</graphType>
 		<color>red</color>
@@ -29,22 +32,7 @@
 	</add>
 
 	<add>
-		<name>Slab</name>
-	</add>
-	<add>
-		<name>MemTotal</name>
-	</add>
-	<add>
-		<name>Buffers</name>
-	</add>
-	<add>
-		<name>Cached</name>
-	</add>
-	<add>
-		<name>MemFree</name>
-	</add>
-	<add>
-		<rpn>MemTotal, Buffers, -, Cached, -, MemFree, -, Slab, -, SwapCached, -</rpn>
+		<dsName>AnonPages</dsName>
 		<graphType>stack</graphType>
 		<color>green</color>
 		<legend>Anonymous pages in RAM</legend>
