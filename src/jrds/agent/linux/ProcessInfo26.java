@@ -42,7 +42,7 @@ public class ProcessInfo26  extends LProbe {
 		null,	 				// nice
 		"num_threads", 			//
 		null,					// it_real_value
-		"start_time", 			//
+		"start_time", 			// time the process started after system boot
 		"vsize", 				//
 		null,	 				// mm ? get_mm_rss(mm) : 0,
 		null,	 				// rsslim
@@ -78,8 +78,9 @@ public class ProcessInfo26  extends LProbe {
 	static final Pattern pidFile = Pattern.compile("^(\\d+)$");
 	Pattern cmdFilter = null;
 
-	public ProcessInfo26(String cmdFilter) {
+	public Boolean configure(String cmdFilter) {
 		this.cmdFilter = Pattern.compile(cmdFilter);
+		return true;
 	}
 
 	public String getName() throws RemoteException {
@@ -94,7 +95,7 @@ public class ProcessInfo26  extends LProbe {
 			String cmdLine = getCmdLine(pid);
 			if(cmdFilter.matcher(cmdLine).matches()) {
 				count++;
-				Map<String, Number> bufferMap = new HashMap<String, Number>();
+				Map<String, Number> bufferMap = new HashMap<String, Number>(retValues.size());
 				bufferMap.putAll(parseFile(pid, "stat", statKey));
 				bufferMap.putAll(parseFile(pid, "statm", statmKey));
 				long startTimeTick = bufferMap.get("stat:start_time").longValue();
@@ -184,10 +185,12 @@ public class ProcessInfo26  extends LProbe {
 	 * @return uptime, in second
 	 */
 	private long computeUpTime(long startTime) {
+	    if(startTime == 0)
+	        return 0;
 		try {
 			BufferedReader r = new BufferedReader(new FileReader(new File("/proc/uptime")));
 			String uptimeLine = r.readLine();
-			// We talks minutes here, so a low precision is good enough
+			// We talks minutes here, so a precision down to second is good enough
 			long uptimeSystem = (long) Double.parseDouble(uptimeLine.split(" ")[0]);
 			return uptimeSystem - startTime / USER_HZ;
 		} catch (FileNotFoundException e) {

@@ -1,7 +1,6 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,18 +8,18 @@ import java.util.Map;
 import jrds.agent.LProbe;
 
 public class Diskstats extends LProbe {
-	static final String STATFILE = "/proc/diskstats";
 	String disk;
-	static final int offset = 2;
+	static private final int offset = 2;
 
-	public Diskstats(String disk) {
+	public Boolean configure(String disk) {
 		this.disk = disk;
+		return true;
 	}
 
 	public Map<String, Number> query() throws RemoteException {
 		Map<String, Number> retValues = new HashMap<String, Number>();
 		try {
-			BufferedReader r = new BufferedReader(new FileReader(STATFILE));
+			BufferedReader r = readStatFile();
 			String line;
 			boolean found = false;
 			while(! found && ((line = r.readLine()) != null)) {

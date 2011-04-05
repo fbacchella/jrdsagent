@@ -1,6 +1,5 @@
 package jrds.probe;
 
-import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ public class RMI extends ProbeConnected<String, Number, RMIConnection> {
 			RProbe rp = (RProbe) cnx.getConnection();
 			String statFile = getPd().getSpecific("statFile");
 			if(statFile != null)
-				remoteName = rp.prepare(getPd().getSpecific("remote"), new File(statFile), args);
+				remoteName = rp.prepare(getPd().getSpecific("remote"), statFile, args);
 			else
 				remoteName = rp.prepare(getPd().getSpecific("remote"), args);
 			retValues = rp.query(remoteName);

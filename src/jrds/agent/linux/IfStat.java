@@ -1,7 +1,6 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,17 +8,17 @@ import java.util.Map;
 import jrds.agent.LProbe;
 
 public class IfStat extends LProbe {
-	String STATFILE = "/proc/net/dev";
 	String ifName;
 
-	public IfStat(String ifName) {
+	public Boolean configure(String ifName) {
 		this.ifName = ifName;
+		return true;
 	}
 
 	public Map<String, Number> query() throws RemoteException {
 		Map<String, Number> retValues = new HashMap<String, Number>();
 		try {
-			BufferedReader r = new BufferedReader(new FileReader(STATFILE));
+			BufferedReader r = readStatFile();
 			String line;
 
 			//Jump other first 2 lines

@@ -1,7 +1,6 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +11,6 @@ import jrds.agent.LProbe;
 import jrds.agent.Start;
 
 public class Meminfo26 extends LProbe {
-	private static final String STATFILE = "/proc/meminfo";
 	private static final Pattern linePattern = Pattern.compile("(\\w+):\\s*(\\d+).*");
 
 	public String getName() throws RemoteException {
@@ -24,7 +22,7 @@ public class Meminfo26 extends LProbe {
 		//This value is not always present, put a sensible default
 		retValues.put("Hugepagesize", 2048 * 1024);
 		try {
-			BufferedReader r = new BufferedReader(new FileReader(STATFILE));
+			BufferedReader r = readStatFile();
 			String line;
 			while((line = r.readLine()) != null) {
 				Matcher m = linePattern.matcher(line);

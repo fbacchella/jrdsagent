@@ -1,6 +1,9 @@
 package jrds.agent;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.rmi.RemoteException;
 import java.util.Map;
 
@@ -9,6 +12,10 @@ public abstract class LProbe {
 
 	public LProbe() {
 		super();
+	}
+	
+	public Boolean configure() {
+		return true;
 	}
 
 	public abstract Map<String, Number> query()  throws RemoteException;
@@ -33,6 +40,10 @@ public abstract class LProbe {
 	 */
 	public void setStatFile(File statFile) {
 		this.statFile = statFile;
+	}
+	
+	public BufferedReader readStatFile() throws FileNotFoundException {
+	    return new BufferedReader(new FileReader(getStatFile()));
 	}
 
 }

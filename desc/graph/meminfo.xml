@@ -9,6 +9,9 @@
 	</unit>
 	<verticalLabel>Bytes</verticalLabel>
 	<add>
+		<name>PageTables</name>
+	</add>
+	<add>
 		<name>Slab</name>
 	</add>
 	<add>
@@ -27,10 +30,10 @@
 		<legend>Part of Slab, that might be reclaimed</legend>		
 	</add>
 	<add>
-		<rpn>Slab, SReclaimable,- , SUnreclaim, -</rpn>
+		<rpn>Slab, SReclaimable,- , SUnreclaim, -, PageTables, +</rpn>
 		<graphType>stack</graphType>
 		<color>red</color>
-		<legend>Other part of Slab</legend>		
+		<legend>Other part of kernel memory</legend>		
 	</add>
 	<add>
 		<name>MemTotal</name>
@@ -115,9 +118,9 @@
 		<rpn>SwapTotal, SwapCached, -, SwapFree,-</rpn>
 		<graphType>stack</graphType>
 		<color>red</color>
-		<legend>Other Swap used</legend>
+		<legend>Swap used</legend>
 	</add>
-s	<add>
+	<add>
 		<name>SwapCached</name>
 		<graphType>stack</graphType>
 		<color>blue</color>

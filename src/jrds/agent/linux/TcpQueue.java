@@ -1,7 +1,6 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,20 +8,20 @@ import java.util.Map;
 import jrds.agent.LProbe;
 
 public class TcpQueue extends LProbe {
-	String STATFILE = "/proc/net/tcp";
 	int port;
 	boolean local;
 	static final int offset = 2;
 	
-	public TcpQueue(Integer port, Boolean local) {
+	public Boolean configure(Integer port, Boolean local) {
 		this.port = port.intValue();
 		this.local = local.booleanValue();
+		return true;
 	}
 	
 	public Map<String, Number> query()  throws RemoteException{
 		Map<String, Number> retValues = new HashMap<String, Number>();
 		try {
-			BufferedReader r = new BufferedReader(new FileReader(STATFILE));
+			BufferedReader r = readStatFile();
 			String line;
 			int portCol = 2;
 			if(local)
