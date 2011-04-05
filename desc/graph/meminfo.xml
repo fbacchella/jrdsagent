@@ -60,13 +60,13 @@
 		<dsName>AnonPages</dsName>
 		<graphType>stack</graphType>
 		<color>green</color>
-		<legend>Anonymous pages</legend>
+		<legend>Anonymous memory</legend>
 	</add>
 	<add>
 		<rpn>MemTotal, Buffers, -, Cached, -, MemFree, -, Slab, -, AnonPages, -</rpn>
 		<graphType>stack</graphType>
 		<color>olive</color>
-		<legend>Other used pages</legend>
+		<legend>Other used memory</legend>
 	</add>
 	<add>
 		<name>Dirty</name>
@@ -84,13 +84,13 @@
 		<rpn>Dirty, Writeback, +</rpn>
 		<graphType>stack</graphType>
 		<color>blue</color>
-		<legend>Dirty pages in the pagecache</legend>
+		<legend>Dirty memory in the pagecache</legend>
 	</add>
 	<add>
 		<rpn>Cached, Dirty, -, Writeback, -, Mapped, -</rpn>
 		<graphType>stack</graphType>
 		<color>teal</color>
-		<legend>Other pages in the pagecache</legend>
+		<legend>Other memory in the pagecache</legend>
 	</add>
 	<add>
 		<name>Buffers</name>
