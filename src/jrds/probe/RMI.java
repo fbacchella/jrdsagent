@@ -14,7 +14,7 @@ import org.apache.log4j.Level;
 
 @ProbeMeta(
         topStarter=jrds.probe.JRDSSocketFactory.class
-)
+        )
 public class RMI extends ProbeConnected<String, Number, RMIConnection> {
     List<?> args = new ArrayList<Object>(0);
     private String remoteName = null;
