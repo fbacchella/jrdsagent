@@ -93,13 +93,13 @@
 		<legend>Other memory in the pagecache</legend>
 	</add>
 	<add>
-		<name>Buffers</name>
+		<dsName>Buffers</dsName>
 		<graphType>stack</graphType>
 		<color>orange</color>
 		<legend>Memory in buffer cache</legend>
 	</add>
 	<add>
-		<name>MemFree</name>
+		<dsName>MemFree</dsName>
 		<graphType>stack</graphType>
 		<color>black</color>
 		<legend>Memory free</legend>
