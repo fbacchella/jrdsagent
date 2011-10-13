@@ -28,7 +28,7 @@
 		<legend>Anonymous pages in RAM</legend>
 	</add>
 	<add>
-		<dsName>SwapCached</<dsName>>
+		<dsName>SwapCached</dsName>
 		<graphType>stack</graphType>
 		<color>blue</color>
 		<legend>Anonymous pages both in swap and RAM</legend>
