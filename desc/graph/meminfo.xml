@@ -90,7 +90,7 @@
 		<rpn>Cached, Dirty, -, Writeback, -, Mapped, -</rpn>
 		<graphType>stack</graphType>
 		<color>teal</color>
-		<legend>Other memory in the pagecache</legend>
+		<legend>Cached file data</legend>
 	</add>
 	<add>
 		<dsName>Buffers</dsName>
