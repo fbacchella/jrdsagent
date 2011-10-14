@@ -63,7 +63,7 @@
 		<legend>Anonymous memory</legend>
 	</add>
 	<add>
-		<rpn>MemTotal, Buffers, -, Cached, -, MemFree, -, Slab, -, AnonPages, -</rpn>
+		<rpn>MemTotal, Buffers, -, Cached, -, MemFree, -, Slab, -, AnonPages, -, PageTables, -</rpn>
 		<graphType>stack</graphType>
 		<color>olive</color>
 		<legend>Other used memory</legend>
@@ -90,7 +90,7 @@
 		<rpn>Cached, Dirty, -, Writeback, -, Mapped, -</rpn>
 		<graphType>stack</graphType>
 		<color>teal</color>
-		<legend>Cached file data</legend>
+		<legend>Cached file in the pagecache</legend>
 	</add>
 	<add>
 		<dsName>Buffers</dsName>
