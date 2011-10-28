@@ -28,56 +28,44 @@
     <name>softirq</name>
   </add>
   <add>
-    <name>steal_time</name>
-  </add>
-  <add>
-    <name>guest</name>
-  </add>
-  <add>
     <name>total</name>
-    <rpn>nice, user, +, system,+, iowait, +, idle, +, irq, +, softirq, +, steal_time, +, guest, +</rpn>
+    <rpn>nice, user, +, system,+, iowait, +, idle, +</rpn>
   </add>
   <add>
-    <rpn>system, irq, +, softirq, +, total, /, 100, *</rpn>
+    <rpn>irq, softirq, + , total,/, 100 %</rpn>
+    <graphType>line</graphType>
+    <color>black</color>
+    <legend>IRQ CPU time</legend>
+  </add>
+  <add>
+    <rpn>system, total, /, 100,*</rpn>
     <graphType>area</graphType>
     <color>red</color>
     <legend>System CPU time</legend>
   </add>
   <add>
-    <rpn>user, total, /, 100, *</rpn>
+    <rpn>user, total, /, 100,*</rpn>
     <graphType>stack</graphType>
     <color>blue</color>
     <legend>User CPU time</legend>
   </add>
   <add>
-    <rpn>nice, total, /, 100, *</rpn>
+    <rpn>nice, total, /, 100,*</rpn>
     <graphType>stack</graphType>
     <color>orange</color>
     <legend>Nice CPU time</legend>
   </add>
   <add>
-    <rpn>iowait, total, /, 100, *</rpn>
+    <rpn>iowait, total, /, 100,*</rpn>
     <graphType>stack</graphType>
     <color>teal</color>
     <legend>Iowait CPU time</legend>
   </add>
   <add>
-    <rpn>idle, total, /, 100, *</rpn>
+    <rpn>idle, total, /, 100,*</rpn>
     <graphType>stack</graphType>
     <color>green</color>
     <legend>Idle CPU time</legend>
-  </add>
-  <add>
-    <rpn>steal_time, total, /, 100, *</rpn>
-    <graphType>stack</graphType>
-    <color>red</color>
-    <legend>stolen time</legend>
-  </add>
-  <add>
-    <rpn>guest, total, /, 100, *</rpn>
-    <graphType>stack</graphType>
-    <color>black</color>
-    <legend>VM time</legend>
   </add>
   <hosttree>
     <pathelement>host</pathelement>

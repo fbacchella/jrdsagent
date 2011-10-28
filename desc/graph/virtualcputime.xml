@@ -1,0 +1,40 @@
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+    <name>VirtualCPUTimeStatLinux</name>
+    <graphName>virtualcpustats</graphName>
+    <graphTitle>Virtual CPU time</graphTitle>
+    <verticalLabel>%</verticalLabel>
+    <upperLimit>100</upperLimit>
+    <add>
+        <name>nice</name>
+    </add>
+    <add>
+        <name>user</name>
+    </add>
+    <add>
+        <name>system</name>
+    </add>
+    <add>
+        <name>iowait</name>
+    </add>
+    <add>
+        <name>idle</name>
+    </add>
+    <add>
+        <rpn>nice, user, +, system,+, iowait, +, idle, +</rpn>
+        <graphType>area</graphType>
+        <legend>This VM CPU time</legend>
+    </add>
+    <add>
+        <dsName>steal_time</dsName>
+        <graphType>stack</graphType>
+        <legend>siblins cpu time</legend>
+    </add>
+    <add>
+        <dsName>guest</dsName>
+        <graphType>stack</graphType>
+        <legend>guests CPU time</legend>
+    </add>
+    <hosttree></hosttree>
+    <viewtree></viewtree>
+</graphdesc>
