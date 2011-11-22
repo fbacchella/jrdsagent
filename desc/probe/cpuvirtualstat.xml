@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 	<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
 <probedesc>
-    <name>CpuStatsLinux</name>
+    <name>CpuStatsVirtualLinux</name>
     <probeName>cpustats</probeName>
     <probeClass>jrds.probe.RMI</probeClass>
     <specific name="remote">jrds.agent.linux.MultiNoKeys</specific>
