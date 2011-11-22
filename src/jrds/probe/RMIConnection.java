@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import jrds.PropertiesManager;
 import jrds.agent.RProbe;
 import jrds.starter.Connection;
 import jrds.starter.Resolver;
@@ -13,15 +14,20 @@ import jrds.starter.Starter;
 import org.apache.log4j.Level;
 
 public class RMIConnection extends Connection<RProbe> {
-    private int port = 2002;
+
+    private static final int AGENTPORT = 2002;
+    private final int port;
     private Registry registry = null;
     private RProbe rp = null;
 
     public RMIConnection() {
+        this.port = AGENTPORT;
+        log(Level.DEBUG, "configuring a RMI connection, port %d", port);
     }
 
     public RMIConnection(Integer port) {
         this.port = port.intValue();
+        log(Level.DEBUG, "configuring a RMI connection, port %d", port);
     }
 
     @Override
@@ -32,7 +38,6 @@ public class RMIConnection extends Connection<RProbe> {
     @Override
     public long setUptime() {
         try {
-            log(Level.TRACE, "uptime: %d", rp.getUptime());
             return rp.getUptime();
         } catch (RemoteException e) {
             log(Level.ERROR, e, "Remote exception on server %s: %s", getHostName(), e.getCause());
@@ -43,7 +48,7 @@ public class RMIConnection extends Connection<RProbe> {
     @Override
     public boolean startConnection() {
         String hostName = getHostName();
-        log(Level.DEBUG, "Starting RMIStarter for %s:%d", hostName, port);
+        log(Level.DEBUG, "Starting RMIStarter for %s: %d", hostName, port);
         Starter resolver = getLevel().find(Resolver.class);
         boolean started = false;
         if(resolver.isStarted()) {
@@ -68,6 +73,17 @@ public class RMIConnection extends Connection<RProbe> {
         log(Level.DEBUG, "Stopping RMIStarter for %s:%d", getHostName(), port);
         rp = null;
         registry = null;
+    }
+
+    /* (non-Javadoc)
+     * @see jrds.starter.Starter#configure(jrds.PropertiesManager)
+     */
+    @Override
+    public void configure(PropertiesManager pm) {
+        super.configure(pm);
+        System.setProperty("sun.rmi.transport.tcp.handshakeTimeout", Integer.toString(pm.timeout * 1000));
+        System.setProperty("sun.rmi.transport.tcp.responseTimeout", Integer.toString(pm.timeout * 1000));
+        System.setProperty("sun.rmi.transport.connectionTimeout", Integer.toString(pm.timeout * 1000));
     }
 
 }
