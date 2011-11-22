@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jrds.agent.jmx.RProbeActorJMX;
 import jrds.agent.linux.RProbeActorLinux;
 
 public abstract class RProbeActor implements RProbe {
@@ -20,7 +21,7 @@ public abstract class RProbeActor implements RProbe {
             return new RProbeActorLinux();
         }
         else {
-            throw new RuntimeException("Unsuported operating system");
+            return new RProbeActorJMX();
         }
     }
     
