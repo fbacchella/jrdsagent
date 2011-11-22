@@ -3,23 +3,22 @@ package jrds.agent.linux;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
 import jrds.agent.LProbe;
 
 public class MultiNoKeys extends LProbe {
-    public String getName() throws RemoteException {
+    public String getName() {
         return getStatFile().getPath().replace(getStatFile().getParent(), "");
     }
 
-    public Map<String, Number> query() throws RemoteException {
+    public Map<String, Number> query() {
         try {
             BufferedReader r = new BufferedReader(new FileReader(getStatFile()));
             return parse(r);
         } catch (Exception e) {
-            throw new RemoteException(getName(), e);
+            throw new RuntimeException(getName(), e);
         }
     }
 

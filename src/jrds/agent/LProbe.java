@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.rmi.RemoteException;
 import java.util.Map;
 
 public abstract class LProbe {
@@ -18,7 +17,7 @@ public abstract class LProbe {
         return true;
     }
 
-    public abstract Map<String, Number> query()  throws RemoteException;
+    public abstract Map<String, Number> query();
 
     /**
      * Used to generate an uniq name for the local instance of the probe
@@ -26,7 +25,7 @@ public abstract class LProbe {
      * persistent accross reboot
      * @return the probe instance name
      */
-    public abstract String getName()  throws RemoteException;
+    public abstract String getName();
 
     /**
      * @return the statFile

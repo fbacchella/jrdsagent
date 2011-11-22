@@ -1,7 +1,7 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.rmi.RemoteException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -13,11 +13,11 @@ import jrds.agent.Start;
 public class Meminfo26 extends LProbe {
     private static final Pattern linePattern = Pattern.compile("(\\w+):\\s*(\\d+).*");
 
-    public String getName() throws RemoteException {
+    public String getName() {
         return "meminfo";
     }
 
-    public Map<String, Number> query() throws RemoteException {
+    public Map<String, Number> query() {
         Map<String, Number> retValues = new HashMap<String, Number>();
         //This value is not always present, put a sensible default
         retValues.put("Hugepagesize", 2048 * 1024);
@@ -48,8 +48,8 @@ public class Meminfo26 extends LProbe {
                     }
                 }
             }
-        } catch (Exception e) {
-            throw new RemoteException(this.getName(), e);
+        } catch (IOException e) {
+            throw new RuntimeException("Error running " + this, e );
         }
         return retValues;
     }

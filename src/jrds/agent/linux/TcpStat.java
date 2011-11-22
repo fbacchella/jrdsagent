@@ -3,7 +3,6 @@ package jrds.agent.linux;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,13 +13,13 @@ public class TcpStat extends LProbe {
     String SNMPFILE = "/proc/net/snmp";
 
 
-    public Map<String, Number> query() throws RemoteException {
+    public Map<String, Number> query() {
         Map<String, Number> retValues = new HashMap<String, Number>();
         try {
             queryFile(SNMPFILE, "Tcp:", retValues);
             queryFile(STATFILE, "TcpExt:", retValues);
         } catch (Exception e) {
-            throw new RemoteException(this.getName(), e);
+            throw new RuntimeException(this.getName(), e);
         }
         return retValues;
     }
@@ -45,7 +44,7 @@ public class TcpStat extends LProbe {
         }
     }
 
-    public String getName() throws RemoteException {
+    public String getName() {
         return "netstat";
     }
 

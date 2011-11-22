@@ -1,7 +1,6 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +17,7 @@ public class TcpQueue extends LProbe {
         return true;
     }
 
-    public Map<String, Number> query()  throws RemoteException{
+    public Map<String, Number> query() {
         Map<String, Number> retValues = new HashMap<String, Number>();
         try {
             BufferedReader r = readStatFile();
@@ -48,7 +47,7 @@ public class TcpQueue extends LProbe {
                 retValues.put("rx", new Double(rx/num));
             }
         } catch (Exception e) {
-            throw new RemoteException(this.getName(), e);
+            throw new RuntimeException(this.getName(), e);
         }
         return retValues;
     }

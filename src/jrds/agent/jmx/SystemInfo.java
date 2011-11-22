@@ -4,13 +4,12 @@
 package jrds.agent.jmx;
 
 import java.lang.management.ManagementFactory;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.management.OperatingSystemMXBean;
-
 import jrds.agent.LProbe;
+
+import com.sun.management.OperatingSystemMXBean;
 
 /**
  * @author bacchell
@@ -59,11 +58,11 @@ public class SystemInfo extends LProbe {
         public abstract Number getValue(OperatingSystemMXBean bean);
     };
 
-    public String getName() throws RemoteException {
+    public String getName() {
         return "jmxsysteminfo";
     }
 
-    public Map<String, Number> query() throws RemoteException {
+    public Map<String, Number> query() {
         com.sun.management.OperatingSystemMXBean systemBean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         Map<String, Number> retValues = new HashMap<String, Number>();
         for(OSBEAN value: OSBEAN.values()) {

@@ -1,7 +1,8 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.rmi.RemoteException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class IfStat extends LProbe {
         return true;
     }
 
-    public Map<String, Number> query() throws RemoteException {
+    public Map<String, Number> query() {
         Map<String, Number> retValues = new HashMap<String, Number>();
         try {
             BufferedReader r = readStatFile();
@@ -47,13 +48,17 @@ public class IfStat extends LProbe {
                     retValues.put("txcompressed", Double.valueOf(values[15]));
                 }
             }
-        } catch (Exception e) {
-            throw new RemoteException(this.getName(), e);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return retValues;
     }
 
-    public String getName() throws RemoteException {
+    public String getName() {
         return "ifstat:" + ifName;
     }
 

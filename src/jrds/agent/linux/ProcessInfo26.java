@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -83,11 +82,11 @@ public class ProcessInfo26  extends LProbe {
         return true;
     }
 
-    public String getName() throws RemoteException {
+    public String getName() {
         return "pi26-" + cmdFilter.toString();
     }
 
-    public Map<String, Number> query() throws RemoteException {
+    public Map<String, Number> query() {
         Map<String, Number> retValues = new HashMap<String, Number>();
         int count = 0;
         long mostRecentTick = 0;

@@ -1,5 +1,6 @@
 package jrds.probe;
 
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,12 @@ public class RMI extends ProbeConnected<String, Number, RMIConnection> {
                 root = root.getCause();
             }
             log(Level.ERROR, root, "Remote exception on server: %s", root);
+        } catch (InvocationTargetException e) {
+            Throwable root = e;
+            while(root.getCause() != null) {
+                root = root.getCause();
+            }
+           log(Level.ERROR, root, "Failed to prepare %s: %s", this, root);
         }
         return retValues;
     }
