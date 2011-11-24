@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
 <probedesc>
-	<name>TcpQueue</name>
-	<probeName>tcpq:${index}</probeName>
-	<probeClass>jrds.probe.RMIIndexed</probeClass>
-	<specific name="remote">jrds.agent.linux.TcpQueue</specific>
-	<specific name="statFile">/proc/net/tcp</specific>
-	<ds>
-		<dsName>tx</dsName>
-		<dsType>gauge</dsType>
-	</ds>
-	<ds>
-		<dsName>rx</dsName>
-		<dsType>gauge</dsType>
-	</ds>
-	<graphs>
-		<name>TcpQueue</name>
-	</graphs>
+    <name>TcpQueue</name>
+    <probeName>tcpq:${index}</probeName>
+    <probeClass>jrds.probe.RMIIndexed</probeClass>
+    <index>${1}</index>
+    <specific name="remote">jrds.agent.linux.TcpQueue</specific>
+    <specific name="statFile">/proc/net/tcp</specific>
+    <ds>
+        <dsName>tx</dsName>
+        <dsType>gauge</dsType>
+    </ds>
+    <ds>
+        <dsName>rx</dsName>
+        <dsType>gauge</dsType>
+    </ds>
+    <graphs>
+        <name>TcpQueue</name>
+    </graphs>
 </probedesc>

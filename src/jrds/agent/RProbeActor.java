@@ -67,6 +67,7 @@ public abstract class RProbeActor implements RProbe {
         for(Object thisarg: args) {
             argsType[index] = thisarg.getClass();
             argsVal[index] = thisarg;
+            index++;
         }
         try {
             Method m = p.getClass().getMethod("configure", argsType);

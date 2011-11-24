@@ -24,6 +24,19 @@ public class RMI extends ProbeConnected<String, Number, RMIConnection> {
         super(RMIConnection.class.getName());
     }
 
+    /**
+     * A generic configurator that pass directly the elements of a list to the remote probe
+     * @param args the argument of the remote probe
+     * @return true if configuration succeeds
+     */
+    public Boolean configure(List<?> args) {
+        if(!configure()) {
+            return false;
+        }
+        setArgs(args);
+        return true;
+    }
+
     public Map<String, Number> getNewSampleValuesConnected(RMIConnection cnx) {
         Map<String, Number> retValues = new HashMap<String, Number>(0);
         try {
@@ -45,7 +58,7 @@ public class RMI extends ProbeConnected<String, Number, RMIConnection> {
             while(root.getCause() != null) {
                 root = root.getCause();
             }
-           log(Level.ERROR, root, "Failed to prepare %s: %s", this, root);
+            log(Level.ERROR, root, "Failed to prepare %s: %s", this, root);
         }
         return retValues;
     }
