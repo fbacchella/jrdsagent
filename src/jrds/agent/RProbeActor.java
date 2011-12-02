@@ -16,12 +16,17 @@ public abstract class RProbeActor implements RProbe {
     final private Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
     
     static public RProbeActor getInstance() {
-        String osname = System.getProperty("os.name");
-        if("Linux".equals(osname)) {
-            return new RProbeActorLinux();
-        }
-        else {
-            return new RProbeActorJMX();
+        try {
+            String osname = System.getProperty("os.name");
+            if("Linux".equals(osname)) {
+                return new RProbeActorLinux();
+            }
+            else {
+                return new RProbeActorJMX();
+            }
+        } catch (Exception e) {
+            //If something fails, return a do nothing probe actor
+            return new RProbeActorEmpty();
         }
     }
     
