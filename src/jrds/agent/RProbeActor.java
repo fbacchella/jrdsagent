@@ -106,10 +106,6 @@ public abstract class RProbeActor implements RProbe {
         return iname;
     }
 
-    public boolean exist(String name) {
-        return probeMap.containsKey(name);
-    }
-
     /**
      * Java don't provide an standard way to get system uptime
      * so it's OS dependant

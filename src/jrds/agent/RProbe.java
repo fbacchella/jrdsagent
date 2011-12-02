@@ -12,6 +12,5 @@ public interface RProbe extends Remote {
     public Map<String, Number> query(String name) throws RemoteException;
     public String prepare(String name, List<?> args) throws RemoteException, InvocationTargetException;
     public String prepare(String name, String statFile, List<?> args) throws RemoteException, InvocationTargetException;
-    public boolean exist(String name)  throws RemoteException;
     public long getUptime() throws RemoteException;
 }

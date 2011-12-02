@@ -73,16 +73,6 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
     }
 
     /**
-     * @param name
-     * @return
-     * @throws RemoteException
-     * @see jrds.agent.RProbe#exist(java.lang.String)
-     */
-    public boolean exist(String name) throws RemoteException {
-        return rprobe.exist(name);
-    }
-
-    /**
      * @return
      * @throws RemoteException
      * @see jrds.agent.RProbe#getUptime()
