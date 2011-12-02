@@ -14,7 +14,7 @@ import jrds.agent.linux.RProbeActorLinux;
 public abstract class RProbeActor implements RProbe {
 
     final private Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
-    
+
     static public RProbeActor getInstance() {
         try {
             String osname = System.getProperty("os.name");
@@ -27,11 +27,14 @@ public abstract class RProbeActor implements RProbe {
         } catch (Exception e) {
             //If something fails, return a do nothing probe actor
             return new RProbeActorEmpty();
+        } catch (NoClassDefFoundError e) {
+            //If something fails, return a do nothing probe actor
+            return new RProbeActorEmpty();
         }
     }
-    
+
     protected RProbeActor() {
-        
+
     }
 
     public Map<String,Number> query(String name) {
