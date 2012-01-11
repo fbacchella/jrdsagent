@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
+<probedesc>
+    <name>DiskUsage</name>
+    <probeName>du-${index.cleanpath}</probeName>
+    <probeClass>jrds.probe.RMIIndexed</probeClass>
+    <specific name="remote">jrds.agent.DiskUsage</specific>
+    <ds>
+        <dsName>Total</dsName>
+        <dsType>gauge</dsType>
+        <collect>total</collect>
+    </ds>
+    <ds>
+        <dsName>Avail</dsName>
+        <dsType>gauge</dsType>
+        <collect>usable</collect>
+    </ds>
+    <ds>
+        <dsName>Free</dsName>
+        <dsType>gauge</dsType>
+        <collect>free</collect>
+    </ds>
+    <ds>
+        <dsName>Used</dsName>
+        <dsType>gauge</dsType>
+    </ds>
+    <graphs>
+        <name>PartitionSpaceGraph</name>
+    </graphs>
+</probedesc>
