@@ -4,8 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class DiskUsage  extends LProbe{
+public class DiskUsage extends LProbe{
     String path;
     
     public Boolean configure(String path) {
