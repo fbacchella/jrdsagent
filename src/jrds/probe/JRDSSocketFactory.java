@@ -3,6 +3,7 @@ package jrds.probe;
 import java.io.IOException;
 import java.net.Socket;
 import java.rmi.server.RMIClientSocketFactory;
+import java.util.logging.Handler;
 
 import org.apache.log4j.Level;
 
@@ -23,9 +24,9 @@ public class JRDSSocketFactory extends Starter implements RMIClientSocketFactory
         // java.util.logging reconfiguration
         // formating and filtering is delegated to the log4g level
         JrdsLoggerConfiguration.configureLogger("sun.rmi", Level.ERROR);
-        java.util.logging.Logger.getLogger("sun.rmi").addHandler(new JuliToLog4jHandler());
-        java.util.logging.Logger.getLogger("sun.rmi").setLevel(java.util.logging.Level.ALL);
-
+        Handler jrdsLogger = new JuliToLog4jHandler();
+        jrdsLogger.setLevel(java.util.logging.Level.ALL);
+        java.util.logging.Logger.getLogger("sun.rmi").addHandler(jrdsLogger);
     }
 
     /* (non-Javadoc)
