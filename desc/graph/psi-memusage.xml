@@ -4,11 +4,11 @@
 	<name>ProcessInfo-memusage</name>
 	<graphName>psmem-{2}</graphName>
 	<graphTitle>Average memory usage for {2}</graphTitle>
+    <unit>
+        <binary />
+    </unit>
 	<verticalLabel>Bytes</verticalLabel>
 	<lowerLimit>0</lowerLimit>
-	<unit>
-		<binary />
-	</unit>
 	<add>
 		<name>count</name>
 	</add>

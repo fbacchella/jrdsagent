@@ -35,6 +35,16 @@
         <graphType>stack</graphType>
         <legend>guests CPU time</legend>
     </add>
-    <hosttree></hosttree>
-    <viewtree></viewtree>
+  <hosttree>
+    <pathelement>host</pathelement>
+    <pathelement>system</pathelement>
+    <pathelement>load</pathelement>
+    <pathstring>Virtual CPU usage</pathstring>
+  </hosttree>
+  <viewtree>
+    <pathelement>system</pathelement>
+    <pathelement>load</pathelement>
+    <pathstring>Virtual CPU usage</pathstring>
+    <pathelement>host</pathelement>
+  </viewtree>
 </graphdesc>
