@@ -2,16 +2,19 @@ package jrds.probe;
 
 import java.util.Map;
 
+import jrds.factories.ProbeBean;
+
+@ProbeBean({"index", "pattern"})
 public class ProcessInfo extends RMIIndexed {
-    private String indexName;
+    private String processName;
 
     public Boolean configure(String indexName, String pattern) {
-        this.indexName = indexName;
+        this.processName = indexName;
         return configure(pattern);
     }
 
     public String getIndexName() {
-        return indexName;
+        return processName;
     }
 
     /* (non-Javadoc)
@@ -28,6 +31,36 @@ public class ProcessInfo extends RMIIndexed {
         else
             setUptime(0);
         return retValues;
+    }
+
+    /**
+     * @return the pattern
+     */
+    public String getPattern() {
+        return super.getIndex();
+    }
+
+    /**
+     * @param pattern the pattern to set
+     */
+    public void setPattern(String pattern) {
+        super.setIndex(pattern);
+    }
+
+    /* (non-Javadoc)
+     * @see jrds.probe.RMIIndexed#getIndex()
+     */
+    @Override
+    public String getIndex() {
+        return processName;
+    }
+
+    /* (non-Javadoc)
+     * @see jrds.probe.RMIIndexed#setIndex(java.lang.String)
+     */
+    @Override
+    public void setIndex(String index) {
+        this.processName = index;
     }
 
 }

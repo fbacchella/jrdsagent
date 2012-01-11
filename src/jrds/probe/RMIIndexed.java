@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jrds.Util;
+import jrds.factories.ProbeBean;
 
+@ProbeBean({"index"})
 public class RMIIndexed extends RMI implements IndexedProbe {
     private String index;
     private String label;
@@ -44,5 +46,19 @@ public class RMIIndexed extends RMI implements IndexedProbe {
     
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    /**
+     * @return the index
+     */
+    public String getIndex() {
+        return index;
+    }
+
+    /**
+     * @param index the index to set
+     */
+    public void setIndex(String index) {
+        this.index = index;
     }
 }
