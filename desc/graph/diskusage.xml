@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+    <name>DiskUsage</name>
+    <graphName>du-${index.cleanpath}</graphName>
+    <graphTitle>Occupation of file system ${index} on ${host}</graphTitle>
+    <unit>
+        <binary />
+    </unit>
+    <verticalLabel>bytes</verticalLabel>
+    <add>
+        <name>total</name>
+    </add>
+    <add>
+        <name>free</name>
+    </add>
+    <add>
+        <name>usable</name>
+    </add>
+    <add>
+        <rpn>total, free, -</rpn>
+        <graphType>area</graphType>
+        <color>BLUE</color>
+        <legend>Used Space</legend>
+    </add>
+    <add>
+        <dsName>usable</dsName>
+        <graphType>stack</graphType>
+        <color>GREEN</color>
+        <legend>Available space</legend></add>
+    <add>
+        <rpn>free,usable,-</rpn>
+        <graphType>stack</graphType>
+        <color>black</color>
+        <legend>Reserved space</legend></add>
+  <hosttree>
+    <pathstring>${host}</pathstring>
+    <pathelement>DISK</pathelement>
+    <pathstring>File system use</pathstring>
+    <pathstring>${index}</pathstring>
+  </hosttree>
+  <viewtree>
+    <pathelement>DISK</pathelement>
+    <pathstring>File system use</pathstring>
+    <pathstring>${host}</pathstring>
+    <pathstring>${index}</pathstring>
+  </viewtree>
+</graphdesc>

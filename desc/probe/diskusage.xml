@@ -6,25 +6,18 @@
     <probeClass>jrds.probe.RMIIndexed</probeClass>
     <specific name="remote">jrds.agent.DiskUsage</specific>
     <ds>
-        <dsName>Total</dsName>
+        <dsName>total</dsName>
         <dsType>gauge</dsType>
-        <collect>total</collect>
     </ds>
     <ds>
-        <dsName>Avail</dsName>
+        <dsName>usable</dsName>
         <dsType>gauge</dsType>
-        <collect>usable</collect>
     </ds>
     <ds>
-        <dsName>Free</dsName>
-        <dsType>gauge</dsType>
-        <collect>free</collect>
-    </ds>
-    <ds>
-        <dsName>Used</dsName>
+        <dsName>free</dsName>
         <dsType>gauge</dsType>
     </ds>
     <graphs>
-        <name>PartitionSpaceGraph</name>
+        <name>DiskUsage</name>
     </graphs>
 </probedesc>
