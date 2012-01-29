@@ -1,6 +1,6 @@
 package jrds.probe;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jrds.Util;
@@ -11,15 +11,17 @@ public class RMIIndexed extends RMI implements IndexedProbe {
     private String index;
     private String label;
 
-    public Boolean configure(String indexKey) {
-        if(!configure()) {
+    public Boolean configure() {
+        if(!super.configure()) {
             return false;
         }
-        this.index = indexKey;
-        List<Object> l = new ArrayList<Object>(1);
-        l.add(indexKey);
-        setArgs(l);
+        setArgs(Collections.singletonList(index));
         return true;
+    }
+
+    public Boolean configure(String indexKey) {
+        this.index = indexKey;
+        return configure();
     }
 
     /**
@@ -39,11 +41,11 @@ public class RMIIndexed extends RMI implements IndexedProbe {
     public String getIndexName() {
         return index;
     }
-    
+
     public String getLabel() {
         return label;
     }
-    
+
     public void setLabel(String label) {
         this.label = label;
     }
