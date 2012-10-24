@@ -30,6 +30,9 @@ public abstract class RProbeActor implements RProbe {
         } catch (NoClassDefFoundError e) {
             //If something fails, return a do nothing probe actor
             return new RProbeActorEmpty();
+        } catch (IllegalAccessError e) {
+            //If something fails, return a do nothing probe actor
+            return new RProbeActorEmpty();
         }
     }
 
