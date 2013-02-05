@@ -119,6 +119,9 @@ public class ProcessInfo26  extends LProbe {
     private Collection<Integer> getPids() {
         Collection<Integer> retValue =  new HashSet<Integer>();
         File procFile = new File("/proc");
+        //If launched in a non linux os, avoid a NPE
+        if( ! procFile.isDirectory())
+            return Collections.emptySet();
         for(String path: procFile.list()) {
             Matcher m = pidFile.matcher(path);
             if(m.matches()) {
