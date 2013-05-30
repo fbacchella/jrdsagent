@@ -50,16 +50,18 @@ public class RMIConnection extends Connection<RProbe> {
     @Override
     public boolean startConnection() {
         String hostName = getHostName();
-        log(Level.DEBUG, "Starting RMIStarter for %s: %d", hostName, port);
+        log(Level.DEBUG, "Starting RMIStarter for %s:%d", hostName, port);
         Starter resolver = getLevel().find(Resolver.class);
         boolean started = false;
         if(resolver.isStarted()) {
             try {
                 log(Level.TRACE, "locate registry for %s:%d", hostName, port);
+                log(Level.TRACE, "will use %s a a socket factoy", getLevel().find(JRDSSocketFactory.class));
                 registry = LocateRegistry.getRegistry(hostName, port, getLevel().find(JRDSSocketFactory.class));
                 log(Level.TRACE, "lookup  probe %s", RProbe.NAME);
+                
                 rp = (RProbe) registry.lookup(RProbe.NAME);
-                log(Level.TRACE, "done: %s", rp);
+                log(Level.TRACE, "done: %s", rp.getClass());
                 started = true;
             } catch (RemoteException e) {
                 log(Level.ERROR, e, "Remote exception on server %s: %s", hostName, e.getCause());
@@ -86,6 +88,7 @@ public class RMIConnection extends Connection<RProbe> {
         System.setProperty("sun.rmi.transport.tcp.handshakeTimeout", Integer.toString(pm.timeout * 1000));
         System.setProperty("sun.rmi.transport.tcp.responseTimeout", Integer.toString(pm.timeout * 1000));
         System.setProperty("sun.rmi.transport.connectionTimeout", Integer.toString(pm.timeout * 1000));
+        System.setProperty("sun.rmi.transport.proxy.connectTimeout", Integer.toString(pm.timeout * 1000));
     }
 
     /**

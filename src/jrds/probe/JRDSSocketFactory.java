@@ -22,7 +22,7 @@ public class JRDSSocketFactory extends Starter implements RMIClientSocketFactory
     static
     {
         // java.util.logging reconfiguration
-        // formating and filtering is delegated to the log4g level
+        // formating and filtering is delegated to the log4j level
         JrdsLoggerConfiguration.configureLogger("sun.rmi", Level.ERROR);
         Handler jrdsLogger = new JuliToLog4jHandler();
         jrdsLogger.setLevel(java.util.logging.Level.ALL);
@@ -39,6 +39,7 @@ public class JRDSSocketFactory extends Starter implements RMIClientSocketFactory
     }
 
     public Socket createSocket(String host, int port) throws IOException {
+        log(Level.DEBUG, "creating a socket to %s:%d", host, port);
         return getLevel().find(SocketFactory.class).createSocket(host, port);
     }
 
@@ -49,4 +50,18 @@ public class JRDSSocketFactory extends Starter implements RMIClientSocketFactory
     public boolean isStarted() {
         return true;
     }
+    
+    /**
+     * The socket factory is identified by it's level,
+     * it's state full, it can be running or stopped.
+     */
+    public boolean equals(Object o) {
+        return (getClass() == o.getClass() &&
+                getLevel() == ((JRDSSocketFactory) o).getLevel());
+    }
+    
+    public int hashCode() {
+         return getLevel().hashCode();
+    }
+
 }
