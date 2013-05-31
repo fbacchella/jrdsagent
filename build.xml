@@ -28,8 +28,8 @@
         <mkdir dir="${build.home}/classes"/>
         <javac debug="${compile.debug}" deprecation="${compile.deprecation}"
             destdir="${build.home}/classes" encoding="iso-8859-1"
-            optimize="${compile.optimize}" source="1.5" srcdir="${src.home}"
-            target="1.5">
+            optimize="${compile.optimize}" source="1.6" srcdir="${src.home}"
+            target="1.6">
             <classpath refid="external.classpath"/>
         </javac>
         <rmic base="${build.home}/classes" classname="jrds.agent.RProbeImpl"></rmic>
@@ -56,7 +56,8 @@
             packagenames="jrds.probe,jrds.agent"
             sourcepath="src" splitindex="true" use="true" version="true">
             <classpath refid="external.classpath"/>
-            <link href="http://java.sun.com/j2se/1.4.2/docs/api"/>
+			<link href="http://docs.oracle.com/javase/6/docs/api/" />
+			<link href="http://jrds.fr/apidoc-core/" />
         </javadoc>
     </target>
     
