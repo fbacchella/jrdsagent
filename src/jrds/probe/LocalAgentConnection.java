@@ -3,11 +3,12 @@ package jrds.probe;
 import jrds.PropertiesManager;
 import jrds.agent.RProbe;
 import jrds.agent.RProbeActor;
+import jrds.factories.ConnectionName;
 
-public class LocalRMIConnection extends RMIConnection {
+public class LocalAgentConnection extends AgentConnection {
     private final RProbeActor rp;
 
-    public LocalRMIConnection() {
+    public LocalAgentConnection() {
         rp = RProbeActor.getInstance();
         super.setName(RMIConnection.class.getName());
     }
