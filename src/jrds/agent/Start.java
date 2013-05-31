@@ -1,34 +1,77 @@
 package jrds.agent;
 
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.io.Serializable;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.security.Permission;
 import java.util.Collections;
 import java.util.HashSet;
 
+import javax.management.MBeanServer;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXConnectorServer;
+import javax.management.remote.JMXConnectorServerFactory;
+import javax.management.remote.JMXServiceURL;
+
 public class Start implements Serializable {
     static final private int defaultPort = 2002;
+    static final private String defaultProto = "rmi";
+    public static enum PROTOCOL {
+        rmi,
+        jmx,
+        jmxmp,
+    }
+
+    static private final class JrdsMBeanInfo {
+        MBeanServer mbs;
+        JMXServiceURL url;
+        JMXConnectorServer cs;
+
+        public JrdsMBeanInfo(String protocol, String host, int port) throws IOException, NotBoundException {
+            String path = "/";
+            if (protocol == "jmx") {
+                protocol = "rmi";
+                java.rmi.registry.LocateRegistry.createRegistry(port);
+                path = "/jndi/rmi://" + host + ":" + port + "/jmxrmi";
+            }
+            url = new JMXServiceURL(protocol, host, port, path);
+            mbs = ManagementFactory.getPlatformMBeanServer();
+            cs = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
+            cs.start();
+            JMXServiceURL addr = cs.getAddress();
+            JMXConnectorFactory.connect(addr);
+        }
+    }
+
 
     /**
      * @param args
-     * @throws RemoteException 
-     * @throws AlreadyBoundException 
-     * @throws MalformedURLException 
+     * @throws Exception 
      */
-    public static void main(String[] args) throws RemoteException, MalformedURLException, AlreadyBoundException {
+    public static void main(String[] args) throws Exception {
         String portProp = System.getProperty("jrds.port");
         int port = parseStringNumber(portProp, Integer.class, defaultPort).intValue();
         if(port == 0)
             port = defaultPort;
 
-        start(port);
+        PROTOCOL proto = PROTOCOL.valueOf(defaultProto);
+        String protoProp = System.getProperty("jrds.proto", proto.toString()).trim().toLowerCase();
+        if( ! "".equals(protoProp) )
+            proto = PROTOCOL.valueOf(protoProp);
+
+        start(port, proto);
+        //Make it wait on himself to wait forever
+        try {
+            Thread.currentThread().join();
+            System.out.print("joined");
+        } catch (InterruptedException e) {
+        }
     }
 
     static final private SecurityManager getSecurityManager() {
@@ -37,14 +80,18 @@ public class Start implements Serializable {
             {
                 Collections.addAll(runtimePermissions, "setContextClassLoader", "getFileSystemAttributes", "writeFileDescriptor", "getClassLoader", "createClassLoader",
                         "sun.rmi.runtime.RuntimeUtil.getInstance", "reflectionFactoryAccess", "accessClassInPackage.sun.reflect",
-                        "accessDeclaredMembers");
+                        "accessDeclaredMembers", "fileSystemProvider", "getProtectionDomain",
+                        "accessClassInPackage.sun.util.resources", "accessClassInPackage.sun.instrument", "accessClassInPackage.sun.management", "accessClassInPackage.sun.management.resources",
+                        "accessClassInPackage.sun.util.logging.resources", "accessClassInPackage.sun.text.resources", "accessClassInPackage.com.sun.jmx.remote.internal",
+                        "sun.misc.Perf.getPerf", "accessClassInPackage.sun.security.provider", "accessClassInPackage.com.sun.jmx.remote.protocol.jmxmp"
+                        );
             }
             public void checkPermission(Permission perm) {
                 final String permName = perm.getName();
                 final String permAction = perm.getActions();
                 final String permClass = perm.getClass().getName();
                 if("java.io.FilePermission".equals(permClass)) {
-                    if("read".equals(permAction)  && (permName.startsWith("/proc/") || permName.startsWith("/sys/")))
+                    if("read".equals(permAction)  && (permName.startsWith("/proc/") || permName.startsWith("/sys/") || permName.endsWith("jmxremote_optional.jar")))
                         return;
                 }
                 else if("java.net.SocketPermission".equals(permClass)) {
@@ -55,13 +102,20 @@ public class Start implements Serializable {
                     return;
                 }
                 else if("java.util.PropertyPermission".equals(permClass) ) {
-                    if ("read".equals(permAction))
-                        return;
+                    return;
+                }
+                else if("javax.management.MBeanServerPermission".equals(permClass) ) {
+                    return;
+                }
+                else if("javax.management.MBeanPermission".equals(permClass) ) {
+                    return;
+                }
+                else if("java.lang.management.ManagementPermission".equals(permClass) ) {
+                    return;
                 }
                 else if("java.lang.RuntimePermission".equals(permClass)) {
                     if(runtimePermissions.contains(permName))
                         return;
-                    System.out.println(permName);
                 }
                 else if("java.io.SerializablePermission".equals(permClass)) {
                     return;
@@ -74,6 +128,16 @@ public class Start implements Serializable {
                 }
                 else if("java.security.SecurityPermission".equals(permClass)) {
                     if ("getPolicy".equals(permName))
+                        return;
+                    else if ("getProperty.networkaddress.cache.ttl".equals(permName))
+                        return;
+                    else if ("getProperty.networkaddress.cache.negative.ttl".equals(permName))
+                        return;
+                    else if (permName.startsWith("getProperty.security.provider"))
+                        return;
+                    else if ("getProperty.securerandom.source".equals(permName))
+                        return;
+                    else if ("putProviderProperty.SUN".equals(permName))
                         return;
                 }
                 super.checkPermission(perm);
@@ -96,19 +160,25 @@ public class Start implements Serializable {
      * @throws RemoteException
      * @throws AlreadyBoundException
      */
-    public static void start(int port) throws RemoteException, AlreadyBoundException {
-        RProbe dispatcher = new RProbeImpl(port);
-
-        Registry registry = LocateRegistry.createRegistry(port);
-        registry.bind(RProbe.NAME, dispatcher);
+    public static void start(int port, PROTOCOL proto) {
+        RProbeActor actor = RProbeActor.getInstance();
+        try {
+            switch(proto) {
+            case  rmi: 
+                RProbeRMIImpl.register(actor, port);
+                break;
+            case jmxmp:
+            case jmx:
+                new JrdsMBeanInfo(proto.toString(), "localhost", port);
+                RProbeJMXImpl.register(actor);
+                break;
+            }
+        } catch (InvocationTargetException e1) {
+        } catch (IOException e) {
+        } catch (NotBoundException e) {
+        }
         if (System.getSecurityManager() == null)
             System.setSecurityManager ( getSecurityManager() );
-        //Make it wait on himself to wait forever
-        try {
-            Thread.currentThread().join();
-            System.out.print("joined");
-        } catch (InterruptedException e) {
-        }
     }
 
     /**

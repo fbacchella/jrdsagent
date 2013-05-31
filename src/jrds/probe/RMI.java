@@ -16,12 +16,12 @@ import org.apache.log4j.Level;
 @ProbeMeta(
         topStarter=jrds.probe.JRDSSocketFactory.class
         )
-public class RMI extends ProbeConnected<String, Number, RMIConnection> {
+public class RMI extends ProbeConnected<String, Number, AgentConnection> {
     List<?> args = new ArrayList<Object>(0);
     private String remoteName = null;
 
     public RMI() {
-        super(RMIConnection.class.getName());
+        super(AgentConnection.CONNECTIONNAME);
     }
 
     /**
@@ -37,7 +37,7 @@ public class RMI extends ProbeConnected<String, Number, RMIConnection> {
         return true;
     }
 
-    public Map<String, Number> getNewSampleValuesConnected(RMIConnection cnx) {
+    public Map<String, Number> getNewSampleValuesConnected(AgentConnection cnx) {
         Map<String, Number> retValues = new HashMap<String, Number>(0);
         try {
             RProbe rp = (RProbe) cnx.getConnection();

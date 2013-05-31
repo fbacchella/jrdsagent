@@ -114,7 +114,7 @@ public abstract class RProbeActor implements RProbe {
 
     /**
      * Java don't provide an standard way to get system uptime
-     * so it's OS dependant
+     * so it's actor dependant
      * @see jrds.agent.RProbe#getUptime()
      */
     abstract public long getUptime();

@@ -8,14 +8,13 @@ import java.rmi.registry.Registry;
 import jrds.PropertiesManager;
 import jrds.agent.RProbe;
 import jrds.factories.ProbeBean;
-import jrds.starter.Connection;
 import jrds.starter.Resolver;
 import jrds.starter.Starter;
 
 import org.apache.log4j.Level;
 
 @ProbeBean({"port"})
-public class RMIConnection extends Connection<RProbe> {
+public class RMIConnection extends AgentConnection {
 
     private static final int AGENTPORT = 2002;
     private int port;
@@ -24,12 +23,10 @@ public class RMIConnection extends Connection<RProbe> {
 
     public RMIConnection() {
         this.port = AGENTPORT;
-        log(Level.DEBUG, "configuring a RMI connection, port %d", port);
     }
 
     public RMIConnection(Integer port) {
-        this.port = port.intValue();
-        log(Level.DEBUG, "configuring a RMI connection, port %d", port);
+        this.port = port;
     }
 
     @Override
@@ -56,7 +53,7 @@ public class RMIConnection extends Connection<RProbe> {
         if(resolver.isStarted()) {
             try {
                 log(Level.TRACE, "locate registry for %s:%d", hostName, port);
-                log(Level.TRACE, "will use %s a a socket factoy", getLevel().find(JRDSSocketFactory.class));
+                log(Level.TRACE, "will use %s for the socket factoy", getLevel().find(JRDSSocketFactory.class));
                 registry = LocateRegistry.getRegistry(hostName, port, getLevel().find(JRDSSocketFactory.class));
                 log(Level.TRACE, "lookup  probe %s", RProbe.NAME);
                 

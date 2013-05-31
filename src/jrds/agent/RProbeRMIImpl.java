@@ -1,7 +1,11 @@
 package jrds.agent;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Map;
@@ -11,19 +15,31 @@ import java.util.Map;
  * @author bacchell
  *
  */
-public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializable {
+public class RProbeRMIImpl extends UnicastRemoteObject implements RProbe, Serializable {
     static final long serialVersionUID = -7914792289084645089L;
 
-    final private RProbe rprobe;
-
-    public RProbeImpl() throws RemoteException {
-        super();
-        rprobe = RProbeActor.getInstance();
+    final private RProbeActor actor;
+    
+    static public final void register(RProbeActor actor, int port) throws InvocationTargetException {
+        try {
+            RProbe dispatcher = new RProbeRMIImpl(port, actor);
+            Registry registry = LocateRegistry.createRegistry(port);
+            registry.bind(RProbe.NAME, dispatcher);
+        } catch (RemoteException e) {
+            throw new InvocationTargetException(e, "Error registring RMI");
+        } catch (AlreadyBoundException e) {
+            throw new InvocationTargetException(e, "Error registring RMI");
+        }
     }
 
-    public RProbeImpl(int port) throws RemoteException {
+    public RProbeRMIImpl(RProbeActor rprobe) throws RemoteException {
+        super();
+        this.actor = rprobe;
+    }
+
+    public RProbeRMIImpl(int port, RProbeActor rprobe) throws RemoteException {
         super(port);
-        rprobe = RProbeActor.getInstance();
+        this.actor = rprobe;
     }
 
     /**
@@ -34,9 +50,9 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
      */
     public Map<String, Number> query(String name) throws RemoteException {
         try {
-            return rprobe.query(name);
+            return actor.query(name);
         } catch (Exception e) {
-            throw new RemoteException("Error while preparing " + name, e);
+            throw new RemoteException("Error while quering " + name, e);
         }
     }
 
@@ -49,7 +65,7 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
      */
     public String prepare(String name, List<?> args) throws RemoteException {
         try {
-            return rprobe.prepare(name, args);
+            return actor.prepare(name, args);
         } catch (Exception e) {
             throw new RemoteException("Error while preparing " + name, e);
         }
@@ -66,7 +82,7 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
     public String prepare(String name, String statFile, List<?> args)
             throws RemoteException {
         try {
-            return rprobe.prepare(name, statFile, args);
+            return actor.prepare(name, statFile, args);
         } catch (Exception e) {
             throw new RemoteException("Error while preparing " + name, e);
         }
@@ -79,9 +95,9 @@ public class RProbeImpl extends UnicastRemoteObject implements RProbe, Serializa
      */
     public long getUptime() throws RemoteException {
         try {
-            return rprobe.getUptime();
+            return actor.getUptime();
         } catch (Exception e) {
-            throw new RemoteException("Error while getting uptime for " + rprobe, e);
+            throw new RemoteException("Error while getting uptime for " + actor, e);
         }
     }
 
