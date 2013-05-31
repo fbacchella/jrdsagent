@@ -32,7 +32,7 @@
             target="1.6">
             <classpath refid="external.classpath"/>
         </javac>
-        <rmic base="${build.home}/classes" classname="jrds.agent.RProbeImpl"></rmic>
+        <rmic base="${build.home}/classes" classname="jrds.agent.RProbeActor"></rmic>
     </target>
     
     <target depends="compile" name="jar">
