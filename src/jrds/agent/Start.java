@@ -1,6 +1,5 @@
 package jrds.agent;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
@@ -10,10 +9,15 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.security.Permission;
-import java.util.Collections;
-import java.util.HashSet;
+import java.security.Permissions;
+import java.security.SecurityPermission;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.management.MBeanPermission;
 import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
@@ -26,6 +30,102 @@ public class Start implements Serializable {
         rmi,
         jmx,
         jmxmp,
+    }
+
+    static private final Permissions allowed = new Permissions();
+    static {
+        Map<String, ObjectName> objNameMap = new HashMap<String, ObjectName>();
+        try {
+            for(String onameString: new String[] {"jrds:type=agent", "java.lang:type=Runtime"}) {
+                ObjectName on = new ObjectName(onameString);
+                objNameMap.put(onameString, on);
+            }
+
+            Object[][] args = new Object[][]{
+                    new Object[] {"-#-[-]", "getClassLoaderRepository"},
+                    new Object[] {"jrds.agent.RProbeJMXImpl", null, objNameMap.get("jrds:type=agent"), "*"},
+                    new Object[] {"jrds.agent.RProbeJMXImpl", "Uptime", objNameMap.get("jrds:type=agent"), "*"},
+                    new Object[] {"jrds.agent.RProbeJMXImpl", "query", objNameMap.get("jrds:type=agent"), "*"},
+                    new Object[] {"jrds.agent.RProbeJMXImpl", "prepare", objNameMap.get("jrds:type=agent"), "*"},
+                    new Object[] {"sun.management.RuntimeImpl", "Uptime", objNameMap.get("java.lang:type=Runtime"), "getAttribute"},
+            };
+            Map<Integer, Constructor<MBeanPermission>> constructsmap = new HashMap<Integer, Constructor<MBeanPermission>>();
+
+            @SuppressWarnings("unchecked")
+            Constructor<MBeanPermission>[] mbpermConstructors = (Constructor<MBeanPermission>[]) MBeanPermission.class.getConstructors();
+            for(Constructor<MBeanPermission> c: mbpermConstructors ) {
+                constructsmap.put(c.getGenericParameterTypes().length, c);
+            }
+            for(Object[] arg: args) {
+                MBeanPermission aperm = constructsmap.get(arg.length).newInstance(arg);
+                allowed.add(aperm);
+            }
+            Map<Class<?>, String[]> permByName = new HashMap<Class<?>, String[]>();
+            permByName.put(RuntimePermission.class, new String[] {
+                "getFileSystemAttributes", 
+                "readFileDescriptor", "writeFileDescriptor", //Don't forget, network sockets are file descriptors
+                "modifyThreadGroup", "modifyThread", //Needed by termination of the VM
+                "setContextClassLoader", "getClassLoader", "createClassLoader",
+                "sun.rmi.runtime.RuntimeUtil.getInstance", "sun.misc.Perf.getPerf", "reflectionFactoryAccess",
+                "accessDeclaredMembers", "fileSystemProvider", "getProtectionDomain",
+                "accessClassInPackage.sun.util.resources", "accessClassInPackage.sun.instrument", "accessClassInPackage.sun.management", "accessClassInPackage.sun.management.resources",
+                "accessClassInPackage.sun.util.logging.resources", "accessClassInPackage.sun.text.resources", "accessClassInPackage.com.sun.jmx.remote.internal",
+                "accessClassInPackage.sun.security.provider", "accessClassInPackage.com.sun.jmx.remote.protocol.jmxmp", "accessClassInPackage.sun.reflect",
+
+            });
+            permByName.put(SecurityPermission.class, new String[] {
+                "getPolicy", "getProperty.networkaddress.cache.ttl", "getProperty.networkaddress.cache.negative.ttl", 
+                "getProperty.security.provider", "getProperty.securerandom.source", "putProviderProperty.SUN"
+            });
+            for(Map.Entry<Class<?>, String[]> e: permByName.entrySet()) {
+                @SuppressWarnings("unchecked")
+                Constructor<Permission> c = (Constructor<Permission>) e.getKey().getConstructor(String.class);
+                for(String permName: e.getValue()) {
+                    Permission newPerm;
+                    newPerm = c.newInstance(permName);
+                    allowed.add(newPerm);
+                }
+            }
+
+            String[][] permArgs = new String[][] {
+                    new String[] { "java.util.logging.LoggingPermission", "control", "" },
+                    new String[] { "java.net.NetPermission", "getProxySelector"},
+                    new String[] { "javax.management.MBeanServerPermission", "*"},
+                    new String[] { "java.lang.management.ManagementPermission", "monitor"},
+                    new String[] { "java.lang.reflect.ReflectPermission", "suppressAccessChecks"},
+                    new String[] { "java.io.SerializablePermission", "enableSubstitution"},
+                    new String[] { "java.io.FilePermission", "/proc/-", "read"},
+                    new String[] { "java.io.FilePermission", "/sys/-", "read"},
+                    new String[] { "java.io.FilePermission", "/", "read"},
+                    new String[] { "java.util.PropertyPermission", "sun.net.maxDatagramSockets", "read"},
+                    new String[] { "java.util.PropertyPermission", "java.rmi.server.randomIDs", "read"},
+                    new String[] { "java.util.PropertyPermission", "java.rmi.server.hostname", "read"},
+                    new String[] { "java.util.PropertyPermission", "socksProxyHost", "read"},
+                    new String[] { "java.util.PropertyPermission", "sun.util.logging.disableCallerCheck", "read"},
+                    new String[] { "java.util.PropertyPermission", "com.sun.jmx.remote.bug.compatible", "read"},
+                    new String[] { "java.util.PropertyPermission", "os.arch", "read"},
+                    new String[] { "java.util.PropertyPermission", "user.language.format", "read"},
+                    new String[] { "java.util.PropertyPermission", "user.script.format", "read"},
+                    new String[] { "java.util.PropertyPermission", "user.country.format", "read"},
+                    new String[] { "java.util.PropertyPermission", "line.separator", "read"},
+                    new String[] { "java.net.SocketPermission", "*", "accept,connect,listen,resolve"},
+            };
+            Class<?>[][] typeVector = new Class[][]{
+                    new Class[] { String.class },
+                    new Class[] { String.class, String.class },                    
+            };
+            for(String[] a: permArgs) {
+                String className = a[0];
+                String[] argVector = Arrays.copyOfRange(a, 1, a.length);
+                Class<?> cl = Start.class.getClassLoader().loadClass(className);
+                Constructor<?> c = cl.getConstructor( typeVector[argVector.length - 1]);
+                Permission newPerm = (Permission) c.newInstance((Object[])argVector);
+                allowed.add(newPerm);
+            }
+            allowed.setReadOnly();
+        } catch (Exception e) {
+            throw new RuntimeException("Permission initialization failed: " + e.getMessage(), e);
+        }
     }
 
     static private final class JrdsMBeanInfo {
@@ -66,6 +166,12 @@ public class Start implements Serializable {
             proto = PROTOCOL.valueOf(protoProp);
 
         start(port, proto);
+
+        //Initialization done, set the security manager
+        String withSecurity = System.getProperty("jrds.security", "true");
+        if (System.getSecurityManager() == null && Boolean.parseBoolean(withSecurity))
+            System.setSecurityManager ( getSecurityManager() );
+
         //Make it wait on himself to wait forever
         try {
             Thread.currentThread().join();
@@ -76,81 +182,12 @@ public class Start implements Serializable {
 
     static final private SecurityManager getSecurityManager() {
         return new SecurityManager() {
-            private final HashSet<String> runtimePermissions = new HashSet<String>();
-            {
-                Collections.addAll(runtimePermissions, "setContextClassLoader", "getFileSystemAttributes", "writeFileDescriptor", "getClassLoader", "createClassLoader",
-                        "sun.rmi.runtime.RuntimeUtil.getInstance", "reflectionFactoryAccess", "accessClassInPackage.sun.reflect",
-                        "accessDeclaredMembers", "fileSystemProvider", "getProtectionDomain",
-                        "accessClassInPackage.sun.util.resources", "accessClassInPackage.sun.instrument", "accessClassInPackage.sun.management", "accessClassInPackage.sun.management.resources",
-                        "accessClassInPackage.sun.util.logging.resources", "accessClassInPackage.sun.text.resources", "accessClassInPackage.com.sun.jmx.remote.internal",
-                        "sun.misc.Perf.getPerf", "accessClassInPackage.sun.security.provider", "accessClassInPackage.com.sun.jmx.remote.protocol.jmxmp"
-                        );
-            }
             public void checkPermission(Permission perm) {
-                final String permName = perm.getName();
-                final String permAction = perm.getActions();
-                final String permClass = perm.getClass().getName();
-                if("java.io.FilePermission".equals(permClass)) {
-                    if("read".equals(permAction)  && (permName.startsWith("/proc/") || permName.startsWith("/sys/") || permName.endsWith("jmxremote_optional.jar")))
-                        return;
-                }
-                else if("java.net.SocketPermission".equals(permClass)) {
-                    if(! "connect".equals(permAction))
-                        return;
-                }
-                else if("java.net.NetPermission".equals(permClass)) {
+                if(allowed.implies(perm)) {
                     return;
-                }
-                else if("java.util.PropertyPermission".equals(permClass) ) {
-                    return;
-                }
-                else if("javax.management.MBeanServerPermission".equals(permClass) ) {
-                    return;
-                }
-                else if("javax.management.MBeanPermission".equals(permClass) ) {
-                    return;
-                }
-                else if("java.lang.management.ManagementPermission".equals(permClass) ) {
-                    return;
-                }
-                else if("java.lang.RuntimePermission".equals(permClass)) {
-                    if(runtimePermissions.contains(permName))
-                        return;
-                }
-                else if("java.io.SerializablePermission".equals(permClass)) {
-                    return;
-                }
-                else if("java.lang.reflect.ReflectPermission".equals(permClass)) {
-                    return;
-                }
-                else if("java.util.logging.LoggingPermission".equals(permClass)) {
-                    return;
-                }
-                else if("java.security.SecurityPermission".equals(permClass)) {
-                    if ("getPolicy".equals(permName))
-                        return;
-                    else if ("getProperty.networkaddress.cache.ttl".equals(permName))
-                        return;
-                    else if ("getProperty.networkaddress.cache.negative.ttl".equals(permName))
-                        return;
-                    else if (permName.startsWith("getProperty.security.provider"))
-                        return;
-                    else if ("getProperty.securerandom.source".equals(permName))
-                        return;
-                    else if ("putProviderProperty.SUN".equals(permName))
-                        return;
                 }
                 super.checkPermission(perm);
             }
-            public void checkAccept(String host, int port) {}
-            public void checkAccess(Thread t) {}
-            public void checkAccess(ThreadGroup g) {}
-            public void checkConnect(String host, int port, Object context) {}
-            public void checkConnect(String host, int port) {}
-            public void checkRead(FileDescriptor fd) {}
-            public void checkRead(String file, Object context) {}
-            public void checkRead(String file) {}
-            public void checkLink(String lib) {}
         };    
     }
 
@@ -177,8 +214,6 @@ public class Start implements Serializable {
         } catch (IOException e) {
         } catch (NotBoundException e) {
         }
-        if (System.getSecurityManager() == null)
-            System.setSecurityManager ( getSecurityManager() );
     }
 
     /**
