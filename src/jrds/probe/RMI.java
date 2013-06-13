@@ -3,7 +3,6 @@ package jrds.probe;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
     }
 
     public Map<String, Number> getNewSampleValuesConnected(AgentConnection cnx) {
-        Map<String, Number> retValues = new HashMap<String, Number>(0);
+        Map<String, Number> retValues = null;
         try {
             RProbe rp = (RProbe) cnx.getConnection();
             String statFile = getPd().getSpecific("statFile");
