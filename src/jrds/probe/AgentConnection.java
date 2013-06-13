@@ -152,4 +152,14 @@ public class AgentConnection extends Connection<RProbe> {
     public void stopConnection() {
     }
 
+    /* (non-Javadoc)
+     * @see jrds.starter.Starter#isStarted()
+     */
+    @Override
+    public boolean isStarted() {
+        if(proxy == null)
+            return false;
+        return proxy.isStarted();
+    }
+
 }
