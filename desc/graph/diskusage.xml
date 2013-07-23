@@ -15,9 +15,6 @@
         <name>free</name>
     </add>
     <add>
-        <name>usable</name>
-    </add>
-    <add>
         <rpn>total, free, -</rpn>
         <graphType>area</graphType>
         <color>BLUE</color>
@@ -27,22 +24,24 @@
         <dsName>usable</dsName>
         <graphType>stack</graphType>
         <color>GREEN</color>
-        <legend>Available space</legend></add>
+        <legend>Available space</legend>
+    </add>
     <add>
         <rpn>free,usable,-</rpn>
         <graphType>stack</graphType>
         <color>black</color>
-        <legend>Reserved space</legend></add>
-  <hosttree>
-    <pathstring>${host}</pathstring>
-    <pathelement>DISK</pathelement>
-    <pathstring>File system use</pathstring>
-    <pathstring>${index}</pathstring>
-  </hosttree>
-  <viewtree>
-    <pathelement>DISK</pathelement>
-    <pathstring>File system use</pathstring>
-    <pathstring>${host}</pathstring>
-    <pathstring>${index}</pathstring>
-  </viewtree>
+        <legend>Reserved space</legend>
+    </add>
+    <hosttree>
+        <pathstring>${host}</pathstring>
+        <pathelement>DISK</pathelement>
+        <pathstring>File system use</pathstring>
+        <pathstring>${index}</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>DISK</pathelement>
+        <pathstring>File system use</pathstring>
+        <pathstring>${host}</pathstring>
+        <pathstring>${index}</pathstring>
+    </viewtree>
 </graphdesc>

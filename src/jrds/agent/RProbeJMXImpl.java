@@ -15,7 +15,7 @@ import javax.management.ObjectName;
 import javax.management.StandardMBean;
 
 
-public class RProbeJMXImpl  extends StandardMBean implements jrds.agent.RProbe {
+public class RProbeJMXImpl extends StandardMBean implements jrds.agent.RProbe {
     public final static String NAME = "jrds:type=agent";
     private final RProbeActor actor;
     static public final void register(RProbeActor rp) throws InvocationTargetException {
