@@ -70,12 +70,15 @@ public class Start implements Serializable {
                 "accessDeclaredMembers", "fileSystemProvider", "getProtectionDomain",
                 "accessClassInPackage.sun.util.resources", "accessClassInPackage.sun.instrument", "accessClassInPackage.sun.management", "accessClassInPackage.sun.management.resources",
                 "accessClassInPackage.sun.util.logging.resources", "accessClassInPackage.sun.text.resources", "accessClassInPackage.com.sun.jmx.remote.internal",
-                "accessClassInPackage.sun.security.provider", "accessClassInPackage.com.sun.jmx.remote.protocol.jmxmp", "accessClassInPackage.sun.reflect",
+                "accessClassInPackage.sun.security.provider", "accessClassInPackage.com.sun.jmx.remote.protocol.jmxmp", "accessClassInPackage.sun.reflect", "accessClassInPackage.sun.reflect.misc",
 
             });
             permByName.put(SecurityPermission.class, new String[] {
                 "getPolicy", "getProperty.networkaddress.cache.ttl", "getProperty.networkaddress.cache.negative.ttl", 
-                "getProperty.security.provider", "getProperty.securerandom.source", "putProviderProperty.SUN"
+                "getProperty.security.provider", "getProperty.securerandom.source", "putProviderProperty.SUN", 
+                "getProperty.security.provider.1", "getProperty.security.provider.2", "getProperty.security.provider.3", "getProperty.security.provider.4",
+                "getProperty.security.provider.5", "getProperty.security.provider.6", "getProperty.security.provider.7", "getProperty.security.provider.8",
+                "getProperty.security.provider.9", "getProperty.security.provider.10", "getProperty.security.provider.11"
             });
             for(Map.Entry<Class<?>, String[]> e: permByName.entrySet()) {
                 @SuppressWarnings("unchecked")
@@ -90,6 +93,7 @@ public class Start implements Serializable {
             String[][] permArgs = new String[][] {
                     new String[] { "java.util.logging.LoggingPermission", "control", "" },
                     new String[] { "java.net.NetPermission", "getProxySelector"},
+                    new String[] { "java.net.NetPermission", "specifyStreamHandler"},
                     new String[] { "javax.management.MBeanServerPermission", "*"},
                     new String[] { "java.lang.management.ManagementPermission", "monitor"},
                     new String[] { "java.lang.reflect.ReflectPermission", "suppressAccessChecks"},
@@ -97,10 +101,15 @@ public class Start implements Serializable {
                     new String[] { "java.io.FilePermission", "/proc/-", "read"},
                     new String[] { "java.io.FilePermission", "/sys/-", "read"},
                     new String[] { "java.io.FilePermission", "/", "read"},
+                    new String[] { "java.io.FilePermission", "/dev/random", "read"},
+                    new String[] { "java.io.FilePermission", "/dev/urandom", "read"},
+                    new String[] { "java.io.FilePermission", System.getProperty("java.home") + "/-", "read"},
                     new String[] { "java.util.PropertyPermission", "sun.net.maxDatagramSockets", "read"},
                     new String[] { "java.util.PropertyPermission", "java.rmi.server.randomIDs", "read"},
                     new String[] { "java.util.PropertyPermission", "java.rmi.server.hostname", "read"},
+                    new String[] { "java.util.PropertyPermission", "java.security.egd", "read"},
                     new String[] { "java.util.PropertyPermission", "socksProxyHost", "read"},
+                    new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read"},
                     new String[] { "java.util.PropertyPermission", "sun.util.logging.disableCallerCheck", "read"},
                     new String[] { "java.util.PropertyPermission", "com.sun.jmx.remote.bug.compatible", "read"},
                     new String[] { "java.util.PropertyPermission", "os.arch", "read"},
