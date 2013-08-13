@@ -218,9 +218,8 @@ public class Start implements Serializable {
                 RProbeJMXImpl.register(actor);
                 break;
             }
-        } catch (InvocationTargetException e1) {
-        } catch (IOException e) {
-        } catch (NotBoundException e) {
+        } catch (Exception e) {
+            throw new RuntimeException("failed to start jrdsagent", e);
         }
     }
 
