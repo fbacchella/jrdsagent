@@ -33,6 +33,7 @@ public class Start implements Serializable {
     }
 
     static private final Permissions allowed = new Permissions();
+
     static {
         Map<String, ObjectName> objNameMap = new HashMap<String, ObjectName>();
         try {
@@ -137,14 +138,15 @@ public class Start implements Serializable {
         JMXServiceURL url;
         JMXConnectorServer cs;
 
-        public JrdsMBeanInfo(String protocol, String host, int port) throws IOException, NotBoundException {
+        public JrdsMBeanInfo(PROTOCOL protocol, String host, int port) throws IOException, NotBoundException {
             String path = "/";
-            if (protocol == "jmx") {
-                protocol = "rmi";
+            String protocolString = protocol.toString();
+            if (protocol == PROTOCOL.jmx) {
+                protocolString = "rmi";
                 java.rmi.registry.LocateRegistry.createRegistry(port);
                 path = "/jndi/rmi://" + host + ":" + port + "/jmxrmi";
             }
-            url = new JMXServiceURL(protocol, host, port, path);
+            url = new JMXServiceURL(protocolString, host, port, path);
             mbs = ManagementFactory.getPlatformMBeanServer();
             cs = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
             cs.start();
@@ -209,7 +211,7 @@ public class Start implements Serializable {
                 break;
             case jmxmp:
             case jmx:
-                new JrdsMBeanInfo(proto.toString(), "localhost", port);
+                new JrdsMBeanInfo(proto, "localhost", port);
                 RProbeJMXImpl.register(actor);
                 break;
             }
