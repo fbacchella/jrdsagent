@@ -157,9 +157,15 @@ public class AgentConnection extends Connection<RProbe> {
      */
     @Override
     public boolean isStarted() {
-        if(proxy == null)
-            return false;
-        return proxy.isStarted();
+        if(getClass() == AgentConnection.class) {
+
+            if(proxy == null)
+                return false;
+            return proxy.isStarted();
+        }
+        else {
+            return super.isStarted();
+        }
     }
 
 }
