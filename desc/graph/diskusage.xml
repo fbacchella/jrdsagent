@@ -21,7 +21,7 @@
         <legend>Used Space</legend>
     </add>
     <add>
-        <dsName>usable</dsName>
+        <name>usable</name>
         <graphType>stack</graphType>
         <color>GREEN</color>
         <legend>Available space</legend>
