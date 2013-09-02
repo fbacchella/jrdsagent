@@ -193,8 +193,7 @@ public class Start implements Serializable {
                 if(allowed.implies(perm)) {
                     return;
                 }
-                System.out.println(perm);
-                //super.checkPermission(perm);
+                super.checkPermission(perm);
             }
         };    
     }
