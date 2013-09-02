@@ -32,13 +32,13 @@
     <rpn>nice, user, +, system,+, iowait, +, idle, +</rpn>
   </add>
   <add>
-    <rpn>irq, softirq, + , total,/, 100 %</rpn>
+    <rpn>irq, softirq, + , total, /, 100, *</rpn>
     <graphType>line</graphType>
     <color>black</color>
     <legend>IRQ CPU time</legend>
   </add>
   <add>
-    <rpn>system, total, /, 100,*</rpn>
+    <rpn>system, irq, -, softirq, -, total, /, 100,*</rpn>
     <graphType>area</graphType>
     <color>red</color>
     <legend>System CPU time</legend>

@@ -157,8 +157,9 @@ public class AgentConnection extends Connection<RProbe> {
      */
     @Override
     public boolean isStarted() {
+        // Only the base class uses the proxy
+        // The comptability sub class RMIConnection should not do that
         if(getClass() == AgentConnection.class) {
-
             if(proxy == null)
                 return false;
             return proxy.isStarted();

@@ -67,7 +67,7 @@ public class Start implements Serializable {
                 "readFileDescriptor", "writeFileDescriptor", //Don't forget, network sockets are file descriptors
                 "modifyThreadGroup", "modifyThread", //Needed by termination of the VM
                 "setContextClassLoader", "getClassLoader", "createClassLoader",
-                "sun.rmi.runtime.RuntimeUtil.getInstance", "sun.misc.Perf.getPerf", "reflectionFactoryAccess",
+                "sun.rmi.runtime.RuntimeUtil.getInstance", "sun.misc.Perf.getPerf", "reflectionFactoryAccess", "loadLibrary.rmi",
                 "accessDeclaredMembers", "fileSystemProvider", "getProtectionDomain",
                 "accessClassInPackage.sun.util.resources", "accessClassInPackage.sun.instrument", "accessClassInPackage.sun.management", "accessClassInPackage.sun.management.resources",
                 "accessClassInPackage.sun.util.logging.resources", "accessClassInPackage.sun.text.resources", "accessClassInPackage.com.sun.jmx.remote.internal",
@@ -100,13 +100,15 @@ public class Start implements Serializable {
                     new String[] { "java.lang.reflect.ReflectPermission", "suppressAccessChecks"},
                     new String[] { "java.io.SerializablePermission", "enableSubstitution"},
                     new String[] { "java.io.FilePermission", "<<ALL FILES>>", "read"},
-                    new String[] { "java.util.PropertyPermission", "sun.net.maxDatagramSockets", "read"},
-                    new String[] { "java.util.PropertyPermission", "java.rmi.server.randomIDs", "read"},
-                    new String[] { "java.util.PropertyPermission", "java.rmi.server.hostname", "read"},
+                    new String[] { "java.util.PropertyPermission", "java.rmi.server.*", "read"},
                     new String[] { "java.util.PropertyPermission", "java.security.egd", "read"},
                     new String[] { "java.util.PropertyPermission", "socksProxyHost", "read"},
-                    new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read"},
-                    new String[] { "java.util.PropertyPermission", "sun.util.logging.disableCallerCheck", "read"},
+                    new String[] { "java.util.PropertyPermission", "jdk.logging.*", "read"},
+                    new String[] { "java.util.PropertyPermission", "sun.boot.class.path", "read"},
+                    new String[] { "java.util.PropertyPermission", "sun.io.serialization.extendedDebugInfo", "read"},
+                    new String[] { "java.util.PropertyPermission", "sun.net.maxDatagramSockets", "read"},
+                    new String[] { "java.util.PropertyPermission", "sun.rmi.*", "read"},
+                    new String[] { "java.util.PropertyPermission", "sun.util.logging.*", "read"},
                     new String[] { "java.util.PropertyPermission", "com.sun.jmx.remote.bug.compatible", "read"},
                     new String[] { "java.util.PropertyPermission", "os.arch", "read"},
                     new String[] { "java.util.PropertyPermission", "user.language.format", "read"},
@@ -191,7 +193,8 @@ public class Start implements Serializable {
                 if(allowed.implies(perm)) {
                     return;
                 }
-                super.checkPermission(perm);
+                System.out.println(perm);
+                //super.checkPermission(perm);
             }
         };    
     }
