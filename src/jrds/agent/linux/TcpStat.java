@@ -9,38 +9,46 @@ import java.util.Map;
 import jrds.agent.LProbe;
 
 public class TcpStat extends LProbe {
-    String STATFILE = "/proc/net/netstat";
-    String SNMPFILE = "/proc/net/snmp";
-
+    private final static String STATFILE = "/proc/net/netstat";
+    private final static String SNMPFILE = "/proc/net/snmp";
 
     public Map<String, Number> query() {
         Map<String, Number> retValues = new HashMap<String, Number>();
-        try {
-            queryFile(SNMPFILE, "Tcp:", retValues);
-            queryFile(STATFILE, "TcpExt:", retValues);
-        } catch (Exception e) {
-            throw new RuntimeException(this.getName(), e);
-        }
+        queryFile(SNMPFILE, "Tcp:", retValues);
+        queryFile(STATFILE, "TcpExt:", retValues);
         return retValues;
     }
 
-    public void queryFile(String file, String prefix, Map<String, Number> retValues) throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader(file));
-        String line;
+    public void queryFile(String file, String prefix, Map<String, Number> retValues) {
+        BufferedReader r = null;
+        try {
+            r = new BufferedReader(new FileReader(file));
+            String line;
 
-        while((line = r.readLine()) != null) {
-            String[] keys  = line.trim().split("\\s+");
-            line = r.readLine();
-            String[] values = line.trim().split("\\s+");
-            if( ! keys[0].trim().equals(prefix))
-                continue;
+            while((line = r.readLine()) != null) {
+                String[] keys  = line.trim().split("\\s+");
+                line = r.readLine();
+                String[] values = line.trim().split("\\s+");
+                if( ! keys[0].trim().equals(prefix))
+                    continue;
 
-            for(int i=0; i < keys.length; i++) {
-                try {
-                    retValues.put(keys[i], new Double(values[i]));
-                } catch (NumberFormatException e) {
+                for(int i=0; i < keys.length; i++) {
+                    try {
+                        retValues.put(keys[i], new Double(values[i]));
+                    } catch (NumberFormatException e) {
+                    }
                 }
             }
+            r.close();
+        } catch (Exception e) {
+            if(r != null) {
+                try {
+                    r.close();
+                } catch (IOException e1) {
+                    throw new RuntimeException(getName(), e1);
+                }
+            }
+            throw new RuntimeException(getName(), e);
         }
     }
 
