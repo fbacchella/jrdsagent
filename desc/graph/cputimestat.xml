@@ -29,17 +29,17 @@
   </add>
   <add>
     <name>total</name>
-    <rpn>nice, user, +, system,+, iowait, +, idle, +</rpn>
+    <rpn>nice, user, +, system,+, iowait, +, idle, +, irq, +, softirq, +</rpn>
   </add>
   <add>
     <rpn>irq, softirq, + , total, /, 100, *</rpn>
-    <graphType>line</graphType>
+    <graphType>area</graphType>
     <color>black</color>
-    <legend>IRQ CPU time</legend>
+    <legend>Time processing interrupts</legend>
   </add>
   <add>
-    <rpn>system, irq, -, softirq, -, total, /, 100,*</rpn>
-    <graphType>area</graphType>
+    <rpn>system, total, /, 100,*</rpn>
+    <graphType>stack</graphType>
     <color>red</color>
     <legend>System CPU time</legend>
   </add>
