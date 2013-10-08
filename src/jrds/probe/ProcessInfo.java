@@ -23,7 +23,7 @@ public class ProcessInfo extends RMIIndexed {
     @Override
     public Map<String, Number> getNewSampleValues() {
         Map<String, Number> retValues = super.getNewSampleValues();
-        if(retValues.containsKey("uptime")) {
+        if(retValues != null && retValues.containsKey("uptime")) {
             long uptime = retValues.get("uptime").longValue();
             setUptime(uptime);
             retValues.remove("uptime");
