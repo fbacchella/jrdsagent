@@ -1,0 +1,5 @@
+/build/
+.ant-targets-build.xml
+.classpath
+.project
+build.properties
