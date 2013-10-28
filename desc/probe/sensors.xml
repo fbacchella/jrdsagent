@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
+<probedesc>
+	<name>Sensors</name>
+	<probeName>sensors</probeName>
+	<probeClass>jrds.probe.RMI</probeClass>
+	<specific name="remote">jrds.agent.linux.Sensors</specific>
+    <ds>
+        <dsName>Core0 Temp</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+	<graphs>
+		<name>CoreTemperature</name>
+	</graphs>
+</probedesc>
