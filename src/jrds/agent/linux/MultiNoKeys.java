@@ -9,6 +9,28 @@ import java.util.Map;
 import jrds.agent.LProbe;
 
 public class MultiNoKeys extends LProbe {
+
+    private int keyIndex = 0;
+    private String separator = "\\s+";
+
+    public MultiNoKeys() {
+        super();
+    }
+
+    public Boolean configure(Integer keyIndex, String separator) {
+        if(keyIndex != null) {
+            this.keyIndex = keyIndex.intValue();            
+        } else {
+            this.keyIndex = 0;
+        }
+        if(separator != null && ! separator.isEmpty()) {
+            this.separator = separator;            
+        } else {
+            this.separator = "\\s+";
+        }
+        return Boolean.TRUE;
+    }
+
     public String getName() {
         return getStatFile().getPath().replace(getStatFile().getParent(), "");
     }
@@ -27,9 +49,12 @@ public class MultiNoKeys extends LProbe {
 
         String line;
         while((line = r.readLine()) != null) {
-            String[] values = line.trim().split("\\s+");
-            String key = values[0];
-            for(int i=1; i < values.length; i++) {
+            String[] values = line.trim().split(separator);
+            if(values.length < keyIndex + 1) {
+                continue;
+            }
+            String key = values[keyIndex];
+            for(int i=0; i < values.length; i++) {
                 try {
                     Number parsed = new Double(values[i]);
                     String localKey = key + "." + i;

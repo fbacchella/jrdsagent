@@ -3,8 +3,7 @@
 <probedesc>
 	<name>NFSServer3</name>
 	<probeName>nfssserver3</probeName>
-	<probeClass>jrds.probe.RMI</probeClass>
-	<specific name="remote">jrds.agent.linux.MultiNoKeys</specific>
+    <probeClass>jrds.probe.MultiNoKeys</probeClass>
 	<specific name="statFile">/proc/net/rpc/nfsd</specific>
 	<ds>
 		<dsName>rpc.calls</dsName>

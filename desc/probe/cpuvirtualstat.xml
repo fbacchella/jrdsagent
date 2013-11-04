@@ -3,8 +3,7 @@
 <probedesc>
     <name>CpuStatsVirtualLinux</name>
     <probeName>cpustats</probeName>
-    <probeClass>jrds.probe.RMI</probeClass>
-    <specific name="remote">jrds.agent.linux.MultiNoKeys</specific>
+    <probeClass>jrds.probe.MultiNoKeys</probeClass>
     <specific name="statFile">/proc/stat</specific>
     <ds>
         <dsName>user</dsName>
