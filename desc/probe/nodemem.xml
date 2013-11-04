@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc" >
 <probedesc>
-	<name>NodeMem</name>
+	<name>NodeMemoryLinux</name>
 	<probeName>nodemem${attr.index}</probeName>
 	<probeClass>jrds.probe.MultiNoKeys</probeClass>
 	<specific name="statFile">/sys/devices/system/node/node${attr.index}/meminfo</specific>
@@ -22,5 +22,5 @@
 		<dsType>GAUGE</dsType>
 		<collect>MemUsed.3</collect>
 	</ds>
-	<graphs></graphs>
+	<graphs />
 </probedesc>
