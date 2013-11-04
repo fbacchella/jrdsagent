@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import jrds.ProbeConnected;
+import jrds.Util;
 import jrds.agent.RProbe;
 import jrds.factories.ProbeMeta;
 
@@ -41,10 +42,12 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
         try {
             RProbe rp = (RProbe) cnx.getConnection();
             String statFile = getPd().getSpecific("statFile");
-            if(statFile != null)
+            if(statFile != null) {
+                statFile = Util.parseTemplate(statFile, this);
                 remoteName = rp.prepare(getPd().getSpecific("remote"), statFile, args);
-            else
-                remoteName = rp.prepare(getPd().getSpecific("remote"), args);
+            } else {
+                remoteName = rp.prepare(getPd().getSpecific("remote"), args);                
+            }
             retValues = rp.query(remoteName);
         } catch (RemoteException e) {
             Throwable root = e;
