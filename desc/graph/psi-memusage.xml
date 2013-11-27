@@ -2,8 +2,8 @@
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
 	<name>ProcessInfo-memusage</name>
-	<graphName>psmem-{2}</graphName>
-	<graphTitle>Average memory usage for {2}</graphTitle>
+	<graphName>psmem-${index}</graphName>
+	<graphTitle>Average memory usage for ${index}</graphTitle>
     <unit>
         <binary />
     </unit>
@@ -25,22 +25,22 @@
 		<name>data</name>
 	</add>
 	<add>
-		<rpn>size, count /, 4096, *</rpn>
+		<rpn>size, count, /, 4096, *</rpn>
 		<graphType>line</graphType>
 		<legend>Average size</legend>
 	</add>
 	<add>
-		<rpn>resident, count /, 4096, *</rpn>
+		<rpn>resident, count, /, 4096, *</rpn>
 		<graphType>line</graphType>
 		<legend>Average resident</legend>
 	</add>
 	<add>
-		<rpn>shared, count /, 4096, *</rpn>
+		<rpn>shared, count, /, 4096, *</rpn>
 		<graphType>line</graphType>
 		<legend>Average shared</legend>
 	</add>
 	<add>
-		<rpn>data, count /, 4096, *</rpn>
+		<rpn>data, count, /, 4096, *</rpn>
 		<graphType>line</graphType>
 		<legend>Average data</legend>
 	</add>
@@ -48,14 +48,14 @@
 		<pathelement>HOST</pathelement>
 		<pathelement>SYSTEM</pathelement>
 		<pathstring>Processus</pathstring>
-		<pathelement>INDEX</pathelement>
+		<pathstring>${index}</pathstring>
 		<pathstring>Memory usage</pathstring>
 	</hosttree>
 	<viewtree>
 		<pathelement>SYSTEM</pathelement>
 		<pathstring>Processus</pathstring>
 		<pathelement>HOST</pathelement>
-		<pathelement>INDEX</pathelement>
+		<pathstring>${index}</pathstring>
 		<pathstring>Memory usage</pathstring>
 	</viewtree>
 </graphdesc>

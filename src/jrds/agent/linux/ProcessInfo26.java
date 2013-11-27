@@ -3,6 +3,7 @@ package jrds.agent.linux;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
@@ -92,12 +93,17 @@ public class ProcessInfo26  extends LProbe {
         long mostRecentTick = 0;
         for(int pid: getPids()) {
             String cmdLine = getCmdLine(pid);
-            if(cmdFilter.matcher(cmdLine).matches()) {
+            if(cmdLine!= null && cmdFilter.matcher(cmdLine).matches()) {
                 count++;
                 Map<String, Number> bufferMap = new HashMap<String, Number>(retValues.size());
                 bufferMap.putAll(parseFile(pid, "stat", statKey));
                 bufferMap.putAll(parseFile(pid, "statm", statmKey));
-                long startTimeTick = bufferMap.get("stat:start_time").longValue();
+                Number startTimeTickObject = bufferMap.get("stat:start_time");
+                if(startTimeTickObject == null) {
+                    //invalid start_time, or empty map, skip this process
+                    continue;
+                }
+                long startTimeTick = startTimeTickObject.longValue();
                 mostRecentTick = Math.max(startTimeTick, mostRecentTick);
                 bufferMap.remove("stat:start_time");
                 for(Map.Entry<String, Number> e: bufferMap.entrySet()) {
@@ -147,17 +153,20 @@ public class ProcessInfo26  extends LProbe {
                 }
             }
             String retValue = new String(content);
-            is.close();
             return retValue.trim();
+        } catch (FileNotFoundException e){
+            //An file not found is not a problem just return null
+            return null;
         } catch (Exception e) {
+            throw new RuntimeException(getName(), e);
+        } finally {
             if(is != null) {
                 try {
                     is.close();
                 } catch (IOException e1) {
                     throw new RuntimeException(getName(), e1);
                 }                
-            }
-            throw new RuntimeException(getName(), e);
+            }            
         }
     }
 
@@ -183,17 +192,20 @@ public class ProcessInfo26  extends LProbe {
                     }
                 }
             }
-            r.close();
             return retValues;
+        } catch (FileNotFoundException e){
+            //An file not found is not a problem just return nothing
+            return Collections.emptyMap();
         } catch (Exception e) {
+            throw new RuntimeException(getName(), e);
+        } finally {
             if(r != null) {
                 try {
                     r.close();
                 } catch (IOException e1) {
                     throw new RuntimeException(getName(), e1);
                 }                
-            }
-            throw new RuntimeException(getName(), e);
+            }            
         }
     }
 
@@ -211,17 +223,17 @@ public class ProcessInfo26  extends LProbe {
             String uptimeLine = r.readLine();
             // We talks minutes here, so a precision down to second is good enough
             long uptimeSystem = (long) Double.parseDouble(uptimeLine.split(" ")[0]);
-            r.close();
             return uptimeSystem - startTime / USER_HZ;
         } catch (Exception e) {
+            throw new RuntimeException(getName(), e);
+        } finally {
             if(r != null) {
                 try {
                     r.close();
                 } catch (IOException e1) {
                     throw new RuntimeException(getName(), e1);
                 }                
-            }
-            throw new RuntimeException(getName(), e);
+            }            
         }
 
     }
