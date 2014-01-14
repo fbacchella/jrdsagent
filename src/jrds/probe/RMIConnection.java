@@ -1,5 +1,6 @@
 package jrds.probe;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -38,6 +39,9 @@ public class RMIConnection extends AgentConnection {
     public long setUptime() {
         try {
             return rp.getUptime();
+        } catch (NoSuchObjectException e) {
+            log(Level.ERROR, e, "Remote exception on server %s: %s", getHostName(), e.getMessage());
+            return 0;
         } catch (RemoteException e) {
             log(Level.ERROR, e, "Remote exception on server %s: %s", getHostName(), e.getCause());
             return 0;
@@ -60,6 +64,8 @@ public class RMIConnection extends AgentConnection {
                 rp = (RProbe) registry.lookup(RProbe.NAME);
                 log(Level.TRACE, "done: %s", rp.getClass());
                 started = true;
+            } catch (NoSuchObjectException e) {
+                log(Level.ERROR, e, "Remote exception on server %s: %s", getHostName(), e.getMessage());
             } catch (RemoteException e) {
                 log(Level.ERROR, e, "Remote exception on server %s: %s", hostName, e.getCause());
             } catch (NotBoundException e) {

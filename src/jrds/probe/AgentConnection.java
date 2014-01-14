@@ -62,13 +62,12 @@ public class AgentConnection extends Connection<RProbe> {
     };
 
     private static final int AGENTPORT = 2002;
-    private int port;
-    private PROTOCOL protocol;
+    private int port = AGENTPORT;
+    private PROTOCOL protocol = PROTOCOL.rmi;
     private Connection<?> proxy = null;
 
     public AgentConnection() {
         super();
-        this.port = AGENTPORT;
     }
 
     public AgentConnection(Integer port) {
