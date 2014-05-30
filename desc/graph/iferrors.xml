@@ -7,7 +7,7 @@
   <verticalLabel>error/s</verticalLabel>
   <lowerLimit>NaN</lowerLimit>
   <add>
-    <legend>Received (upward graph)</legend>
+    <legend>Transmit (downward graph)</legend>
   </add>
   <add>
     <name>txerrs</name>
@@ -35,7 +35,7 @@
     <legend>Number of carrier losses detected by the device</legend>
   </add>
   <add>
-    <legend>Transmit (downward graph)</legend>
+    <legend>Received (upward graph)</legend>
   </add>
   <add>
     <name>rxerrs</name>
