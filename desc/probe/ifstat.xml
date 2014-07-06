@@ -72,5 +72,6 @@
 	</ds>
 	<graphs>
 		<name>IfErrors</name>
+                <name>IfTraffic</name>
 	</graphs>
 </probedesc>
