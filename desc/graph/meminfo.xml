@@ -15,7 +15,7 @@
 		<name>Slab</name>
 	</add>
 	<add>
-		<legend>Kernel Memory (slab)</legend>
+		<legend>Kernel Memory</legend>
 	</add>
 	<add>
 		<name>SUnreclaim</name>
@@ -29,11 +29,21 @@
 		<color>magenta</color>
 		<legend>Part of Slab, that might be reclaimed</legend>		
 	</add>
+    <add>
+        <name>VmallocUsed</name>
+        <graphType>stack</graphType>
+        <color>orange</color>
+        <legend>Vmalloc usage</legend>      
+    </add>
+    <add>
+       <name>kernel</name>
+       <rpn>Slab, VmallocUsed, +, PageTables, +</rpn>
+    </add>
 	<add>
-		<rpn>Slab, SReclaimable,- , SUnreclaim, -, PageTables, +</rpn>
+		<rpn>PageTables</rpn>
 		<graphType>stack</graphType>
 		<color>red</color>
-		<legend>Other part of kernel memory</legend>		
+		<legend>Page Tables</legend>		
 	</add>
 	<add>
 		<name>MemTotal</name>
@@ -63,7 +73,7 @@
 		<legend>Anonymous memory</legend>
 	</add>
 	<add>
-		<rpn>MemTotal, Buffers, -, Cached, -, MemFree, -, Slab, -, AnonPages, -, PageTables, -</rpn>
+		<rpn>MemTotal, Buffers, -, Cached, -, MemFree, -, kernel, -, AnonPages, -, </rpn>
 		<graphType>stack</graphType>
 		<color>olive</color>
 		<legend>Other used memory</legend>
