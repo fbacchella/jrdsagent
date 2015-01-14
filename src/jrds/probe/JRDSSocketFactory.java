@@ -13,9 +13,9 @@ import jrds.starter.Starter;
 import org.apache.log4j.Level;
 
 /**
- * @author bacchell
+ * @author Fabrice Bacchella
  * A simplified default RMI.
- * It support only a directe connection, it uses the default timeout from jrds
+ * It support only a direct connection, it uses the default timeout from jrds
  */
 public class JRDSSocketFactory extends Starter implements RMIClientSocketFactory {
     static
