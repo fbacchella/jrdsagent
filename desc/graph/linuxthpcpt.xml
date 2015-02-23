@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+    <name>LinuxTHPCompact</name>
+    <graphName>linuxthpcpt</graphName>
+    <graphTitle>Transparent Huge Pages compact</graphTitle>
+    <verticalLabel>events/s</verticalLabel>
+    <add>
+        <name>compact_stall</name>
+        <graphType>line</graphType>
+        <legend>Process stall to run memory compaction</legend>
+    </add>
+    <add>
+        <name>compact_success</name>
+        <graphType>line</graphType>
+        <legend>Compact success</legend>
+    </add>
+    <add>
+        <name>compact_fail</name>
+        <graphType>line</graphType>
+        <legend>Compact failed</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>SYSTEM</pathelement>
+        <pathelement>MEMORY</pathelement>
+        <pathstring>THP activity</pathstring>
+        <pathstring>Compact</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>SYSTEM</pathelement>
+        <pathelement>MEMORY</pathelement>
+        <pathstring>THP activity</pathstring>
+        <pathstring>Compact</pathstring>
+        <pathelement>HOST</pathelement>
+    </viewtree>
+</graphdesc>

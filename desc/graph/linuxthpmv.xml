@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+    <name>LinuxTHPMoved</name>
+    <graphName>linuxthpmv</graphName>
+    <graphTitle>Transparent Huge Pages Moved</graphTitle>
+    <verticalLabel>events/s</verticalLabel>
+    <add>
+        <name>compact_pages_moved</name>
+        <graphType>line</graphType>
+        <legend>Pages moved</legend>
+    </add>
+    <add>
+        <name>compact_blocks_moved</name>
+        <graphType>line</graphType>
+        <legend>Huge page aligned range moved</legend>
+    </add>
+    <add>
+        <name>cmpct_pgmgrt_failed</name>
+        <graphType>line</graphType>
+        <legend>Pages failed to move</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>SYSTEM</pathelement>
+        <pathelement>MEMORY</pathelement>
+        <pathstring>THP activity</pathstring>
+        <pathstring>Pages movement</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>SYSTEM</pathelement>
+        <pathelement>MEMORY</pathelement>
+        <pathstring>THP activity</pathstring>
+        <pathstring>Pages movement</pathstring>
+        <pathelement>HOST</pathelement>
+    </viewtree>
+</graphdesc>
