@@ -98,6 +98,7 @@ public class ProcessInfo26  extends LProbe {
                 Map<String, Number> bufferMap = new HashMap<String, Number>(retValues.size());
                 bufferMap.putAll(parseFile(pid, "stat", statKey));
                 bufferMap.putAll(parseFile(pid, "statm", statmKey));
+                bufferMap.putAll(parseKeyFile(pid, "io"));
                 Number startTimeTickObject = bufferMap.get("stat:start_time");
                 if(startTimeTickObject == null) {
                     //invalid start_time, or empty map, skip this process
@@ -170,7 +171,7 @@ public class ProcessInfo26  extends LProbe {
         }
     }
 
-    Map<String, Number> parseFile(int pid, String file, String[] keys) {
+    private Map<String, Number> parseFile(int pid, String file, String[] keys) {
         File stat = new File("/proc/" + pid + "/" + file);
         BufferedReader r = null;
         try {
@@ -186,7 +187,7 @@ public class ProcessInfo26  extends LProbe {
                 String key = keys[i];
                 if(key != null) {
                     try {
-                        double dvalue = Double.parseDouble(value);
+                        Number dvalue = Long.parseLong(value);
                         retValues.put(file + ":" + key, dvalue);
                     } catch (NumberFormatException e) {
                     }
@@ -207,6 +208,42 @@ public class ProcessInfo26  extends LProbe {
                 }                
             }            
         }
+    }
+
+    private Map<String, Number> parseKeyFile(int pid, String file) {
+        File stat = new File("/proc/" + pid + "/" + file);
+        BufferedReader r = null;
+        Map<String, Number> retValues = new HashMap<String, Number>();
+        try {
+            r = new BufferedReader(new FileReader(stat));
+            String line;
+            while((line = r.readLine()) != null) {
+                String[] values = line.trim().split(":");
+                if (values.length == 2) {
+                    String key = values[0].trim();                   
+                    try {
+                        Number value = Long.parseLong(values[1].trim());
+                        retValues.put(file + ":" + key, value);
+                    } catch (NumberFormatException e) {
+                    }
+                }
+            }            
+            return retValues;
+        } catch (FileNotFoundException e){
+            //An file not found is not a problem just return nothing
+            return Collections.emptyMap();
+        } catch (Exception e) {
+            throw new RuntimeException(getName(), e);
+        } finally {
+            if(r != null) {
+                try {
+                    r.close();
+                } catch (IOException e1) {
+                    throw new RuntimeException(getName(), e1);
+                }                
+            }            
+        }
+
     }
 
     /**
