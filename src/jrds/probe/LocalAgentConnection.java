@@ -8,10 +8,10 @@ public class LocalAgentConnection extends AgentConnection {
     private final RProbeActor rp;
 
     public LocalAgentConnection() {
-        rp = RProbeActor.getInstance();
+        rp = new RProbeActor();
         super.setName(RMIConnection.class.getName());
     }
-    
+
     /* (non-Javadoc)
      * @see jrds.probe.RMIConnection#getConnection()
      */
