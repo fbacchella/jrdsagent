@@ -48,20 +48,16 @@ public class RProbeJMXImpl extends StandardMBean implements jrds.agent.RProbe {
         }
     }
 
-    @Override
-    public String prepare(String name, List<?> args) throws RemoteException {
+    /**
+     * @param name
+     * @param args
+     * @return
+     * @throws RemoteException
+     * @see jrds.agent.RProbe#prepare(java.lang.String, java.util.List)
+     */
+    public String prepare(String name, Map<String, String> specifics, List<?> args) throws RemoteException {
         try {
-            return actor.prepare(name, args);
-        } catch (Exception e) {
-            throw new RemoteException("Error while preparing " + name, e);
-        }
-    }
-
-    @Override
-    public String prepare(String name, String statFile, List<?> args)
-            throws RemoteException {
-        try {
-            return actor.prepare(name, statFile, args);
+            return actor.prepare(name, specifics, args);
         } catch (Exception e) {
             throw new RemoteException("Error while preparing " + name, e);
         }
@@ -75,4 +71,5 @@ public class RProbeJMXImpl extends StandardMBean implements jrds.agent.RProbe {
             throw new RemoteException("Error while getting uptime for " + actor, e);
         }
     }
+
 }

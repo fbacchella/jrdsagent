@@ -7,10 +7,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jrds.agent.LProbe;
 import jrds.agent.Start;
 
-public class Meminfo26 extends LProbe {
+public class Meminfo26 extends LProbeProc {
     private static final Pattern linePattern = Pattern.compile("(\\w+):\\s*(\\d+).*");
 
     public String getName() {

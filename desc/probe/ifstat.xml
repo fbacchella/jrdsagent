@@ -5,6 +5,7 @@
 	<probeName>ifstat:${index}</probeName>
 	<probeClass>jrds.probe.RMIIndexed</probeClass>
 	<specific name="remote">jrds.agent.linux.IfStat</specific>
+    <specific name="remoteSpecifics">statFile</specific>
 	<specific name="statFile">/proc/net/dev</specific>
 	<ds>
 		<dsName>rxbits</dsName>

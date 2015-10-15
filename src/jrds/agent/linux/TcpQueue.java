@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import jrds.agent.LProbe;
-
-public class TcpQueue extends LProbe {
+public class TcpQueue extends LProbeProc {
     int port;
     boolean local;
     static final int offset = 2;

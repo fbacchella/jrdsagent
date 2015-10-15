@@ -1,17 +1,8 @@
 package jrds.agent;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.Map;
 
 public abstract class LProbe {
-    private File statFile;
-
-    public LProbe() {
-        super();
-    }
 
     public Boolean configure() {
         return true;
@@ -28,21 +19,13 @@ public abstract class LProbe {
     public abstract String getName();
 
     /**
-     * @return the statFile
+     * Some property that might be configured for this prope
+     * Each implementation should overide it and catch intersting property
+     * but dont forger to call super(...) if not intersted in it
+     * @param specific
+     * @param value
      */
-    protected File getStatFile() {
-        return statFile;
-    }
-
-    /**
-     * @param statFile the statFile to set
-     */
-    public void setStatFile(File statFile) {
-        this.statFile = statFile;
-    }
-
-    public BufferedReader readStatFile() throws FileNotFoundException {
-        return new BufferedReader(new FileReader(getStatFile()));
+    public void setProperty(String specific, String value) {
     }
 
 }

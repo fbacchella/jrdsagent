@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import jrds.agent.LProbe;
-
-public class Diskstats extends LProbe {
+public class Diskstats extends LProbeProc {
     String disk;
     static private final int offset = 2;
 

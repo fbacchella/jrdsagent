@@ -19,10 +19,10 @@ public class RProbeRMIImpl extends UnicastRemoteObject implements RProbe, Serial
     static final long serialVersionUID = -7914792289084645089L;
 
     final private RProbeActor actor;
-    
+
     //RProbeRMIImpl should not be eligible to gc, so keep it un a useless variable
     public static RProbe dispatcher;
-    
+
     static public final void register(RProbeActor actor, int port) throws InvocationTargetException {
         try {
             dispatcher = new RProbeRMIImpl(port, actor);
@@ -66,26 +66,9 @@ public class RProbeRMIImpl extends UnicastRemoteObject implements RProbe, Serial
      * @throws RemoteException
      * @see jrds.agent.RProbe#prepare(java.lang.String, java.util.List)
      */
-    public String prepare(String name, List<?> args) throws RemoteException {
+    public String prepare(String name, Map<String, String> specifics, List<?> args) throws RemoteException {
         try {
-            return actor.prepare(name, args);
-        } catch (Exception e) {
-            throw new RemoteException("Error while preparing " + name, e);
-        }
-    }
-
-    /**
-     * @param name
-     * @param statFile
-     * @param args
-     * @return
-     * @throws RemoteException
-     * @see jrds.agent.RProbe#prepare(java.lang.String, java.lang.String, java.util.List)
-     */
-    public String prepare(String name, String statFile, List<?> args)
-            throws RemoteException {
-        try {
-            return actor.prepare(name, statFile, args);
+            return actor.prepare(name, specifics, args);
         } catch (Exception e) {
             throw new RemoteException("Error while preparing " + name, e);
         }

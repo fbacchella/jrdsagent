@@ -1,6 +1,5 @@
 package jrds.agent;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -95,14 +94,11 @@ public abstract class RProbeActor implements RProbe {
         }
     }
 
-    public String prepare(String name, List<?> args) throws InvocationTargetException {
-        return prepare(name, null, args);
-    }
-
-    public String prepare(String name, String statFile, List<?> args) throws InvocationTargetException {
+    public String prepare(String name, Map<String, String> properties, List<?> args) throws InvocationTargetException {
         LProbe p = getLProbe(name);
-        if(statFile != null)
-            p.setStatFile(new File(statFile));
+        for(Map.Entry<String, String> e: properties.entrySet()) {
+            p.setProperty(e.getKey(), e.getValue());
+        }
         boolean configured = configure(p, args);
         if( ! configured)
             throw new RuntimeException("configure failed for " + p.getName());

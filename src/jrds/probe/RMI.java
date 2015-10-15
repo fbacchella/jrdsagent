@@ -3,11 +3,12 @@ package jrds.probe;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jrds.ProbeConnected;
-import jrds.Util;
 import jrds.agent.RProbe;
 import jrds.factories.ProbeMeta;
 
@@ -19,6 +20,7 @@ import org.apache.log4j.Level;
 public class RMI extends ProbeConnected<String, Number, AgentConnection> {
     List<?> args = new ArrayList<Object>(0);
     private String remoteName = null;
+    Map<String, String> remoteSpecifics = Collections.emptyMap();
 
     public RMI() {
         super(AgentConnection.CONNECTIONNAME);
@@ -34,6 +36,25 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
             return false;
         }
         setArgs(args);
+
+        return true;
+    }
+
+    public Boolean configure() {
+        // Extract all the list of remote properties of the remote probe
+        // and store them in the remoteProperties set
+        String remoteSpecificsNames = getPd().getSpecific("remoteSpecifics");
+        if(remoteSpecificsNames != null && ! remoteSpecificsNames.trim().isEmpty()) {
+            remoteSpecifics = new HashMap<String, String>();
+            for(String remoteSpecific: remoteSpecificsNames.split(",")) {
+                String trimed = remoteSpecific.trim();
+                if(trimed.isEmpty()) {
+                    continue;
+                }
+                remoteSpecifics.put(trimed, getPd().getSpecific(trimed));
+            }
+        }
+
         return true;
     }
 
@@ -41,13 +62,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
         Map<String, Number> retValues = null;
         try {
             RProbe rp = (RProbe) cnx.getConnection();
-            String statFile = getPd().getSpecific("statFile");
-            if(statFile != null) {
-                statFile = Util.parseTemplate(statFile, this);
-                remoteName = rp.prepare(getPd().getSpecific("remote"), statFile, args);
-            } else {
-                remoteName = rp.prepare(getPd().getSpecific("remote"), args);                
-            }
+            remoteName = rp.prepare(getPd().getSpecific("remote"), remoteSpecifics, args);
             retValues = rp.query(remoteName);
         } catch (RemoteException e) {
             Throwable root = e;

@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import jrds.agent.LProbe;
-
-public class IfStat extends LProbe {
+public class IfStat extends LProbeProc {
     String ifName;
 
     public Boolean configure(String ifName) {

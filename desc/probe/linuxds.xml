@@ -5,7 +5,8 @@
   <probeName>ds-${index}</probeName>
   <probeClass>jrds.probe.RMIIndexed</probeClass>
   <specific name="remote">jrds.agent.linux.Diskstats</specific>
-	<specific name="statFile">/proc/diskstats</specific>
+  <specific name="remoteSpecifics">statFile</specific>
+  <specific name="statFile">/proc/diskstats</specific>
   <ds>
     <dsName>rrqm</dsName>
     <dsType>COUNTER</dsType>
