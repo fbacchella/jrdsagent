@@ -28,6 +28,9 @@ public class MultiNoKeys extends RMI implements IndexedProbe {
         if(getPd().getSpecific("remote") == null) {
             getPd().addSpecific("remote", "jrds.agent.linux.MultiNoKeys");
         }
+        if(getPd().getSpecific("remoteSpecifics") == null) {
+            getPd().addSpecific("remoteSpecifics", "statFile");
+        }
         // Only set args if one parsing specific is set, so old jrdsagent and old probes are still usable
         if(getPd().getSpecific("separator") != null || getPd().getSpecific("keyIndex") != null) {
             setArgs(args);

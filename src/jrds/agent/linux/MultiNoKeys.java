@@ -1,16 +1,14 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import jrds.agent.LProbe;
+public class MultiNoKeys extends LProbeProc {
 
-public class MultiNoKeys extends LProbe {
-
-    private int keyIndex = 0;
+    private int keyIndex = -1;
     private String separator = "\\s+";
 
     public MultiNoKeys() {
@@ -20,8 +18,6 @@ public class MultiNoKeys extends LProbe {
     public Boolean configure(Integer keyIndex, String separator) {
         if(keyIndex != null) {
             this.keyIndex = keyIndex.intValue();            
-        } else {
-            this.keyIndex = 0;
         }
         if(separator != null && ! separator.isEmpty()) {
             this.separator = separator;            
@@ -32,12 +28,13 @@ public class MultiNoKeys extends LProbe {
     }
 
     public String getName() {
-        return getStatFile().getPath().replace(getStatFile().getParent(), "");
+        File statFile = getStatFile();
+        return statFile.getPath().replace(statFile.getParent(), "");
     }
 
     public Map<String, Number> query() {
         try {
-            BufferedReader r = new BufferedReader(new FileReader(getStatFile()));
+            BufferedReader r = readStatFile();
             return parse(r);
         } catch (Exception e) {
             throw new RuntimeException(getName(), e);
@@ -50,14 +47,20 @@ public class MultiNoKeys extends LProbe {
         String line;
         while((line = r.readLine()) != null) {
             String[] values = line.trim().split(separator);
+            //Skip line if it's too short
             if(values.length < keyIndex + 1) {
                 continue;
             }
-            String key = values[keyIndex];
+            //Prefix value with column key value
+            //but only if keyIndex is given a legal value
+            String keyPrefix = "";
+            if(keyIndex >= 0) {
+                keyPrefix = values[keyIndex] + ".";                
+            }
             for(int i=0; i < values.length; i++) {
                 try {
                     Number parsed = new Double(values[i]);
-                    String localKey = key + "." + i;
+                    String localKey = keyPrefix + i;
                     retValues.put(localKey, parsed);
                 } catch (NumberFormatException e) {
                 }
