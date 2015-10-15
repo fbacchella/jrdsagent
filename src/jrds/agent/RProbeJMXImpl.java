@@ -34,7 +34,7 @@ public class RProbeJMXImpl extends StandardMBean implements jrds.agent.RProbe {
         }
     }
 
-    public RProbeJMXImpl(RProbeActor rp) {
+    private RProbeJMXImpl(RProbeActor rp) {
         super(jrds.agent.RProbe.class, false);
         this.actor = rp;
     }

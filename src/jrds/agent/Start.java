@@ -205,7 +205,7 @@ public class Start implements Serializable {
      * @throws AlreadyBoundException
      */
     public static void start(int port, PROTOCOL proto) {
-        RProbeActor actor = RProbeActor.getInstance();
+        RProbeActor actor = new RProbeActor();
         try {
             switch(proto) {
             case  rmi: 

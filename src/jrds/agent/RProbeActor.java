@@ -7,36 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jrds.agent.jmx.RProbeActorJMX;
-import jrds.agent.linux.RProbeActorLinux;
+import jrds.agent.jmx.JmxSystemUptime;
+import jrds.agent.linux.LinuxSystemUptime;
 
-public abstract class RProbeActor implements RProbe {
+public class RProbeActor implements RProbe {
 
     final private Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
+    final private SystemUptime uptime;
 
-    static public RProbeActor getInstance() {
-        try {
-            String osname = System.getProperty("os.name");
-            if("Linux".equals(osname)) {
-                return new RProbeActorLinux();
-            }
-            else {
-                return new RProbeActorJMX();
-            }
-        } catch (Exception e) {
-            //If something fails, return a do nothing probe actor
-            return new RProbeActorEmpty();
-        } catch (NoClassDefFoundError e) {
-            //If something fails, return a do nothing probe actor
-            return new RProbeActorEmpty();
-        } catch (IllegalAccessError e) {
-            //If something fails, return a do nothing probe actor
-            return new RProbeActorEmpty();
+    public RProbeActor() {
+        String osname = System.getProperty("os.name");
+        if("Linux".equals(osname)) {
+            uptime = new LinuxSystemUptime();
         }
-    }
-
-    protected RProbeActor() {
-
+        else {
+            uptime = new JmxSystemUptime();
+        }
     }
 
     public Map<String,Number> query(String name) {
@@ -113,6 +99,8 @@ public abstract class RProbeActor implements RProbe {
      * so it's actor dependant
      * @see jrds.agent.RProbe#getUptime()
      */
-    abstract public long getUptime();
+    public long getUptime() {
+        return uptime.getSystemUptime();
+    }
 
 }
