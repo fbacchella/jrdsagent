@@ -20,9 +20,12 @@ public class RProbeRMIImpl extends UnicastRemoteObject implements RProbe, Serial
 
     final private RProbeActor actor;
     
+    //RProbeRMIImpl should not be eligible to gc, so keep it un a useless variable
+    public static RProbe dispatcher;
+    
     static public final void register(RProbeActor actor, int port) throws InvocationTargetException {
         try {
-            RProbe dispatcher = new RProbeRMIImpl(port, actor);
+            dispatcher = new RProbeRMIImpl(port, actor);
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind(RProbe.NAME, dispatcher);
         } catch (RemoteException e) {
