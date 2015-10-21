@@ -7,6 +7,9 @@
     <version>1.0-SNAPSHOT</version>
     <name>jrdsagent</name>
     <url>http://maven.apache.org</url>
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
     <properties>
         <!-- The project should have a source encoding set. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,18 +25,13 @@
             <artifactId>jrds</artifactId>
             <version>1.0-SNAPSHOT</version>
             <exclusions>
-                <!--  broken on central repository, but don't needed any way -->
+                <!-- broken on central repository, but don't needed any way -->
                 <exclusion>
                     <groupId>org.dojotoolkit</groupId>
                     <artifactId>dojo</artifactId>
                 </exclusion>
-            </exclusions> 
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            </exclusions>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <repositories>
@@ -51,27 +49,23 @@
         </repository>
     </repositories>
     <build>
-        <resources>
-            <resource>
-                <directory>desc</directory>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>junit</directory>
-                <includes>
-                    <include>ressources/**/*</include>
-                </includes>
-            </testResource>
-        </testResources>
         <finalName>jrdsagent</finalName>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/junit</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>${buildSource}</source>
+                    <target>${buildTarget}</target>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.6</version>
                 <executions>
                     <execution>
                         <id>default-jar</id>
@@ -85,6 +79,27 @@
                                     <Class-Path>${project.build.finalName}.jar</Class-Path>
                                 </manifestEntries>
                             </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/desc</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>desc</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
