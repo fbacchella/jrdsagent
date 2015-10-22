@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import jrds.ProbeConnected;
+import jrds.Util;
 import jrds.agent.RProbe;
 import jrds.factories.ProbeMeta;
 
@@ -51,7 +52,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
                 if(trimed.isEmpty()) {
                     continue;
                 }
-                remoteSpecifics.put(trimed, getPd().getSpecific(trimed));
+                remoteSpecifics.put(trimed, Util.parseTemplate(getPd().getSpecific(trimed), this));
             }
         }
 
