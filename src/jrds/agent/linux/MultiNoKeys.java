@@ -1,44 +1,24 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MultiNoKeys extends LProbeProc {
 
-    private int keyIndex = -1;
+    //The column where the "line name" is extracted from
+    private int keyIndex = 0;
     private String separator = "\\s+";
-
-    public MultiNoKeys() {
-        super();
-    }
 
     public Boolean configure(Integer keyIndex, String separator) {
         if(keyIndex != null) {
-            this.keyIndex = keyIndex.intValue();            
+            this.keyIndex = keyIndex;            
         }
         if(separator != null && ! separator.isEmpty()) {
             this.separator = separator;            
-        } else {
-            this.separator = "\\s+";
         }
-        return Boolean.TRUE;
-    }
-
-    public String getName() {
-        File statFile = getStatFile();
-        return statFile.getPath().replace(statFile.getParent(), "");
-    }
-
-    public Map<String, Number> query() {
-        try {
-            BufferedReader r = readStatFile();
-            return parse(r);
-        } catch (Exception e) {
-            throw new RuntimeException(getName(), e);
-        }
+        return super.configure();
     }
 
     public Map<String, Number> parse(BufferedReader r) throws IOException {
@@ -51,12 +31,7 @@ public class MultiNoKeys extends LProbeProc {
             if(values.length < keyIndex + 1) {
                 continue;
             }
-            //Prefix value with column key value
-            //but only if keyIndex is given a legal value
-            String keyPrefix = "";
-            if(keyIndex >= 0) {
-                keyPrefix = values[keyIndex] + ".";                
-            }
+            String keyPrefix = values[keyIndex] + ".";
             for(int i=0; i < values.length; i++) {
                 try {
                     Number parsed = new Double(values[i]);
