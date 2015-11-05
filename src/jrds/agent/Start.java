@@ -1,5 +1,7 @@
 package jrds.agent;
 
+import java.io.File;
+import java.io.FilePermission;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
@@ -10,14 +12,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.security.Permission;
 import java.security.Permissions;
-import java.security.SecurityPermission;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.management.MBeanPermission;
 import javax.management.MBeanServer;
-import javax.management.ObjectName;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
@@ -35,87 +32,56 @@ public class Start implements Serializable {
     static private final Permissions allowed = new Permissions();
 
     static {
-        Map<String, ObjectName> objNameMap = new HashMap<String, ObjectName>();
         try {
-            for(String onameString: new String[] {"jrds:type=agent", "java.lang:type=Runtime"}) {
-                ObjectName on = new ObjectName(onameString);
-                objNameMap.put(onameString, on);
-            }
-
-            Object[][] args = new Object[][]{
-                    new Object[] {"-#-[-]", "getClassLoaderRepository"},
-                    new Object[] {"jrds.agent.RProbeJMXImpl", null, objNameMap.get("jrds:type=agent"), "*"},
-                    new Object[] {"jrds.agent.RProbeJMXImpl", "Uptime", objNameMap.get("jrds:type=agent"), "*"},
-                    new Object[] {"jrds.agent.RProbeJMXImpl", "query", objNameMap.get("jrds:type=agent"), "*"},
-                    new Object[] {"jrds.agent.RProbeJMXImpl", "prepare", objNameMap.get("jrds:type=agent"), "*"},
-                    new Object[] {"sun.management.RuntimeImpl", "Uptime", objNameMap.get("java.lang:type=Runtime"), "getAttribute"},
-            };
-            Map<Integer, Constructor<MBeanPermission>> constructsmap = new HashMap<Integer, Constructor<MBeanPermission>>();
-
-            @SuppressWarnings("unchecked")
-            Constructor<MBeanPermission>[] mbpermConstructors = (Constructor<MBeanPermission>[]) MBeanPermission.class.getConstructors();
-            for(Constructor<MBeanPermission> c: mbpermConstructors ) {
-                constructsmap.put(c.getGenericParameterTypes().length, c);
-            }
-            for(Object[] arg: args) {
-                MBeanPermission aperm = constructsmap.get(arg.length).newInstance(arg);
-                allowed.add(aperm);
-            }
-            Map<Class<?>, String[]> permByName = new HashMap<Class<?>, String[]>();
-            permByName.put(RuntimePermission.class, new String[] {
-                "getFileSystemAttributes", 
-                "readFileDescriptor", "writeFileDescriptor", //Don't forget, network sockets are file descriptors
-                "modifyThreadGroup", "modifyThread", //Needed by termination of the VM
-                "setContextClassLoader", "getClassLoader", "createClassLoader",
-                "sun.rmi.runtime.RuntimeUtil.getInstance", "sun.misc.Perf.getPerf", "reflectionFactoryAccess", "loadLibrary.rmi",
-                "accessDeclaredMembers", "fileSystemProvider", "getProtectionDomain",
-                "accessClassInPackage.sun.util.resources", "accessClassInPackage.sun.instrument", "accessClassInPackage.sun.management", "accessClassInPackage.sun.management.resources",
-                "accessClassInPackage.sun.util.logging.resources", "accessClassInPackage.sun.text.resources", "accessClassInPackage.com.sun.jmx.remote.internal",
-                "accessClassInPackage.sun.security.provider", "accessClassInPackage.com.sun.jmx.remote.protocol.jmxmp", "accessClassInPackage.sun.reflect", "accessClassInPackage.sun.reflect.misc",
-
-            });
-            permByName.put(SecurityPermission.class, new String[] {
-                "getPolicy", "getProperty.networkaddress.cache.ttl", "getProperty.networkaddress.cache.negative.ttl", 
-                "getProperty.security.provider", "getProperty.securerandom.source", "putProviderProperty.SUN", 
-                "getProperty.security.provider.1", "getProperty.security.provider.2", "getProperty.security.provider.3", "getProperty.security.provider.4",
-                "getProperty.security.provider.5", "getProperty.security.provider.6", "getProperty.security.provider.7", "getProperty.security.provider.8",
-                "getProperty.security.provider.9", "getProperty.security.provider.10", "getProperty.security.provider.11"
-            });
-            for(Map.Entry<Class<?>, String[]> e: permByName.entrySet()) {
-                @SuppressWarnings("unchecked")
-                Constructor<Permission> c = (Constructor<Permission>) e.getKey().getConstructor(String.class);
-                for(String permName: e.getValue()) {
-                    Permission newPerm;
-                    newPerm = c.newInstance(permName);
-                    allowed.add(newPerm);
-                }
-            }
-
             String[][] permArgs = new String[][] {
+                    new String[] { "java.io.FilePermission", "/proc/*", "read" },
+                    new String[] { "java.io.FilePermission", "/proc/net/*", "read" },
+                    new String[] { "java.io.SerializablePermission", "enableSubstitution" },
+                    new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect" },
+                    new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect.misc" },
+                    new String[] { "java.lang.RuntimePermission", "accessDeclaredMembers" },
+                    new String[] { "java.lang.RuntimePermission", "createClassLoader" },
+                    new String[] { "java.lang.RuntimePermission", "getClassLoader" },
+                    new String[] { "java.lang.RuntimePermission", "getProtectionDomain" },
+                    new String[] { "java.lang.RuntimePermission", "loadLibrary.net" },
+                    new String[] { "java.lang.RuntimePermission", "readFileDescriptor" },
+                    new String[] { "java.lang.RuntimePermission", "modifyThreadGroup" },
+                    new String[] { "java.lang.RuntimePermission", "modifyThread" },
+                    new String[] { "java.lang.RuntimePermission", "reflectionFactoryAccess" },
+                    new String[] { "java.lang.RuntimePermission", "setContextClassLoader" },
+                    new String[] { "java.lang.RuntimePermission", "sun.rmi.runtime.RuntimeUtil.getInstance" },
+                    new String[] { "java.lang.RuntimePermission", "writeFileDescriptor" },
+                    new String[] { "java.lang.reflect.ReflectPermission", "suppressAccessChecks" },
+                    new String[] { "java.net.NetPermission", "getProxySelector" },
+                    new String[] { "java.net.NetPermission", "specifyStreamHandler" },
+                    new String[] { "java.net.SocketPermission", "*", "listen,accept,resolve" },
+                    new String[] { "java.security.SecurityPermission", "getPolicy" },
                     new String[] { "java.util.logging.LoggingPermission", "control", "" },
-                    new String[] { "java.net.NetPermission", "getProxySelector"},
-                    new String[] { "java.net.NetPermission", "specifyStreamHandler"},
-                    new String[] { "javax.management.MBeanServerPermission", "*"},
-                    new String[] { "java.lang.management.ManagementPermission", "monitor"},
-                    new String[] { "java.lang.reflect.ReflectPermission", "suppressAccessChecks"},
-                    new String[] { "java.io.SerializablePermission", "enableSubstitution"},
-                    new String[] { "java.io.FilePermission", "<<ALL FILES>>", "read"},
-                    new String[] { "java.util.PropertyPermission", "java.rmi.server.*", "read"},
-                    new String[] { "java.util.PropertyPermission", "java.security.egd", "read"},
-                    new String[] { "java.util.PropertyPermission", "socksProxyHost", "read"},
-                    new String[] { "java.util.PropertyPermission", "jdk.logging.*", "read"},
-                    new String[] { "java.util.PropertyPermission", "sun.boot.class.path", "read"},
-                    new String[] { "java.util.PropertyPermission", "sun.io.serialization.extendedDebugInfo", "read"},
-                    new String[] { "java.util.PropertyPermission", "sun.net.maxDatagramSockets", "read"},
-                    new String[] { "java.util.PropertyPermission", "sun.rmi.*", "read"},
-                    new String[] { "java.util.PropertyPermission", "sun.util.logging.*", "read"},
-                    new String[] { "java.util.PropertyPermission", "com.sun.jmx.remote.bug.compatible", "read"},
-                    new String[] { "java.util.PropertyPermission", "os.arch", "read"},
-                    new String[] { "java.util.PropertyPermission", "user.language.format", "read"},
-                    new String[] { "java.util.PropertyPermission", "user.script.format", "read"},
-                    new String[] { "java.util.PropertyPermission", "user.country.format", "read"},
-                    new String[] { "java.util.PropertyPermission", "line.separator", "read"},
-                    new String[] { "java.net.SocketPermission", "*", "accept,connect,listen,resolve"},
+                    new String[] { "java.util.PropertyPermission", "java.rmi.server.RMIClassLoaderSpi", "read" },
+                    new String[] { "java.util.PropertyPermission", "java.rmi.server.codebase", "read" },
+                    new String[] { "java.util.PropertyPermission", "java.rmi.server.hostname", "read" },
+                    new String[] { "java.util.PropertyPermission", "java.rmi.server.randomIDs", "read" },
+                    new String[] { "java.util.PropertyPermission", "java.rmi.server.useCodebaseOnly", "read" },
+                    new String[] { "java.util.PropertyPermission", "java.util.Arrays.useLegacyMergeSort", "read" },
+                    new String[] { "java.util.PropertyPermission", "jdk.internal.lambda.dumpProxyClasses", "read" },
+                    new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read" },
+                    new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.high", "read" },
+                    new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.low", "read" },
+                    new String[] { "java.util.PropertyPermission", "socksProxyHost", "read" },
+                    new String[] { "java.util.PropertyPermission", "sun.io.serialization.extendedDebugInfo", "read" },
+                    new String[] { "java.util.PropertyPermission", "sun.net.maxDatagramSockets", "read" },
+                    new String[] { "java.util.PropertyPermission", "sun.rmi.dgc.ackTimeout", "read" },
+                    new String[] { "java.util.PropertyPermission", "sun.rmi.loader.logLevel", "read" },
+                    new String[] { "java.util.PropertyPermission", "sun.rmi.transport.connectionTimeout", "read" },
+                    new String[] { "java.util.PropertyPermission", "sun.rmi.transport.tcp.handshakeTimeout", "read" },
+                    new String[] { "java.util.PropertyPermission", "sun.rmi.transport.tcp.responseTimeout", "read" },
+                    new String[] { "java.util.PropertyPermission", "sun.util.logging.disableCallerCheck", "read" },
+                    new String[] { "javax.management.MBeanPermission", "-#-[-]", "getClassLoaderRepository" },
+                    new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#prepare[jrds:type=agent]", "invoke" },
+                    new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#query[jrds:type=agent]", "invoke" },
+                    new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#-[jrds:type=agent]", "getClassLoaderFor" },
+                    new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#-[jrds:type=agent]", "getClassLoaderFor" },
+                    new String[] { "javax.management.MBeanPermission", "sun.management.RuntimeImpl#Uptime[java.lang:type=Runtime]", "getAttribute" },
             };
             Class<?>[][] typeVector = new Class[][]{
                     new Class[] { String.class },
@@ -129,6 +95,10 @@ public class Start implements Serializable {
                 Permission newPerm = (Permission) c.newInstance((Object[])argVector);
                 allowed.add(newPerm);
             }
+            
+            //Add the java home to readable files
+            Permission newPerm = new FilePermission(System.getProperty("java.home") + File.separator + "-", "read");
+            allowed.add(newPerm);
             allowed.setReadOnly();
         } catch (Exception e) {
             throw new RuntimeException("Permission initialization failed: " + e.getMessage(), e);
