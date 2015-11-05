@@ -13,7 +13,7 @@ public class Wmiprobe extends RMI {
         public Double Timestamp_Sys100NS;
     };
 
-     @Override
+    @Override
     public Boolean configure() {
         if(getPd().getSpecific("remoteSpecifics") == null) {
             getPd().addSpecific("remoteSpecifics", "wbemClass");

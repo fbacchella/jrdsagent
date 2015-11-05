@@ -14,11 +14,7 @@ public class WmiAgent extends LProbe {
     protected String[] fields;
 
     public Boolean configure(ArrayList<String> fields) {
-        this.fields = new String[fields.size()];
-        int i = 0;
-        for(String field: fields) {
-            this.fields[i++] = field.replaceAll("#.*$", "");
-        }
+        this.fields = fields.toArray(new String[]{});
         return configure();
     }
 
