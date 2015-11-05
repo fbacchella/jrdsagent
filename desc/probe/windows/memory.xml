@@ -3,7 +3,7 @@
 <probedesc>
     <name>PerfOS_Memory</name>
     <probeName>memory</probeName>
-    <probeClass>jrds.probe.Wmi.Wmiprobe</probeClass>
+    <probeClass>jrds.probe.Wmiprobe</probeClass>
     <specific name="wbemClass">Win32_PerfRawData_PerfOS_Memory</specific>
     <ds>
         <dsName>AvailableBytes</dsName>

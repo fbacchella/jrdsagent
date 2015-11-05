@@ -3,37 +3,37 @@
 <probedesc>
     <name>PerfOS_System</name>
     <probeName>system</probeName>
-    <probeClass>jrds.wmi.WMIProbe</probeClass>
+    <probeClass>jrds.probe.Wmiprobe</probeClass>
     <specific name="wbemClass">Win32_PerfRawData_PerfOS_System</specific>
     <ds>
         <dsName>Processes</dsName>
         <dsType>gauge</dsType>
-        <collect>Processes#PERF_COUNTER_RAWCOUNT</collect>
+        <collect>Processes</collect>
     </ds>
     <ds>
         <dsName>Threads</dsName>
         <dsType>gauge</dsType>
-        <collect>Threads#PERF_COUNTER_RAWCOUNT</collect>
+        <collect>Threads</collect>
     </ds>
     <ds>
         <dsName>QueueLength</dsName>
         <dsType>gauge</dsType>
-        <collect>ProcessorQueueLength#PERF_COUNTER_RAWCOUNT</collect>
+        <collect>ProcessorQueueLength</collect>
     </ds>
     <ds>
         <dsName>CtxtSwitches</dsName>
         <dsType>counter</dsType>
-        <collect>ContextSwitchesPerSec#PERF_COUNTER_COUNTER</collect>
+        <collect>ContextSwitchesPerSec</collect>
     </ds>
     <ds>
         <dsName>ExceptionDispatches</dsName>
         <dsType>counter</dsType>
-        <collect>ExceptionDispatchesPerSec#PERF_COUNTER_COUNTER</collect>
+        <collect>ExceptionDispatchesPerSec</collect>
     </ds>
     <ds>
         <dsName>SystemCalls</dsName>
         <dsType>counter</dsType>
-        <collect>SystemCallsPerSec#PERF_COUNTER_COUNTER</collect>
+        <collect>SystemCallsPerSec</collect>
     </ds>
     <graphs>
         <name>threads</name>

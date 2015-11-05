@@ -2,7 +2,7 @@
 <probedesc>
     <name>NTDS_NTDS</name>
     <probeName>ntds</probeName>
-    <probeClass>jrds.wmi.WMIProbe</probeClass>
+    <probeClass>jrds.probe.Wmiprobe</probeClass>
     <specific name="wbemClass">Win32_PerfRawData_NTDS_NTDS</specific>
     <ds>
         <dsName>LDAPClientSessions</dsName>
