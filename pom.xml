@@ -120,7 +120,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>jrds.agent.windows.agent</mainClass>
+                            <mainClass>jrds.agent.Start</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

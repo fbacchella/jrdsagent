@@ -14,7 +14,6 @@ public class WindowsSystemUptime extends SystemUptime {
     @Override
     protected Date systemStartTime() {
         try {
-            System.out.println( WmiRequester.getFromClass(UPTIMERELPATH, UPTIMEFIELD).get(0).getClass());
             String formatedString = (String) WmiRequester.getFromClass(UPTIMERELPATH, UPTIMEFIELD).get(0);
             long formated = Long.parseLong(formatedString);
             return new Date(new Date().getTime() - formated * 1000);

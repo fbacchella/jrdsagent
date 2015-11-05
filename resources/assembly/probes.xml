@@ -12,9 +12,14 @@
             <directory>${project.build.directory}/classes</directory>
             <outputDirectory>/</outputDirectory>
             <excludes>
-                <exclude>jrds/agent/**</exclude>
+                <exclude>jrds/agent/RProbe?*.java</exclude>
                 <exclude>com4j/**</exclude>
             </excludes>
+            <includes>
+                <include>jrds/agent/RProbe.class</include>
+                <include>jrds/probe/**</include>
+                <include>desc/**</include>
+            </includes>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/src/desc</directory>
