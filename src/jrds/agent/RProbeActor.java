@@ -7,21 +7,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jrds.agent.jmx.JmxSystemUptime;
-import jrds.agent.linux.LinuxSystemUptime;
-
 public class RProbeActor implements RProbe {
 
     final private Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
     final private SystemUptime uptime;
 
     public RProbeActor() {
-        String osname = System.getProperty("os.name");
-        if("Linux".equals(osname)) {
-            uptime = new LinuxSystemUptime();
+        String uptimeClassName = System.getProperty("jrds.uptimeClass", "");
+        if(! uptimeClassName.trim().isEmpty()) {
+        } else {
+            String osname = System.getProperty("os.name");
+            if("Linux".equals(osname)) {
+                uptimeClassName = "jrds.agent.linux.LinuxSystemUptime";
+            }
+            else if(osname.startsWith("Windows")) {
+                uptimeClassName = "jrds.agent.windows.WindowsSystemUptime";
+            }
+            else {
+                uptimeClassName = "jrds.agent.jmx.JmxSystemUptime";
+            }            
         }
-        else {
-            uptime = new JmxSystemUptime();
+        try {
+            @SuppressWarnings("unchecked")
+            Class<SystemUptime> uptimeClass = (Class<SystemUptime>) RProbeActor.class.getClassLoader().loadClass(uptimeClassName.trim());
+            uptime = uptimeClass.newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
+        } catch (InstantiationException e) {
+            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
         }
     }
 
