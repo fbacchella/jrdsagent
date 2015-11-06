@@ -14,8 +14,7 @@ public class RProbeActor implements RProbe {
 
     public RProbeActor() {
         String uptimeClassName = System.getProperty("jrds.uptimeClass", "");
-        if(! uptimeClassName.trim().isEmpty()) {
-        } else {
+        if(uptimeClassName.trim().isEmpty()) {
             String osname = System.getProperty("os.name");
             if("Linux".equals(osname)) {
                 uptimeClassName = "jrds.agent.linux.LinuxSystemUptime";
@@ -57,7 +56,7 @@ public class RProbeActor implements RProbe {
             Constructor<?> theConst = probeClass.getConstructor();
             return (LProbe) theConst.newInstance();
         } catch (ClassNotFoundException e) {
-            throw new InvocationTargetException(e, "Error instanciating probe " + name);
+            throw new InvocationTargetException(e, "Class " + name + " not found");
         } catch (IllegalArgumentException e) {
             throw new InvocationTargetException(e, "Error instanciating probe " + name);
         } catch (InstantiationException e) {
