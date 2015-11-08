@@ -119,11 +119,10 @@ public abstract class WmiRequester {
             // don't care
         }
     }
-    
+
     static String buildQuery(String name, String key, String index) {
         String newIndex = key.isEmpty() ? "@" : '"' + index + '"';
         String resolvedName = name + (key.isEmpty() ? "" : "." + key) + "=" + newIndex;
-        System.out.println(resolvedName);
         return resolvedName;
     }
 

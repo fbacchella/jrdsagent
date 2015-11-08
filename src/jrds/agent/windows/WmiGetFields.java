@@ -13,7 +13,6 @@ public class WmiGetFields implements Callable<Object[]> {
     WmiGetFields(String query, String... fields) {
         this.query = query;
         this.fields = fields;
-        System.out.println(query);
     }
 
     @Override
