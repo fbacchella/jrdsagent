@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Level;
+
 import jrds.probe.RMI;
 
 public class Wmiprobe extends RMI {
@@ -21,16 +23,21 @@ public class Wmiprobe extends RMI {
         if(getPd().getSpecific("remote") == null) {
             getPd().addSpecific("remote", "jrds.agent.windows.WmiAgent");
         }
+        List<Object> args = new ArrayList<Object>();
+        buildArgs(args);
+        setArgs(args);
+        log(Level.DEBUG, "remote args for this probe: %s", args);
+        return super.configure();
+    }
+    
+    protected void buildArgs(List<Object> args) {        
         List<String> fields = new ArrayList<String>();
         for(String key: getPd().getCollectStrings().keySet()) {
             fields.add(key);
         }
         fields.add("Timestamp_Sys100NS");
         fields.add("Frequency_Sys100NS");
-        List<Object> args = new ArrayList<Object>(1);
         args.add(fields);
-        setArgs(args);
-        return super.configure();
     }
 
     @Override
