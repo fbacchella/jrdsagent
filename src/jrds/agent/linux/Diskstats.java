@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import jrds.agent.Start;
+
 public class Diskstats extends LProbeProc {
     String disk;
     static private final int offset = 2;
@@ -14,7 +16,7 @@ public class Diskstats extends LProbeProc {
         return super.configure();
     }
 
-    public Map<String, Number> parse(BufferedReader r) throws NumberFormatException, IOException {
+    public Map<String, Number> parse(BufferedReader r) throws IOException {
         Map<String, Number> retValues = new HashMap<String, Number>();
         String line;
         boolean found = false;
@@ -24,23 +26,23 @@ public class Diskstats extends LProbeProc {
                 String[] values = line.trim().split("\\s+");
                 //Full line, with all the values
                 if(values.length > offset + 7 ) {
-                    retValues.put("rrqm", Double.valueOf(values[offset + 2]));
-                    retValues.put("wrqm", Double.valueOf(values[offset + 6]));
-                    retValues.put("r", Double.valueOf(values[offset + 1]));
-                    retValues.put("w", Double.valueOf(values[offset + 5]));
-                    retValues.put("rsec", Double.valueOf(values[offset + 3]));
-                    retValues.put("wsec", Double.valueOf(values[offset + 7]));
-                    retValues.put("rwait", Double.valueOf(values[offset + 4]));
-                    retValues.put("wwait", Double.valueOf(values[offset + 8]));
-                    retValues.put("qu-sz", Double.valueOf(values[offset + 9]));
-                    retValues.put("waittm", Double.valueOf(values[offset + 10]));
-                    retValues.put("wwaittm", Double.valueOf(values[offset + 11]));
+                    retValues.put("rrqm", Start.parseStringNumber(values[offset + 2], Double.NaN));
+                    retValues.put("wrqm", Start.parseStringNumber(values[offset + 6], Double.NaN));
+                    retValues.put("r", Start.parseStringNumber(values[offset + 1], Double.NaN));
+                    retValues.put("w", Start.parseStringNumber(values[offset + 5], Double.NaN));
+                    retValues.put("rsec", Start.parseStringNumber(values[offset + 3], Double.NaN));
+                    retValues.put("wsec", Start.parseStringNumber(values[offset + 7], Double.NaN));
+                    retValues.put("rwait", Start.parseStringNumber(values[offset + 4], Double.NaN));
+                    retValues.put("wwait", Start.parseStringNumber(values[offset + 8], Double.NaN));
+                    retValues.put("qu-sz", Start.parseStringNumber(values[offset + 9], Double.NaN));
+                    retValues.put("waittm", Start.parseStringNumber(values[offset + 10], Double.NaN));
+                    retValues.put("wwaittm", Start.parseStringNumber(values[offset + 11], Double.NaN));
                 }
                 else {
-                    retValues.put("r", Double.valueOf(values[offset + 1]));
-                    retValues.put("rsec", Double.valueOf(values[offset + 2]));
-                    retValues.put("w", Double.valueOf(values[offset + 3]));
-                    retValues.put("wsec", Double.valueOf(values[offset + 4]));
+                    retValues.put("r", Start.parseStringNumber(values[offset + 1], Double.NaN));
+                    retValues.put("rsec", Start.parseStringNumber(values[offset + 2], Double.NaN));
+                    retValues.put("w", Start.parseStringNumber(values[offset + 3], Double.NaN));
+                    retValues.put("wsec", Start.parseStringNumber(values[offset + 4], Double.NaN));
                 }
             }
         }

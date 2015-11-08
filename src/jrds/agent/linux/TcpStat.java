@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jrds.agent.LProbe;
+import jrds.agent.Start;
 
 public class TcpStat extends LProbe {
     private final static String STATFILE = "/proc/net/netstat";
@@ -33,10 +34,8 @@ public class TcpStat extends LProbe {
                     continue;
 
                 for(int i=0; i < keys.length; i++) {
-                    try {
-                        retValues.put(keys[i], new Double(values[i]));
-                    } catch (NumberFormatException e) {
-                    }
+                    Double value = Start.parseStringNumber(values[i], Double.NaN);
+                    retValues.put(keys[i], value);
                 }
             }
             r.close();

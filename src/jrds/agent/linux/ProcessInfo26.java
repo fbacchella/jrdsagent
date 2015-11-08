@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jrds.agent.LProbe;
+import jrds.agent.Start;
 
 public class ProcessInfo26  extends LProbe {
     static final private int USER_HZ = 100; 
@@ -186,11 +187,8 @@ public class ProcessInfo26  extends LProbe {
                 String value = statArray[i];
                 String key = keys[i];
                 if(key != null) {
-                    try {
-                        Number dvalue = Long.parseLong(value);
-                        retValues.put(file + ":" + key, dvalue);
-                    } catch (NumberFormatException e) {
-                    }
+                    Number dvalue = Start.parseStringNumber(value, 0l);
+                    retValues.put(file + ":" + key, dvalue);
                 }
             }
             return retValues;
@@ -221,11 +219,8 @@ public class ProcessInfo26  extends LProbe {
                 String[] values = line.trim().split(":");
                 if (values.length == 2) {
                     String key = values[0].trim();                   
-                    try {
-                        Number value = Long.parseLong(values[1].trim());
-                        retValues.put(file + ":" + key, value);
-                    } catch (NumberFormatException e) {
-                    }
+                    Number value = Start.parseStringNumber(values[1].trim(), 0l);
+                    retValues.put(file + ":" + key, value);
                 }
             }            
             return retValues;

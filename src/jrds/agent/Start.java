@@ -195,23 +195,21 @@ public class Start implements Serializable {
     }
 
     /**
-     * A function from jrds.Util
-     * @param toParse
-     * @param numberClass
-     * @param defaultVal
-     * @return
+     * <p>A compact and exception free number parser.<p>
+     * <p>If the string can be parsed as the specified type, it return the default value<p>
+     * @param toParse The string to parse
+     * @param defaultVal A default value to use it the string can't be parsed
+     * @return An Number object using the same type than the default value.
      */
-    public static Number parseStringNumber(String toParse, Class<? extends Number> numberClass, Number defaultVal) {
+    @SuppressWarnings("unchecked")
+    public static <NumberClass extends Number> NumberClass parseStringNumber(String toParse, NumberClass defaultVal) {
         if(toParse == null || "".equals(toParse))
             return defaultVal;
-        if(! (Number.class.isAssignableFrom(numberClass))) {
-            return defaultVal;
-        }
 
         try {
-            Constructor<? extends Number> c = numberClass.getConstructor(String.class);
-            Number n = c.newInstance(toParse);
-            return n;
+            Class<NumberClass> clazz = (Class<NumberClass>) defaultVal.getClass();
+            Constructor<NumberClass> c = clazz.getConstructor(String.class);
+            return c.newInstance(toParse);
         } catch (SecurityException e) {
         } catch (NoSuchMethodException e) {
         } catch (IllegalArgumentException e) {

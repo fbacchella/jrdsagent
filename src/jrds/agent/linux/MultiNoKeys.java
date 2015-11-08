@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import jrds.agent.Start;
+
 public class MultiNoKeys extends LProbeProc {
 
     //The column where the "line name" is extracted from
@@ -33,12 +35,9 @@ public class MultiNoKeys extends LProbeProc {
             }
             String keyPrefix = values[keyIndex] + ".";
             for(int i=0; i < values.length; i++) {
-                try {
-                    Number parsed = new Double(values[i]);
-                    String localKey = keyPrefix + i;
-                    retValues.put(localKey, parsed);
-                } catch (NumberFormatException e) {
-                }
+                Number parsed = Start.parseStringNumber(values[i], Double.NaN);
+                String localKey = keyPrefix + i;
+                retValues.put(localKey, parsed);
             }
         }
         return retValues;

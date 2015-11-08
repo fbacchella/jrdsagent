@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jrds.agent.LProbe;
+import jrds.agent.Start;
 
 public class WmiAgent extends LProbe {
 
@@ -44,12 +45,8 @@ public class WmiAgent extends LProbe {
             if(o instanceof Number) {
                 returned.put(fields[i], (Number) o);
             } else if(o instanceof String) {
-                try {
-                    Double value = Double.parseDouble((String) o);
-                    returned.put(fields[i], value);
-                } catch (NumberFormatException e) {
-                    returned.put(fields[i], Double.NaN);
-                }                    
+                Double value = Start.parseStringNumber((String) o, Double.NaN);
+                returned.put(fields[i], value);
             }
         }
         return returned;

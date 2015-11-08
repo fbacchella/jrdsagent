@@ -22,7 +22,7 @@ public class LinuxSystemUptime extends SystemUptime {
             try {
                 BufferedReader r = new BufferedReader(new FileReader(uptimef));
                 String uptimes[] = r.readLine().trim().split(" ");
-                uptime = Start.parseStringNumber(uptimes[0], Long.class, 0).longValue();
+                uptime = Start.parseStringNumber(uptimes[0], 0l);
                 r.close();
             } catch (FileNotFoundException e) {
             } catch (IOException e) {
