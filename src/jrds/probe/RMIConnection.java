@@ -36,19 +36,6 @@ public class RMIConnection extends AgentConnection {
     }
 
     @Override
-    public long setUptime() {
-        try {
-            return rp.getUptime();
-        } catch (NoSuchObjectException e) {
-            log(Level.ERROR, e, "Remote exception on server %s: %s", getHostName(), e.getMessage());
-            return 0;
-        } catch (RemoteException e) {
-            log(Level.ERROR, e, "Remote exception on server %s: %s", getHostName(), e.getCause());
-            return 0;
-        }
-    }
-
-    @Override
     public boolean startConnection() {
         String hostName = getHostName();
         log(Level.DEBUG, "Starting RMIStarter for %s:%d", hostName, port);

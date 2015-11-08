@@ -1,5 +1,9 @@
 package jrds.probe;
 
+import java.rmi.RemoteException;
+
+import org.apache.log4j.Level;
+
 import jrds.PropertiesManager;
 import jrds.agent.RProbe;
 import jrds.agent.RProbeJMXImpl;
@@ -65,6 +69,7 @@ public class AgentConnection extends Connection<RProbe> {
     private int port = AGENTPORT;
     private PROTOCOL protocol = PROTOCOL.rmi;
     private Connection<?> proxy = null;
+    private long uptime = -1;
 
     public AgentConnection() {
         super();
@@ -80,9 +85,15 @@ public class AgentConnection extends Connection<RProbe> {
         return protocol.getRemoteProbe(proxy);
     }
 
+    /**
+     * This method return a dummy value, the real one
+     * will be read using the proxy connection
+     * and it needs it to be started
+     * @see jrds.starter.Connection#setUptime()
+     */
     @Override
     public long setUptime() {
-        return 0;
+        return -1;
     }
 
     /* (non-Javadoc)
@@ -90,10 +101,15 @@ public class AgentConnection extends Connection<RProbe> {
      */
     @Override
     public long getUptime() {
-        if(this.getClass() == AgentConnection.class)
-            return proxy.getUptime();
-        else
-            return super.getUptime();
+        if(uptime < 0) {
+            try {
+                uptime =  protocol.getRemoteProbe(proxy).getUptime();
+            } catch (RemoteException e) {
+                uptime = 0;
+            }
+        }
+        log(Level.INFO, "uptime is %d", uptime);
+        return uptime;
     }
 
     /**
@@ -144,11 +160,13 @@ public class AgentConnection extends Connection<RProbe> {
     @Override
     //Nothing to do, the proxy starter is registered, so it start by himself
     public boolean startConnection() {
+        uptime = -1;
         return true;
     }
 
     @Override
     public void stopConnection() {
+        uptime = -1;
     }
 
     /* (non-Javadoc)
