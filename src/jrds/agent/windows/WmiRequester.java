@@ -1,8 +1,7 @@
 package jrds.agent.windows;
 
-import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -10,93 +9,122 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import com4j.ComException;
 import com4j.typelibs.wmi.ClassFactory;
 import com4j.typelibs.wmi.ISWbemLocator;
-import com4j.typelibs.wmi.ISWbemObject;
 import com4j.typelibs.wmi.ISWbemRefreshableItem;
 import com4j.typelibs.wmi.ISWbemRefresher;
 import com4j.typelibs.wmi.ISWbemServices;
 
-public abstract class WmiRequester<RESULT> implements Callable<RESULT> {
+public abstract class WmiRequester {
+
     private final static Callable<Object> refresher = new Callable<Object>() {
+        private long lastUpdate = 0;
         @Override
-        public Object call() throws Exception {
-            Holder.wbemRefresher.refresh(0);
+        public Object call() {
+            if(cache.size() <= 0) {
+                return null;
+            }
+            Date now = new Date();
+            // Only one refresh / second
+            if(now.getTime() - lastUpdate < 1000) {
+                return null;
+            }
+            wbemRefresher.refresh(0);
+            lastUpdate = now.getTime();
             return null;
         }
     };
 
-    private static class Holder {
-        private final static ExecutorService executor = Executors.newSingleThreadExecutor();
-        private final static Map<String, ISWbemRefreshableItem> cache = new HashMap<String, ISWbemRefreshableItem>();
-        private final static ISWbemRefresher wbemRefresher = ClassFactory.createSWbemRefresher();
-        private final static ISWbemServices wbemServices;
-        static {
+    private final static ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final static Map<String, ISWbemRefreshableItem> cache = new HashMap<String, ISWbemRefreshableItem>();
+    private final static ISWbemRefresher wbemRefresher;
+    private final static ISWbemServices wbemServices;
+    static {
+        try {
+            wbemRefresher = ClassFactory.createSWbemRefresher();
             ISWbemLocator wbemLocator = ClassFactory.createSWbemLocator();
             wbemServices = wbemLocator.connectServer(".", "Root\\CIMv2", "", "", "", "", 0, null);
-        }        
+        } catch (ComException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }        
 
-        private final synchronized static ISWbemRefreshableItem getItem(String name) {
+    final synchronized static ISWbemRefreshableItem getItem(String name) {
+        return getItemIndexed(name, "", "@");
+    }
+
+    final synchronized static ISWbemRefreshableItem getItemIndexed(String name, String key, String index) {
+        String query = buildQuery(name, key, index);
+        return getItemByQuery(query);
+    }
+
+    final synchronized static ISWbemRefreshableItem getItemByQuery(String query) {
+        try {
             ISWbemRefreshableItem item;
-            if(! cache.containsKey(name)) {
-                item = wbemRefresher.add(wbemServices, name, 0, null);
-                cache.put(name, item);
+            if(! cache.containsKey(query)) {
+                item = wbemRefresher.add(wbemServices, query, 0, null);
+                cache.put(query, item);
             } else {
-                item = cache.get(name);
+                item = cache.get(query);
             }
             return item;
+        } catch (com4j.ExecutionException e) {
+            throw new RuntimeException(e.getMessage());
+        } catch (ComException e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 
-    public static void refresh() throws InterruptedException, ExecutionException {
-        Holder.executor.submit(refresher).get();
-    }
-
-    public static<T> T query(WmiRequester<T> request) throws InterruptedException, ExecutionException {
-        return Holder.executor.submit(request).get();
-    }
-
-    public static List<Object> getFromClass(final String domClassName, final String... fields ) throws InterruptedException, ExecutionException{
-        WmiRequester<List<Object>> requester = new WmiRequester<List<Object>>() {
-            @Override
-            public List<Object> call() throws Exception {
-                return get(domClassName + "=@", fields);
-            }
-        };
-        return Holder.executor.submit(requester).get();
-    }
-
-    public static List<Object> getFromClassIndexed(final String domClassName, final String key, final String index, final String... fields ) throws InterruptedException, ExecutionException{
-        WmiRequester<List<Object>> requester = new WmiRequester<List<Object>>() {
-            @Override
-            public List<Object> call() throws Exception {
-                return get(domClassName + "." + key + "=\"" + index + "\"", fields);
-            }
-        };
-        return Holder.executor.submit(requester).get();
-    }
-
-    public static void terminate() {
-        Holder.executor.shutdown();
+    static void refresh() {
         try {
-            Holder.executor.awaitTermination(100, TimeUnit.MILLISECONDS);
-            Holder.executor.shutdownNow();
+            executor.submit(refresher).get();
+        } catch (com4j.ExecutionException e) {
+            throw new RuntimeException(e.getMessage());
+        } catch (ComException e) {
+            throw new RuntimeException(e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException("can't refresh wmi objects", e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("can't refresh wmi objects", e);
+        }
+
+    }
+
+    static Object[] getFromClass(String name, String... fields ) {
+        return getFromClassIndexed(name, "", "@", fields);
+    }
+
+    static Object[] getFromClassIndexed(String name, String key, String index, String... fields ) {
+        try {
+            String resolvedName = buildQuery(name, key, index);
+            return executor.submit(new WmiGetFields(resolvedName, fields)).get();
+        } catch (com4j.ExecutionException e) {
+            throw new RuntimeException(e.getMessage());
+        } catch (ComException e) {
+            throw new RuntimeException(e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted", e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("can't read WMI object " + name, e);
+        }
+    }
+
+    static void terminate() {
+        executor.shutdown();
+        try {
+            executor.awaitTermination(100, TimeUnit.MILLISECONDS);
+            executor.shutdownNow();
         } catch (InterruptedException e) {
             // don't care
         }
     }
-
-    protected List<Object> get(String name, String... fields) {
-        ISWbemRefreshableItem item = Holder.getItem(name);
-        Holder.wbemRefresher.refresh(0);
-
-        ISWbemObject object = item.object();
-        Object[] values = new Object[fields.length];
-
-        for(int i = 0; i < fields.length; i++) {
-            values[i] = object.properties_().item(fields[i] , 0).value();
-        }
-        return Arrays.asList(values);
+    
+    static String buildQuery(String name, String key, String index) {
+        String newIndex = key.isEmpty() ? "@" : '"' + index + '"';
+        String resolvedName = name + (key.isEmpty() ? "" : "." + key) + "=" + newIndex;
+        System.out.println(resolvedName);
+        return resolvedName;
     }
 
 }
