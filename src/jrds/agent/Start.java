@@ -187,6 +187,8 @@ public class Start implements Serializable {
                 RProbeJMXImpl.register(actor);
                 break;
             }
+            //Check if actor can read uptime;
+            actor.getUptime();
         } catch (Exception e) {
             throw new RuntimeException("failed to start jrdsagent", e);
         }

@@ -18,6 +18,8 @@ public abstract class SystemUptime {
     /**
      * @return the system start time in Date specification
      */
-    protected abstract Date systemStartTime();
+    protected Date systemStartTime() {
+        return new Date();
+    }
 
 }

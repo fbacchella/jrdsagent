@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Date;
 
+import jrds.agent.Start;
 import jrds.agent.SystemUptime;
 
 public class LinuxSystemUptime extends SystemUptime {
@@ -14,7 +14,7 @@ public class LinuxSystemUptime extends SystemUptime {
     final static private long startime = System.currentTimeMillis();
 
     @Override
-    protected Date systemStartTime() {
+    public long getSystemUptime() {
         File uptimef = new File(UPTIMEFILE);
         //Put a default value, being the agent uptime
         long uptime = (System.currentTimeMillis() - startime)/1000;
@@ -22,14 +22,13 @@ public class LinuxSystemUptime extends SystemUptime {
             try {
                 BufferedReader r = new BufferedReader(new FileReader(uptimef));
                 String uptimes[] = r.readLine().trim().split(" ");
-                uptime = (long) Double.parseDouble(uptimes[0]);
+                uptime = Start.parseStringNumber(uptimes[0], Long.class, 0).longValue();
                 r.close();
             } catch (FileNotFoundException e) {
             } catch (IOException e) {
-            } catch (NumberFormatException e) {
             }
         }
-        return new Date(System.currentTimeMillis() - uptime * 1000);
+        return uptime * 1000;
     }
 
 }
