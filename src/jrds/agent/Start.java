@@ -133,7 +133,7 @@ public class Start implements Serializable {
      */
     public static void main(String[] args) throws Exception {
         String portProp = System.getProperty("jrds.port");
-        int port = parseStringNumber(portProp, Integer.class, defaultPort).intValue();
+        int port = parseStringNumber(portProp, defaultPort);
         if(port == 0)
             port = defaultPort;
 
