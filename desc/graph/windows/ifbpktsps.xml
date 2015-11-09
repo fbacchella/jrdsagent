@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN"
+    "urn:jrds:graphdesc">
+<graphdesc>
+    <name>PerfTcpip_NetworkInterface_Pkts</name>
+    <graphName>ifpktsps-${index}</graphName>
+    <graphTitle>Packets exchanged on interface ${index} on ${host}</graphTitle>
+    <verticalLabel>packets/s</verticalLabel>
+    <lowerLimit>NaN</lowerLimit>
+    <add>
+        <name>PktsTx</name>
+        <graphType>area</graphType>
+        <legend>packets sends/s</legend>
+    </add>
+    <add>
+        <name>PktsRx</name>
+        <reversed>true</reversed>
+        <graphType>area</graphType>
+        <legend>packets received/s</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>NETWORK</pathelement>
+        <pathelement>INTERFACES</pathelement>
+        <pathelement>INDEX</pathelement>
+        <pathstring>Packets exchanged</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>NETWORK</pathelement>
+        <pathelement>INTERFACES</pathelement>
+        <pathstring>Packets exchanged</pathstring>
+        <pathelement>HOST</pathelement>
+        <pathelement>INDEX</pathelement>
+    </viewtree>
+</graphdesc>
