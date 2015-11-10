@@ -111,7 +111,7 @@ public class AgentConnection extends Connection<RProbe> {
                 log(Level.ERROR, e, "uptime failed: %s", e);
                 uptime = 0;
             }
-            log(Level.INFO, "uptime is %d", uptime);
+            log(Level.DEBUG, "uptime is %dms", uptime);
         }
         return uptime;
     }
