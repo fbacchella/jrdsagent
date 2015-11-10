@@ -103,12 +103,16 @@ public class AgentConnection extends Connection<RProbe> {
     public long getUptime() {
         if(uptime < 0) {
             try {
-                uptime =  protocol.getRemoteProbe(proxy).getUptime();
+                // Never used the connection directly
+                // Needed to make the instance resolve it, because
+                // because only AgentConnexion used it, not the sub classes
+                uptime = getConnection().getUptime();
             } catch (RemoteException e) {
+                log(Level.ERROR, e, "uptime failed: %s", e);
                 uptime = 0;
             }
+            log(Level.INFO, "uptime is %d", uptime);
         }
-        log(Level.INFO, "uptime is %d", uptime);
         return uptime;
     }
 

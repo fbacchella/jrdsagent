@@ -47,7 +47,7 @@ public class RMIConnection extends AgentConnection {
                 log(Level.TRACE, "will use %s for the socket factoy", getLevel().find(JRDSSocketFactory.class));
                 registry = LocateRegistry.getRegistry(hostName, port, getLevel().find(JRDSSocketFactory.class));
                 log(Level.TRACE, "lookup  probe %s", RProbe.NAME);
-                
+
                 rp = (RProbe) registry.lookup(RProbe.NAME);
                 log(Level.TRACE, "done: %s", rp.getClass());
                 started = true;
@@ -59,11 +59,12 @@ public class RMIConnection extends AgentConnection {
                 log(Level.ERROR, e, "Unexpected exception: %s", e);
             }
         }
-        return started;
+        return started && super.startConnection();
     }
 
     @Override
     public void stopConnection() {
+        super.stopConnection();
         log(Level.DEBUG, "Stopping RMIStarter for %s:%d", getHostName(), port);
         rp = null;
         registry = null;
