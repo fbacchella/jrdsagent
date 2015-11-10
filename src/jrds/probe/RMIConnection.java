@@ -8,27 +8,15 @@ import java.rmi.registry.Registry;
 
 import jrds.PropertiesManager;
 import jrds.agent.RProbe;
-import jrds.factories.ProbeBean;
 import jrds.starter.Resolver;
 import jrds.starter.Starter;
 
 import org.apache.log4j.Level;
 
-@ProbeBean({"port"})
 public class RMIConnection extends AgentConnection {
 
-    private static final int AGENTPORT = 2002;
-    private int port;
     private Registry registry = null;
     private RProbe rp = null;
-
-    public RMIConnection() {
-        this.port = AGENTPORT;
-    }
-
-    public RMIConnection(Integer port) {
-        this.port = port;
-    }
 
     @Override
     public RProbe getConnection() {
@@ -80,20 +68,6 @@ public class RMIConnection extends AgentConnection {
         System.setProperty("sun.rmi.transport.tcp.responseTimeout", Integer.toString(pm.timeout * 1000));
         System.setProperty("sun.rmi.transport.connectionTimeout", Integer.toString(pm.timeout * 1000));
         System.setProperty("sun.rmi.transport.proxy.connectTimeout", Integer.toString(pm.timeout * 1000));
-    }
-
-    /**
-     * @return the port
-     */
-    public Integer getPort() {
-        return port;
-    }
-
-    /**
-     * @param port the port to set
-     */
-    public void setPort(Integer port) {
-        this.port = port;
     }
 
 }

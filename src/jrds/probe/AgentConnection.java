@@ -66,7 +66,7 @@ public class AgentConnection extends Connection<RProbe> {
     };
 
     private static final int AGENTPORT = 2002;
-    private int port = AGENTPORT;
+    protected int port = AGENTPORT;
     private PROTOCOL protocol = PROTOCOL.rmi;
     private Connection<?> proxy = null;
     private long uptime = -1;
