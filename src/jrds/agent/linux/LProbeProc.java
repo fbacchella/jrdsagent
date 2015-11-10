@@ -32,8 +32,6 @@ public abstract class LProbeProc extends LProbe {
     }
 
     public String getName() {
-        //File statFile = getStatFile();
-        //return statFile.getPath().replace(statFile.getParent(), "");
         return statFile.getAbsoluteFile().getName();
     }
 
@@ -47,11 +45,14 @@ public abstract class LProbeProc extends LProbe {
     public Map<String, Number> query() {
         try {
             BufferedReader r = new BufferedReader(new FileReader(statFile));
-            return parse(r);
+            Map<String, Number> values = parse(r);
+            r.close();
+            return values;
         } catch (Exception e) {
             throw new RuntimeException(getName(), e);
         }
     }
 
     public abstract Map<String, Number> parse(BufferedReader r) throws IOException;
+
 }
