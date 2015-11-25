@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class DiskUsage extends LProbe{
     String path;
-    
+
     public Boolean configure(String path) {
         this.path = path;
         return true;
@@ -16,7 +16,7 @@ public class DiskUsage extends LProbe{
     public Map<String, Number> query() {
         File pathFile = new File(path);
         if(! pathFile.isDirectory()) {
-            throw new RuntimeException("Path " + path + "is not a directory");
+            throw new RuntimeException("Path " + path + " is not a directory");
         }
         Map<String, Number> values = new HashMap<String, Number>();
         values.put("free", pathFile.getFreeSpace());
