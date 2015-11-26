@@ -1,14 +1,17 @@
 package jrds.probe;
 
+import java.rmi.RemoteException;
+
 import jrds.PropertiesManager;
 import jrds.agent.RProbe;
 import jrds.agent.RProbeActor;
+import jrds.agent.RProbeLocalImpl;
 
 public class LocalAgentConnection extends AgentConnection {
-    private final RProbeActor rp;
+    private final RProbe rp;
 
     public LocalAgentConnection() {
-        rp = new RProbeActor();
+        rp = new RProbeLocalImpl(new RProbeActor());
         super.setName(RMIConnection.class.getName());
     }
 
@@ -25,7 +28,11 @@ public class LocalAgentConnection extends AgentConnection {
      */
     @Override
     public long setUptime() {
-        return rp.getUptime();
+        try {
+            return rp.getUptime();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e.getCause());
+        }
     }
 
     /* (non-Javadoc)
