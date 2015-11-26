@@ -7,7 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RProbeActor implements RProbe {
+import javax.naming.CompositeName;
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
+import javax.naming.NameNotFoundException;
+
+
+public class RProbeActor {
 
     final private Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
     final private SystemUptime uptime;
@@ -39,13 +45,23 @@ public class RProbeActor implements RProbe {
         }
     }
 
-    public Map<String,Number> query(String name) {
+    public Map<String,Number> query(String name) throws NameNotFoundException {
         Map<String,Number> retValue = new HashMap<String,Number>(0);
         LProbe p =  probeMap.get(name);
-        if(p != null)
-            retValue = p.query();
-        else
-            throw new RuntimeException("Remote probe " + name + " not found");
+        if(p != null) {
+            retValue = p.query();            
+        }
+        else {
+            NameNotFoundException e = new NameNotFoundException("'" + name + "' not founds, needs to prepare");
+            Name cn = new CompositeName();
+            try {
+                cn.add(name);
+            } catch (InvalidNameException e1) {
+                throw new RuntimeException(e1);
+            }
+            e.setRemainingName(cn);
+            throw e;
+        }
         return retValue;
     }
 

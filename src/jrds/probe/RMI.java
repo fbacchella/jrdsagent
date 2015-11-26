@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.NameNotFoundException;
+
 import jrds.ProbeConnected;
 import jrds.Util;
 import jrds.agent.RProbe;
@@ -61,22 +63,36 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
 
     public Map<String, Number> getNewSampleValuesConnected(AgentConnection cnx) {
         Map<String, Number> retValues = null;
-        try {
-            RProbe rp = (RProbe) cnx.getConnection();
-            remoteName = rp.prepare(getPd().getSpecific("remote"), remoteSpecifics, args);
-            retValues = rp.query(remoteName);
-        } catch (RemoteException e) {
-            Throwable root = e;
-            while(root.getCause() != null) {
-                root = root.getCause();
+        // a loop because if one query fails, we try again after a prepare
+        for(int step = 0; step < 2; step++) {
+            try {
+                RProbe rp = (RProbe) cnx.getConnection();
+                if(remoteName == null) {
+                    step++;
+                    remoteName = rp.prepare(getPd().getSpecific("remote"), remoteSpecifics, args);                
+                }
+                retValues = rp.query(remoteName);
+                break;
+            } catch (RemoteException e) {
+                Throwable root = e;
+                if(root.getCause() instanceof NameNotFoundException) {
+                    root = root.getCause();
+                    log(Level.DEBUG, "remote name '%s' not defined, needs to prepare", ((NameNotFoundException)root).getRemainingName().get(0));
+                    remoteName = null;
+                } else {
+                    while(root.getCause() != null) {
+                        root = root.getCause();
+                    }
+                    log(Level.ERROR, root, "Remote exception on server: %s", root);                    
+                }
+            } catch (InvocationTargetException e) {
+                Throwable root = e;
+                while(root.getCause() != null) {
+                    root = root.getCause();
+                }
+                log(Level.ERROR, root, "Failed to prepare %s: %s", this, root);
+                break;
             }
-            log(Level.ERROR, root, "Remote exception on server: %s", root);
-        } catch (InvocationTargetException e) {
-            Throwable root = e;
-            while(root.getCause() != null) {
-                root = root.getCause();
-            }
-            log(Level.ERROR, root, "Failed to prepare %s: %s", this, root);
         }
         return retValues;
     }
