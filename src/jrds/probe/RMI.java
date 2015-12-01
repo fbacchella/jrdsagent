@@ -75,15 +75,15 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
                 break;
             } catch (RemoteException e) {
                 Throwable root = e;
-                if(root.getCause() instanceof NameNotFoundException) {
+                while(root.getCause() != null) {
                     root = root.getCause();
+                }
+                if(root instanceof NameNotFoundException) {
                     log(Level.DEBUG, "remote name '%s' not defined, needs to prepare", ((NameNotFoundException)root).getRemainingName().get(0));
                     remoteName = null;
                 } else {
-                    while(root.getCause() != null) {
-                        root = root.getCause();
-                    }
-                    log(Level.ERROR, root, "Remote exception on server: %s", root);                    
+                    log(Level.ERROR, root, "Remote exception on server: %s", root);  
+                    break;
                 }
             } catch (InvocationTargetException e) {
                 Throwable root = e;
