@@ -2,8 +2,10 @@ package jrds.agent.linux;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FilePermission;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.AccessControlException;
 import java.util.Map;
 
 import jrds.agent.LProbe;
@@ -23,6 +25,15 @@ public abstract class LProbeProc extends LProbe {
 
     @Override
     public Boolean configure() {
+        try {
+            if(! statFile.getCanonicalPath().startsWith("/proc") && ! statFile.getCanonicalPath().startsWith("/sys") ) {
+                FilePermission p = new FilePermission(statFile.getPath(), "read");
+                throw new AccessControlException("access denied " + p);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         if(statFile != null && ! statFile.canRead()) {
             throw new RuntimeException("file '" + statFile + "' not usable");
         }
