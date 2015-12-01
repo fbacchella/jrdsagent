@@ -7,11 +7,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.security.Permission;
 import java.security.Permissions;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import jrds.agent.Start.PROTOCOL;
@@ -36,14 +38,14 @@ public class AgentSecurityManager extends SecurityManager {
 
     private final boolean debugPerm;
     private final Permissions allowed = new Permissions();
-    private final Set<String> filesallowed = new HashSet<String>();
+    private final Set<String> filesallowed = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
     public AgentSecurityManager(boolean debugPerm, PROTOCOL proto) {
         this.debugPerm = debugPerm;
 
         if(debugPerm) {
-            permUsed = new HashSet<String>();
-            permCreated = new HashSet<String>();
+            permUsed = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+            permCreated = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {
                     for(String i: new HashSet<String>(permCreated)) {
