@@ -36,6 +36,7 @@ public class AgentSecurityManager extends SecurityManager {
 
     private final boolean debugPerm;
     private final Permissions allowed = new Permissions();
+    private final Set<String> filesallowed = new HashSet<String>();
 
     public AgentSecurityManager(boolean debugPerm, PROTOCOL proto) {
         this.debugPerm = debugPerm;
@@ -56,7 +57,7 @@ public class AgentSecurityManager extends SecurityManager {
 
                     for(String p: new TreeSet<String>(permUsed)) {
                         System.out.println(p);                    
-                    }                    
+                    }
                 }
             });
         } else {
@@ -111,20 +112,24 @@ public class AgentSecurityManager extends SecurityManager {
     public void checkPermission(Permission perm) {
         // They can be an undefined number of security.provider.*
         // Used by jmxmp
-        if("java.security.SecurityPermission".equals(perm.getClass().getCanonicalName())
+        if(perm instanceof java.security.SecurityPermission
                 && perm.getName().startsWith("getProperty.security.provider") ) {
             return;
         }
-        if("java.io.FilePermission".equals(perm.getClass().getCanonicalName())
+        if(perm instanceof java.io.FilePermission
                 && "read".equals(perm.getActions()) ) {
+            String name = perm.getName();
+            if(filesallowed.contains(name)) {
+                return;
+            }
             // Already allowed, don't check any more
             if(allowed.implies(perm)) {
                 if(debugPerm) {
                     permUsed.add(perm.toString() + " =");
                 }
+                filesallowed.add(name);
                 return;
             }
-            String name = perm.getName();
             // Perhaps it's in the allowed /proc/<pid>/... files
             if(procinfoPattern.matcher(name).matches()) {
                 if(debugPerm) {
@@ -153,6 +158,7 @@ public class AgentSecurityManager extends SecurityManager {
                     if(debugPerm) {
                         permUsed.add(perm.toString() + " =");
                     }
+                    filesallowed.add(name);
                     return;
                 }
             }
