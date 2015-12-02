@@ -18,7 +18,7 @@ import jrds.factories.ProbeMeta;
 import org.apache.log4j.Level;
 
 @ProbeMeta(
-        topStarter=jrds.probe.JRDSSocketFactory.class
+        topStarter=JmxSocketFactory.class
         )
 public class RMI extends ProbeConnected<String, Number, AgentConnection> {
     List<?> args = new ArrayList<Object>(0);
