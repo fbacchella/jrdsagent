@@ -18,8 +18,6 @@ public class RMIConnection extends AgentConnection {
 
     static
     {
-        // java.util.logging reconfiguration
-        // formating and filtering is delegated to the log4j level
         JuliToLog4jHandler.catchLogger("sun.rmi", Level.ERROR);
     }
 
@@ -40,8 +38,8 @@ public class RMIConnection extends AgentConnection {
         if(resolver.isStarted()) {
             try {
                 log(Level.TRACE, "locate registry for %s:%d", hostName, port);
-                log(Level.TRACE, "will use %s for the socket factoy", getLevel().find(JRDSSocketFactory.class));
-                registry = LocateRegistry.getRegistry(hostName, port, getLevel().find(JRDSSocketFactory.class));
+                log(Level.TRACE, "will use %s for the socket factoy", getLevel().find(JmxSocketFactory.class));
+                registry = LocateRegistry.getRegistry(hostName, port, getLevel().find(JmxSocketFactory.class));
                 log(Level.TRACE, "lookup  probe %s", RProbe.NAME);
 
                 rp = (RProbe) registry.lookup(RProbe.NAME);
