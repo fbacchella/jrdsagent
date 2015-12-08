@@ -154,7 +154,7 @@ public class AgentConnection extends Connection<RProbe> {
         // The comptability sub class RMIConnection should not do that
         if(getClass() == AgentConnection.class) {
             proxy = protocol.getProxy();
-            proxy.setName(proxy.getClass().getCanonicalName());
+            proxy.setName(proxy.getClass().getCanonicalName() + "@" + proxy.hashCode());
             getLevel().registerStarter(proxy);
             protocol.configure(this, pm);
             proxy.configure(pm);            
