@@ -55,6 +55,6 @@
         <collect>PercentUserTime</collect>
     </ds>
     <graphs>
-        <name>PerfOS_Processor-time</name>
+        <name>PerfOS_ProcessorTime</name>
     </graphs>
 </probedesc>
