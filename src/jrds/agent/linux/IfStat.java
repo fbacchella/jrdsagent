@@ -1,16 +1,39 @@
 package jrds.agent.linux;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.io.File;
 
 public class IfStat extends LProbeProc {
+    private static final String netDev = "/proc/net/route";
     String ifName;
 
-    public Boolean configure(String ifName) {
-        this.ifName = ifName;
-        return super.configure();
+    public Boolean configure() {
+        List<String> lines;
+        try {
+            lines = FileUtils.readLines(new File(netDev));
+            // Removing first line as it's the header
+            lines.remove(0);
+            for (String line : lines) {
+                if (!line.equals("")) {
+                    String[] lineSplit = line.trim().split("\\s+");
+                    String itf = lineSplit[0];
+                    String firstVal = lineSplit[1];
+                    if (Integer.parseInt(firstVal, 16) == 0) {
+                        this.ifName = itf;
+                        break;
+                    }
+                }
+            }
+            return super.configure();
+        } catch (Exception e) {
+            throw new RuntimeException("Impossible to initialize IfStat probe", e);
+        }
     }
 
     public Map<String, Number> parse(BufferedReader r) throws IOException {

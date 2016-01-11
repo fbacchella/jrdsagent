@@ -73,5 +73,8 @@
 	</ds>
 	<graphs>
 		<name>IfErrors</name>
+		<name>IfBitEx</name>
+		<name>ifPackets</name>
+		<name>IfPktsSz</name>
 	</graphs>
 </probedesc>
