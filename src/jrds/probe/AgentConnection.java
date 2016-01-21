@@ -33,31 +33,31 @@ public class AgentConnection extends Connection<RProbe> {
         jmx {
             @Override
             RProbe getRemoteProbe(Connection<?> proxy) {
-                return ((JMXConnection) proxy).getMBean(RProbeJMXImpl.NAME, RProbe.class);
+                return ((JMXRMIConnection) proxy).getMBean(RProbeJMXImpl.NAME, RProbe.class);
             }
             @Override
             void configure(AgentConnection cnx, PropertiesManager pm) {
-                ((JMXConnection) cnx.proxy).setPort(cnx.getPort());
-                ((JMXConnection) cnx.proxy).setProtocol("rmi");
+                ((JMXRMIConnection) cnx.proxy).setPort(cnx.getPort());
+                ((JMXRMIConnection) cnx.proxy).setProtocol("rmi");
             }
             @Override
             Connection<?> getProxy() {
-                return new JMXConnection();
+                return new JMXRMIConnection();
             }
         },
         jmxmp {
             @Override
             RProbe getRemoteProbe(Connection<?> proxy) {
-                return ((JMXConnection) proxy).getMBean(RProbeJMXImpl.NAME, RProbe.class);
+                return ((JMXRMIConnection) proxy).getMBean(RProbeJMXImpl.NAME, RProbe.class);
             }
             @Override
             void configure(AgentConnection cnx, PropertiesManager pm) {
-                ((JMXConnection) cnx.proxy).setPort(cnx.getPort());
-                ((JMXConnection) cnx.proxy).setProtocol("jmxmp");
+                ((JMXRMIConnection) cnx.proxy).setPort(cnx.getPort());
+                ((JMXRMIConnection) cnx.proxy).setProtocol("jmxmp");
             }
             @Override
             Connection<?> getProxy() {
-                return new JMXConnection();
+                return new JMXRMIConnection();
             }
         };
         abstract RProbe getRemoteProbe(Connection<?>proxy);
