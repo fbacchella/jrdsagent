@@ -58,7 +58,7 @@ public class AgentSecurityManager extends SecurityManager {
                     }
 
                     for(String p: new TreeSet<String>(permUsed)) {
-                        System.out.println(p);                    
+                        System.out.println(p);
                     }
                 }
             });
@@ -71,7 +71,7 @@ public class AgentSecurityManager extends SecurityManager {
         Permission newPerm = new FilePermission(System.getProperty("java.home") + File.separator + "-", "read");
         allowed.add(newPerm);
         if(debugPerm) {
-            permCreated.add(newPerm.toString());            
+            permCreated.add(newPerm.toString());
         }
 
         Map<String, Set<Permission>> permsSets;
@@ -96,14 +96,14 @@ public class AgentSecurityManager extends SecurityManager {
         for(Permission i: permsSets.get("common")) {
             allowed.add(i);
             if(debugPerm) {
-                permCreated.add(i.toString());                
+                permCreated.add(i.toString());
             }
         }
 
         for(Permission i: permsSets.get(proto.name())) {
             allowed.add(i);
             if(debugPerm) {
-                permCreated.add(i.toString());                
+                permCreated.add(i.toString());
             }
         }
 
@@ -135,7 +135,7 @@ public class AgentSecurityManager extends SecurityManager {
             // Perhaps it's in the allowed /proc/<pid>/... files
             if(procinfoPattern.matcher(name).matches()) {
                 if(debugPerm) {
-                    permUsed.add("(\"java.io.FilePermission\" \"" + procinfoPattern.pattern() + "\" \"read\") =");                            
+                    permUsed.add("(\"java.io.FilePermission\" \"" + procinfoPattern.pattern() + "\" \"read\") =");
                 }
                 return;                        
             }
@@ -175,7 +175,7 @@ public class AgentSecurityManager extends SecurityManager {
             super.checkPermission(perm);
         } catch (SecurityException e) {
             if(debugPerm) {
-                permUsed.add(perm.toString() + " -");                        
+                permUsed.add(perm.toString() + " -");
             } else {
                 throw e;
             }
@@ -190,6 +190,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.io.FilePermission", "/proc", "read" },
             new String[] { "java.io.FilePermission", "/proc/*", "read" },
             new String[] { "java.io.FilePermission", "/proc/net/*", "read" },
+            new String[] { "java.io.FilePermission", "/proc/net/rpc/nfs", "read" },
             new String[] { "java.lang.RuntimePermission", "accessDeclaredMembers" },
             new String[] { "java.lang.RuntimePermission", "createClassLoader" },
             new String[] { "java.lang.RuntimePermission", "getFileSystemAttributes" },
@@ -210,6 +211,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect" },
             new String[] { "java.lang.RuntimePermission", "getClassLoader" },
             new String[] { "java.lang.RuntimePermission", "getProtectionDomain" },
+            new String[] { "java.lang.RuntimePermission", "loadLibrary.rmi" },     // Needed on jdk 6
             new String[] { "java.lang.RuntimePermission", "reflectionFactoryAccess" },
             new String[] { "java.lang.RuntimePermission", "sun.rmi.runtime.RuntimeUtil.getInstance" },
             new String[] { "java.net.NetPermission", "specifyStreamHandler" },
@@ -271,7 +273,7 @@ public class AgentSecurityManager extends SecurityManager {
         });
         Class<?>[][] typeVector = new Class[][]{
             new Class[] { String.class },
-            new Class[] { String.class, String.class },                    
+            new Class[] { String.class, String.class },
         };
         for(String name: new String[]{"common", PROTOCOL.rmi.name(), PROTOCOL.jmx.name(), PROTOCOL.jmxmp.name()}) {
             Set<Permission> current = new HashSet<Permission>();
