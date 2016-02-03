@@ -24,6 +24,8 @@ public class Start implements Serializable {
         jmxmp,
     }
 
+    public final static RProbeActor actor = new RProbeActor();
+
     static private final class JrdsMBeanInfo {
         MBeanServer mbs;
         JMXServiceURL url;
@@ -88,7 +90,6 @@ public class Start implements Serializable {
      * @throws AlreadyBoundException
      */
     public static void start(int port, PROTOCOL proto) {
-        RProbeActor actor = new RProbeActor();
         try {
             switch(proto) {
             case  rmi: 
