@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.arkanosis.jpdh.Counter;
 import com.arkanosis.jpdh.JPDH;
 import com.arkanosis.jpdh.JPDHException;
@@ -14,22 +12,20 @@ import com.arkanosis.jpdh.Query;
 import jrds.agent.LProbe;
 
 public class PdhAgent extends LProbe {
-    private static final Logger logger = Logger.getLogger("jrds.agent.windows.pdh.PdhAgent");
 
     // Coming from configuration
     protected String name;
 
     // Constructed
     protected Query query;
-    protected Map<String, Counter> counters = new HashMap<>();
+    protected Map<String, Counter> counters = new HashMap<String, Counter>();
 
     @Override
     public Boolean configure() {
         try {
             this.query = JPDH.openQuery();
         } catch (JPDHException e) {
-            logger.error("Could not open Pdh query", e);
-            return false;
+            throw new RuntimeException(e);
         }
         return true;
     }
@@ -63,19 +59,13 @@ public class PdhAgent extends LProbe {
         try {
             query.collectData();
         } catch (JPDHException e) {
-            logger.error("Could not collect Query data for probe : "+ getName() + ", aborting this polling", e);
-            return m;
+            throw new RuntimeException(e);
         }
         for (Map.Entry<String, Counter> entry : this.counters.entrySet()) {
             try {
                 m.put(entry.getKey(), entry.getValue().getDoubleValue());
             } catch (JPDHException e) {
-                if (entry.getValue() != null) {
-                    logger.error("Error while retrieving counter value : " +
-                                 entry.getValue().getFullPath(), e);
-                } else {
-                    logger.error("Error while retrieving counter value", e);
-                }
+                throw new RuntimeException(e);
             }
         }
 

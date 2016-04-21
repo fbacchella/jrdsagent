@@ -18,6 +18,7 @@
                 <exclude>org.jvnet.com4j:com4j</exclude>
                 <exclude>jrds/agent/windows/**</exclude>
                 <exclude>com4j/**</exclude>
+                <exclude>com/arkanosis/**</exclude>
                 <exclude>jrds/probe/**</exclude>
                 <exclude>desc/**</exclude>
             </excludes>
@@ -31,6 +32,7 @@
             <excludes>
                 <exclude>jrds/agent/windows/**</exclude>
                 <exclude>com4j/**</exclude>
+                <exclude>com/arkanosis/**</exclude>
                 <exclude>jrds/probe/**</exclude>
                 <exclude>desc/**</exclude>
             </excludes>

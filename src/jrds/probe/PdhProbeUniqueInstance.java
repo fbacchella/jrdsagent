@@ -28,8 +28,8 @@ public class PdhProbeUniqueInstance extends PdhProbe {
     protected void buildArgs(List<Object> args) {
         super.buildArgs(args);
         args.add(instance);
-        List<String> counters = new ArrayList<>();
-        for (String key : getPd().getCollectStrings().keySet()) {
+        List<String> counters = new ArrayList<String>();
+        for (String key: getPd().getCollectStrings().keySet()) {
             counters.add(key);
         }
         args.add(counters);
