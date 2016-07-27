@@ -15,12 +15,13 @@
             <scope>runtime</scope>
             <unpackOptions>
             <excludes>
-                <exclude>org.jvnet.com4j:com4j</exclude>
                 <exclude>jrds/agent/windows/**</exclude>
                 <exclude>com4j/**</exclude>
                 <exclude>com/arkanosis/**</exclude>
                 <exclude>jrds/probe/**</exclude>
                 <exclude>desc/**</exclude>
+                <exclude>org/jolokia/client/**</exclude>
+                <exclude>org/apache/commons/logging/**</exclude>
             </excludes>
             </unpackOptions>
         </dependencySet>

@@ -22,6 +22,7 @@ public class Start implements Serializable {
         rmi,
         jmx,
         jmxmp,
+        jolokia,
     }
 
     public final static RProbeActor actor = new RProbeActor();
@@ -92,7 +93,10 @@ public class Start implements Serializable {
     public static void start(int port, PROTOCOL proto) {
         try {
             switch(proto) {
-            case  rmi: 
+            case jolokia: 
+                RProbeJolokiaImpl.register(actor, port);
+                break;
+            case rmi: 
                 RProbeRMIImpl.register(actor, port);
                 break;
             case jmxmp:

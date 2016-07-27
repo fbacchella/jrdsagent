@@ -137,7 +137,7 @@ public class AgentSecurityManager extends SecurityManager {
                 if(debugPerm) {
                     permUsed.add("(\"java.io.FilePermission\" \"" + procinfoPattern.pattern() + "\" \"read\") =");
                 }
-                return;                        
+                return;
             }
             // Only non hidden folder are allowed, for file system usage
             // If it call itself, privileg will be set to true, 
@@ -271,11 +271,30 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#Uptime[jrds:type=agent]", "getAttribute" },
             new String[] { "javax.management.MBeanPermission", "sun.management.RuntimeImpl#Uptime[java.lang:type=Runtime]", "getAttribute" },
         });
+        permsDescription.put(PROTOCOL.jolokia.name(), new String[][] {
+            new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect" },
+            new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect.misc" },
+            new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.text.resources" },
+            new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.text.resources.*" },
+            new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.util.resources" },
+            new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.util.resources.*" },
+            new String[] { "java.net.SocketPermission", "*", "accept,resolve" },
+            new String[] { "java.util.PropertyPermission", "java.home", "read" },
+            new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read" },
+            new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.high", "read" },
+            new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.low", "read" },
+            new String[] { "java.util.PropertyPermission", "sun.timezone.ids.oldmapping", "read" },
+            new String[] { "java.util.PropertyPermission", "user.timezone", "read,write" },
+            new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#-[jrds:type=agent]", "getMBeanInfo" },
+            new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#Uptime[jrds:type=agent]", "getAttribute" },
+            new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#prepare[jrds:type=agent]", "invoke" },
+            new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#query[jrds:type=agent]", "invoke" },
+        });
         Class<?>[][] typeVector = new Class[][]{
             new Class[] { String.class },
             new Class[] { String.class, String.class },
         };
-        for(String name: new String[]{"common", PROTOCOL.rmi.name(), PROTOCOL.jmx.name(), PROTOCOL.jmxmp.name()}) {
+        for(String name: new String[]{"common", PROTOCOL.rmi.name(), PROTOCOL.jmx.name(), PROTOCOL.jmxmp.name(), PROTOCOL.jolokia.name()}) {
             Set<Permission> current = new HashSet<Permission>();
             permsSets.put(name, current);
             for(String[] a: permsDescription.get(name)) {

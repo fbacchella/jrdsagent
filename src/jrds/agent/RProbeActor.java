@@ -30,7 +30,7 @@ public class RProbeActor {
             }
             else {
                 uptimeClassName = "jrds.agent.jmx.JmxSystemUptime";
-            }            
+            }
         }
         try {
             @SuppressWarnings("unchecked")
@@ -49,7 +49,7 @@ public class RProbeActor {
         Map<String,Number> retValue = new HashMap<String,Number>(0);
         LProbe p =  probeMap.get(name);
         if(p != null) {
-            retValue = p.query();            
+            retValue = p.query();
         }
         else {
             NameNotFoundException e = new NameNotFoundException("'" + name + "' not founds, needs to prepare");
