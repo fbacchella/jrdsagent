@@ -35,7 +35,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
      * @return true if configuration succeeds
      */
     public Boolean configure(List<?> args) {
-        if(!configure()) {
+        if (!configure()) {
             return false;
         }
         setArgs(args);
@@ -47,47 +47,47 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
         // Extract all the list of remote properties of the remote probe
         // and store them in the remoteProperties set
         String remoteSpecificsNames = getPd().getSpecific("remoteSpecifics");
-        if(remoteSpecificsNames != null && ! remoteSpecificsNames.trim().isEmpty()) {
+        if (remoteSpecificsNames != null && ! remoteSpecificsNames.trim().isEmpty()) {
             remoteSpecifics = new HashMap<String, String>();
-            for(String remoteSpecific: remoteSpecificsNames.split(",")) {
+            for (String remoteSpecific: remoteSpecificsNames.split(",")) {
                 String trimed = remoteSpecific.trim();
-                if(trimed.isEmpty()) {
+                if (trimed.isEmpty()) {
                     continue;
                 }
                 remoteSpecifics.put(trimed, Util.parseTemplate(getPd().getSpecific(trimed), this));
             }
         }
-
         return true;
     }
 
     public Map<String, Number> getNewSampleValuesConnected(AgentConnection cnx) {
         Map<String, Number> retValues = null;
         // a loop because if one query fails, we try again after a prepare
-        for(int step = 0; step < 2; step++) {
+        for (int step = 0; step < 2; step++) {
             try {
                 RProbe rp = (RProbe) cnx.getConnection();
                 if(remoteName == null) {
+                    log(Level.DEBUG, "name not found, needs to be reconfigure, iteration %d", step);
                     step++;
-                    remoteName = rp.prepare(getPd().getSpecific("remote"), remoteSpecifics, args);                
+                    remoteName = rp.prepare(getPd().getSpecific("remote"), remoteSpecifics, args);
                 }
                 retValues = rp.query(remoteName);
                 break;
             } catch (RemoteException e) {
                 Throwable root = e;
-                while(root.getCause() != null) {
+                while (root.getCause() != null) {
                     root = root.getCause();
                 }
-                if(root instanceof NameNotFoundException) {
+                if (root instanceof NameNotFoundException) {
                     log(Level.DEBUG, "remote name '%s' not defined, needs to prepare", ((NameNotFoundException)root).getRemainingName().get(0));
                     remoteName = null;
                 } else {
-                    log(Level.ERROR, root, "Remote exception on server: %s", root);  
+                    log(Level.ERROR, root, "Remote exception on server: %s", root.getMessage());
                     break;
                 }
             } catch (InvocationTargetException e) {
                 Throwable root = e;
-                while(root.getCause() != null) {
+                while (root.getCause() != null) {
                     root = root.getCause();
                 }
                 log(Level.ERROR, root, "Failed to prepare %s: %s", this, root);
@@ -108,4 +108,5 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
     public String getSourceType() {
         return "JRDS Agent";
     }
+
 }

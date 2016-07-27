@@ -7,6 +7,20 @@
         <format>jar</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+            <unpackOptions>
+            <includes>
+                <include>org/jolokia/client/**</include>
+                <include>org/json/simple/**</include>
+            </includes>
+            </unpackOptions>
+        </dependencySet>
+    </dependencySets>
     <fileSets>
         <fileSet>
             <directory>${project.build.directory}/classes</directory>

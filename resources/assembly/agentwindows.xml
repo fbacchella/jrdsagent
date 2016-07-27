@@ -19,7 +19,6 @@
                 <exclude>jrds/probe/**</exclude>
                 <exclude>desc/**</exclude>
                 <exclude>org/jolokia/client/**</exclude>
-                <exclude>org/apache/commons/logging/**</exclude>
             </excludes>
             </unpackOptions>
         </dependencySet>

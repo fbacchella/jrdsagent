@@ -1,19 +1,32 @@
 package jrds.agent;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
 import javax.management.StandardMBean;
+import javax.naming.NameNotFoundException;
 
 import org.jolokia.jvmagent.JolokiaServer;
 import org.jolokia.jvmagent.JvmAgentConfig;
 
 public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
+    
+    static public final class RemoteExceptionNamingException extends RemoteException {
+        public RemoteExceptionNamingException(String string, NameNotFoundException e) {
+            super(string, e);
+        }
+    };
 
     public final static String NAME = "jrds:type=agent";
     private final RProbeActor actor;
@@ -32,7 +45,19 @@ public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
             String url = server.getUrl();
             System.setProperty(JOLOKIA_AGENT_URL, url);
             
-            RProbeJMXImpl.register(actor);
+            try {
+                MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+                ObjectName name = new ObjectName(NAME);
+                mbs.registerMBean(new RProbeJolokiaImpl(actor), name); 
+            } catch (MalformedObjectNameException e) {
+                throw new InvocationTargetException(e, "Error registring JMX");
+            } catch (InstanceAlreadyExistsException e) {
+                throw new InvocationTargetException(e, "Error registring JMX");
+            } catch (MBeanRegistrationException e) {
+                throw new InvocationTargetException(e, "Error registring JMX");
+            } catch (NotCompliantMBeanException e) {
+                throw new InvocationTargetException(e, "Error registring JMX");
+            }
             
             System.out.println("Jolokia: Agent started with URL " + server.getUrl());
         } catch (RuntimeException exp) {
@@ -56,6 +81,8 @@ public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
     public Map<String, Number> query(String name) throws RemoteException {
         try {
             return actor.query(name);
+        } catch (NameNotFoundException e) {
+            throw new RemoteExceptionNamingException("Error while quering " + name, e);
         } catch (Exception e) {
             throw new RemoteException("Error while quering " + name, e);
         }

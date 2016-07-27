@@ -1,5 +1,6 @@
 package jrds.probe;
 
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 
 import jrds.PropertiesManager;
@@ -31,6 +32,8 @@ public class LocalAgentConnection extends AgentConnection {
         try {
             return rp.getUptime();
         } catch (RemoteException e) {
+            throw new RuntimeException(e.getCause());
+        } catch (InvocationTargetException e) {
             throw new RuntimeException(e.getCause());
         }
     }

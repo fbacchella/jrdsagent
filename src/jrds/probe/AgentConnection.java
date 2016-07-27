@@ -1,5 +1,6 @@
 package jrds.probe;
 
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 
 import org.apache.log4j.Level;
@@ -59,6 +60,20 @@ public class AgentConnection extends Connection<RProbe> {
             Connection<?> getProxy() {
                 return new JMXConnection();
             }
+        },
+        jolokia {
+            @Override
+            RProbe getRemoteProbe(Connection<?> proxy) {
+                return ((JolokiaConnection) proxy).getRemoteProbe();
+            }
+            @Override
+            void configure(AgentConnection cnx, PropertiesManager pm) {
+                ((JolokiaConnection) cnx.proxy).setPort(cnx.getPort());
+            }
+            @Override
+            Connection<?> getProxy() {
+                return new JolokiaConnection();
+            }
         };
         abstract RProbe getRemoteProbe(Connection<?>proxy);
         abstract void configure(AgentConnection cnx, PropertiesManager pm);
@@ -108,7 +123,10 @@ public class AgentConnection extends Connection<RProbe> {
                 // because only AgentConnexion used it, not the sub classes
                 uptime = getConnection().getUptime();
             } catch (RemoteException e) {
-                log(Level.ERROR, e, "uptime failed: %s", e);
+                log(Level.ERROR, e, "uptime failed: %s", e.getCause());
+                uptime = 0;
+            } catch (InvocationTargetException e) {
+                log(Level.ERROR, e, "uptime failed: %s", e.getCause());
                 uptime = 0;
             }
             log(Level.DEBUG, "uptime is %dms", uptime);
@@ -157,7 +175,7 @@ public class AgentConnection extends Connection<RProbe> {
             proxy.setName(proxy.getClass().getCanonicalName() + "@" + proxy.hashCode());
             getLevel().registerStarter(proxy);
             protocol.configure(this, pm);
-            proxy.configure(pm);            
+            proxy.configure(pm);
         }
     }
 
@@ -181,8 +199,9 @@ public class AgentConnection extends Connection<RProbe> {
         // Only the base class uses the proxy
         // The comptability sub class RMIConnection should not do that
         if(getClass() == AgentConnection.class) {
-            if(proxy == null)
+            if (proxy == null) {
                 return false;
+            }
             return proxy.isStarted();
         }
         else {
