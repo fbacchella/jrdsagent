@@ -273,7 +273,7 @@ public class AgentSecurityManager extends SecurityManager {
         });
         permsDescription.put(PROTOCOL.jolokia.name(), new String[][] {
             new String[] { "java.io.FilePermission", "/usr/share/javazi", "read" },
-            new String[] { "java.io.FilePermission", "/usr/share/javazi/*", "read" },
+            new String[] { "java.io.FilePermission", "/usr/share/javazi/-", "read" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect.misc" },
