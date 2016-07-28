@@ -107,6 +107,8 @@ public class Start implements Serializable {
             }
             //Check if actor can read uptime;
             actor.getUptime();
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException("failed to start jrdsagent", e.getCause());
         } catch (Exception e) {
             throw new RuntimeException("failed to start jrdsagent", e);
         }

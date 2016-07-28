@@ -61,9 +61,9 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             
             RProbeJMXImpl.registerinstance(new RProbeJolokiaImpl(actor));
         } catch (RuntimeException exp) {
-            System.err.println("Could not start Jolokia agent: " + exp);
+            throw new InvocationTargetException(exp, "Error registring Jolokia agent");
         } catch (IOException exp) {
-            System.err.println("Could not start Jolokia agent: " + exp);
+            throw new InvocationTargetException(exp, "Error registring Jolokia agent");
         }
     }
 
