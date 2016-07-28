@@ -7,6 +7,8 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
@@ -19,11 +21,32 @@ import javax.naming.NameNotFoundException;
 
 import org.jolokia.jvmagent.JolokiaServer;
 import org.jolokia.jvmagent.JvmAgentConfig;
+import org.jolokia.util.LogHandler;
 
 public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
     
     static public final class RemoteExceptionNamingException extends RemoteException {
         public RemoteExceptionNamingException(String string, NameNotFoundException e) {
+
+    public final static class JrdsLogHandler implements LogHandler {
+
+        private static final Logger julilogger = Logger.getLogger(RProbeJolokiaImpl.class.getCanonicalName());
+        @Override
+        public void debug(String message) {
+            julilogger.fine(message);
+        }
+
+        @Override
+        public void info(String message) {
+            julilogger.info(message);
+        }
+
+        @Override
+        public void error(String message, Throwable t) {
+            julilogger.log(Level.WARNING, message, t);
+        }
+
+    };
             super(string, e);
         }
     };
@@ -39,13 +62,14 @@ public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
             config.put("port", String.valueOf(port));
             config.put("discoveryEnabled", "false");
             config.put("host", "*");
+            config.put("logHandlerClass", JrdsLogHandler.class.getName());
             JvmAgentConfig pConfig = new JvmAgentConfig(config);
             server = new JolokiaServer(pConfig, false);
 
             server.start();
             String url = server.getUrl();
             System.setProperty(JOLOKIA_AGENT_URL, url);
-            
+
             try {
                 MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
                 ObjectName name = new ObjectName(NAME);
@@ -59,15 +83,13 @@ public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
             } catch (NotCompliantMBeanException e) {
                 throw new InvocationTargetException(e, "Error registring JMX");
             }
-            
-            System.out.println("Jolokia: Agent started with URL " + server.getUrl());
         } catch (RuntimeException exp) {
             System.err.println("Could not start Jolokia agent: " + exp);
         } catch (IOException exp) {
             System.err.println("Could not start Jolokia agent: " + exp);
         }
     }
-    
+
     static public final void stop() {
         server.stop();
         System.clearProperty(JOLOKIA_AGENT_URL);
