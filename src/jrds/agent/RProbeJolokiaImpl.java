@@ -24,9 +24,6 @@ import org.jolokia.jvmagent.JvmAgentConfig;
 import org.jolokia.util.LogHandler;
 
 public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
-    
-    static public final class RemoteExceptionNamingException extends RemoteException {
-        public RemoteExceptionNamingException(String string, NameNotFoundException e) {
 
     public final static class JrdsLogHandler implements LogHandler {
 
@@ -47,6 +44,9 @@ public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
         }
 
     };
+
+    static public final class RemoteNamingException extends RemoteException {
+        public RemoteNamingException(String string, NameNotFoundException e) {
             super(string, e);
         }
     };
@@ -105,7 +105,7 @@ public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
         try {
             return actor.query(name);
         } catch (NameNotFoundException e) {
-            throw new RemoteExceptionNamingException("Error while quering " + name, e);
+            throw new RemoteNamingException("Error while quering " + name, e);
         } catch (Exception e) {
             throw new RemoteException("Error while quering " + name, e);
         }

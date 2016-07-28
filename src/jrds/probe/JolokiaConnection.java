@@ -78,7 +78,7 @@ public class JolokiaConnection extends AgentConnection {
                     String fullmsg = e.getMessage();
                     String[] msgSplited = fullmsg.split("(;|\\n\\t)");
                     String message = msgSplited[msgSplited.length - 1].trim();
-                    if ("jrds.agent.RProbeJolokiaImpl$RemoteExceptionNamingException".equals(e.getErrorType())) {
+                    if ("jrds.agent.RProbeJolokiaImpl$RemoteNamingException".equals(e.getErrorType())) {
                         NameNotFoundException nnfe = new NameNotFoundException();
                         try {
                             nnfe.setRemainingName(new CompositeName(name));
