@@ -38,6 +38,7 @@ public class RProbeJolokiaImpl extends StandardMBean implements RProbe {
             Map<String,String> config = new HashMap<String, String>();
             config.put("port", String.valueOf(port));
             config.put("discoveryEnabled", "false");
+            config.put("host", "*");
             JvmAgentConfig pConfig = new JvmAgentConfig(config);
             server = new JolokiaServer(pConfig, false);
 
