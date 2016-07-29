@@ -19,7 +19,7 @@ public abstract class LProbeProc extends LProbe {
         if("statFile".equals(specific)) {
             statFile = new File(value);
         } else {
-            super.setProperty(specific, value);            
+            super.setProperty(specific, value);
         }
     }
 

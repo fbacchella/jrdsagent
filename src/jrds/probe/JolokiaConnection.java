@@ -72,7 +72,6 @@ public class JolokiaConnection extends AgentConnection {
                 try {
                     return j4pClient.execute(req);
                 } catch (J4pRemoteException e) {
-                    
                     // Jolokia don't return the real exception message
                     // It needs to be extracted from the returned message
                     String fullmsg = e.getMessage();
