@@ -13,12 +13,21 @@ public class MultiNoKeys extends LProbeProc {
     private int keyIndex = 0;
     private String separator = "\\s+";
 
+    public Boolean configure(Long keyIndex, String separator) {
+        return doconfigure(keyIndex, separator);
+    }
+
     public Boolean configure(Integer keyIndex, String separator) {
+        return doconfigure(keyIndex, separator);
+    }
+
+    // Needed because jolokia deserializaion can resolve to a Long the keyIndex
+    private boolean doconfigure(Number keyIndex, String separator) {
         if(keyIndex != null) {
-            this.keyIndex = keyIndex;            
+            this.keyIndex = keyIndex.intValue();
         }
         if(separator != null && ! separator.isEmpty()) {
-            this.separator = separator;            
+            this.separator = separator;
         }
         return super.configure();
     }
