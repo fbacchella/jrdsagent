@@ -16,7 +16,7 @@ public class MultiNoKeys extends RMI implements IndexedProbe {
 
         // The colon key index
         Integer keyIndex = jrds.Util.parseStringNumber(getPd().getSpecific("keyIndex"), -1);
-        args.add(keyIndex);            
+        args.add(keyIndex);
 
         // The regex to use as a separator
         String separator = getPd().getSpecific("separator");
