@@ -15,10 +15,7 @@ public class RMIIndexed extends RMI implements IndexedProbe {
         if(!super.configure()) {
             return false;
         }
-        String localIndex = getPd().getSpecific("localindex");
-        if(localIndex == null || ! "true".equals(localIndex.toLowerCase())) {
-            setArgs(Collections.singletonList(index));
-        }
+        setArgs(Collections.singletonList(index));
         return true;
     }
 

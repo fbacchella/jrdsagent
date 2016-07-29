@@ -12,12 +12,15 @@ import jrds.agent.LProbe;
 
 public abstract class LProbeProc extends LProbe {
 
-    private File statFile = null; 
+    private File statFile = null;
+    private String name = null;
 
     @Override
     public void setProperty(String specific, String value) {
         if("statFile".equals(specific)) {
             statFile = new File(value);
+        } else if ("remoteName".equals(specific)){
+            name = value;
         } else {
             super.setProperty(specific, value);
         }
@@ -26,7 +29,7 @@ public abstract class LProbeProc extends LProbe {
     @Override
     public Boolean configure() {
         try {
-            if(! statFile.getCanonicalPath().startsWith("/proc") && ! statFile.getCanonicalPath().startsWith("/sys") ) {
+            if (!statFile.getCanonicalPath().startsWith("/proc") && !statFile.getCanonicalPath().startsWith("/sys") ) {
                 FilePermission p = new FilePermission(statFile.getPath(), "read");
                 throw new AccessControlException("access denied " + p);
             }
@@ -34,16 +37,17 @@ public abstract class LProbeProc extends LProbe {
             throw new RuntimeException(e);
         }
 
-        if(statFile != null && ! statFile.canRead()) {
+        if (statFile == null || ! statFile.canRead()) {
             throw new RuntimeException("file '" + statFile + "' not usable");
         }
-        return statFile != null &&
-                statFile.canRead() &&
-                super.configure();
+        if (name == null || name.isEmpty()) {
+            name = statFile.getAbsoluteFile().getName();
+        }
+        return super.configure();
     }
 
     public String getName() {
-        return statFile.getAbsoluteFile().getName();
+        return name;
     }
 
     /**

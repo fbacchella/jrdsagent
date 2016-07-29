@@ -23,10 +23,10 @@ public class MultiNoKeys extends LProbeProc {
 
     // Needed because jolokia deserializaion can resolve to a Long the keyIndex
     private boolean doconfigure(Number keyIndex, String separator) {
-        if(keyIndex != null) {
+        if (keyIndex != null) {
             this.keyIndex = keyIndex.intValue();
         }
-        if(separator != null && ! separator.isEmpty()) {
+        if (separator != null && ! separator.isEmpty()) {
             this.separator = separator;
         }
         return super.configure();
@@ -36,14 +36,14 @@ public class MultiNoKeys extends LProbeProc {
         Map<String, Number> retValues = new HashMap<String, Number>();
 
         String line;
-        while((line = r.readLine()) != null) {
+        while ((line = r.readLine()) != null) {
             String[] values = line.trim().split(separator);
             //Skip line if it's too short
-            if(values.length < keyIndex + 1) {
+            if (values.length < keyIndex + 1) {
                 continue;
             }
             String keyPrefix = values[keyIndex] + ".";
-            for(int i=0; i < values.length; i++) {
+            for (int i=0; i < values.length; i++) {
                 Number parsed = Start.parseStringNumber(values[i], Double.NaN);
                 String localKey = keyPrefix + i;
                 retValues.put(localKey, parsed);

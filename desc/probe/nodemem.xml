@@ -5,8 +5,11 @@
 	<probeName>nodemem${attr.index}</probeName>
 	<probeClass>jrds.probe.MultiNoKeys</probeClass>
 	<specific name="statFile">/sys/devices/system/node/node${attr.index}/meminfo</specific>
+    <specific name="remoteName">nodememinfo.${attr.index}</specific>
 	<specific name="keyIndex">2</specific>
 	<specific name="separator">[\s:]+</specific>
+    <specific name="localindex">true</specific>
+    <specific name="remoteSpecifics">statFile,remoteName</specific>
 	<ds>
 		<dsName>total</dsName>
 		<dsType>GAUGE</dsType>

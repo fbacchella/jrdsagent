@@ -57,6 +57,8 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
                 remoteSpecifics.put(trimed, Util.parseTemplate(getPd().getSpecific(trimed), this));
             }
         }
+        log(Level.DEBUG, "remote specifics %s", remoteSpecifics);
+
         return true;
     }
 
