@@ -140,7 +140,7 @@ public class AgentSecurityManager extends SecurityManager {
                 return;
             }
             // Only non hidden folder are allowed, for file system usage
-            // If it call itself, privileg will be set to true, 
+            // If it call itself, privileges will be set to true, 
             // so it can check isDirectory and isHidden
             PrivilegHolder privileged = Privilege.get();
             if(privileged.privileged) {
@@ -187,10 +187,6 @@ public class AgentSecurityManager extends SecurityManager {
         Map<String, Set<Permission>> permsSets = new HashMap<String, Set<Permission>>();
 
         permsDescription.put("common", new String[][] {
-            new String[] { "java.io.FilePermission", "/proc", "read" },
-            new String[] { "java.io.FilePermission", "/proc/*", "read" },
-            new String[] { "java.io.FilePermission", "/proc/net/*", "read" },
-            new String[] { "java.io.FilePermission", "/proc/net/rpc/nfs", "read" },
             new String[] { "java.lang.RuntimePermission", "accessDeclaredMembers" },
             new String[] { "java.lang.RuntimePermission", "createClassLoader" },
             new String[] { "java.lang.RuntimePermission", "getFileSystemAttributes" },
@@ -205,6 +201,13 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read" }, 
             new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.high", "read" },  // Needed on windows
             new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.low", "read" },   // Needed on windows
+        });
+        permsDescription.put("forprobes", new String[][] {
+            new String[] { "java.io.FilePermission", "/proc", "read" },
+            new String[] { "java.io.FilePermission", "/proc/*", "read" },
+            new String[] { "java.io.FilePermission", "/proc/net/*", "read" },
+            new String[] { "java.io.FilePermission", "/proc/net/rpc/*", "read" },
+            new String[] { "java.io.FilePermission", "/sys/devices/system/node/-", "read" },
         });
         permsDescription.put(PROTOCOL.rmi.name(), new String[][] {
             new String[] { "java.io.SerializablePermission", "enableSubstitution" },
@@ -286,9 +289,6 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.util.PropertyPermission", "java.home", "read" },
             new String[] { "java.util.PropertyPermission", "java.util.currency.data", "read" },
             new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read" },
-            new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.high", "read" },
-            new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.low", "read" },
-            new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.low", "read" },
             new String[] { "java.util.PropertyPermission", "jdk.net.revealLocalAddress", "read" },
             new String[] { "java.util.PropertyPermission", "sun.timezone.ids.oldmapping", "read" },
             new String[] { "java.util.PropertyPermission", "user.country", "read" },
@@ -303,7 +303,7 @@ public class AgentSecurityManager extends SecurityManager {
             new Class[] { String.class },
             new Class[] { String.class, String.class },
         };
-        for(String name: new String[]{"common", PROTOCOL.rmi.name(), PROTOCOL.jmx.name(), PROTOCOL.jmxmp.name(), PROTOCOL.jolokia.name()}) {
+        for(String name: new String[]{"common", "forprobes", PROTOCOL.rmi.name(), PROTOCOL.jmx.name(), PROTOCOL.jmxmp.name(), PROTOCOL.jolokia.name()}) {
             Set<Permission> current = new HashSet<Permission>();
             permsSets.put(name, current);
             for(String[] a: permsDescription.get(name)) {
