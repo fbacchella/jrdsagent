@@ -261,6 +261,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.security.SecurityPermission", "putProviderProperty.SUN" },
             new String[] { "java.util.PropertyPermission", "com.sun.jmx.remote.bug.compatible", "read" },
             new String[] { "java.util.PropertyPermission", "java.security.egd", "read" },
+            new String[] { "java.util.PropertyPermission", "java.util.currency.data", "read" },
             new String[] { "java.util.PropertyPermission", "os.arch", "read" },
             new String[] { "java.util.PropertyPermission", "sun.net.maxDatagramSockets", "read" },
             new String[] { "java.util.PropertyPermission", "sun.util.logging.disableCallerCheck", "read" },
