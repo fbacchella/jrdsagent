@@ -100,6 +100,13 @@ public class AgentSecurityManager extends SecurityManager {
             }
         }
 
+        for(Permission i: permsSets.get("forprobes")) {
+            allowed.add(i);
+            if(debugPerm) {
+                permCreated.add(i.toString());
+            }
+        }
+
         for(Permission i: permsSets.get(proto.name())) {
             allowed.add(i);
             if(debugPerm) {
@@ -116,12 +123,18 @@ public class AgentSecurityManager extends SecurityManager {
         // Used by jmxmp
         if(perm instanceof java.security.SecurityPermission
                 && perm.getName().startsWith("getProperty.security.provider") ) {
+            if(debugPerm) {
+                permUsed.add(perm.toString() + " =");
+            }
             return;
         }
         if(perm instanceof java.io.FilePermission
                 && "read".equals(perm.getActions()) ) {
             String name = perm.getName();
             if(filesallowed.contains(name)) {
+                if(debugPerm) {
+                    permUsed.add(perm.toString() + " =");
+                }
                 return;
             }
             // Already allowed, don't check any more
@@ -173,6 +186,7 @@ public class AgentSecurityManager extends SecurityManager {
         }
         try {
             super.checkPermission(perm);
+            permUsed.add(perm.toString() + " =");
         } catch (SecurityException e) {
             if(debugPerm) {
                 permUsed.add(perm.toString() + " -");
@@ -303,7 +317,7 @@ public class AgentSecurityManager extends SecurityManager {
             new Class[] { String.class },
             new Class[] { String.class, String.class },
         };
-        for(String name: new String[]{"common", "forprobes", PROTOCOL.rmi.name(), PROTOCOL.jmx.name(), PROTOCOL.jmxmp.name(), PROTOCOL.jolokia.name()}) {
+        for(String name: permsDescription.keySet()) {
             Set<Permission> current = new HashSet<Permission>();
             permsSets.put(name, current);
             for(String[] a: permsDescription.get(name)) {
