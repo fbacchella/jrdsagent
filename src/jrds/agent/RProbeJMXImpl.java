@@ -62,6 +62,8 @@ public class RProbeJMXImpl extends StandardMBean implements RProbe {
     public String prepare(String name, Map<String, String> specifics, List<?> args) throws RemoteException {
         try {
             return actor.prepare(name, specifics, args);
+        } catch (InvocationTargetException e) {
+            throw new RemoteException("Error while preparing " + name, e.getCause());
         } catch (Exception e) {
             throw new RemoteException("Error while preparing " + name, e);
         }
