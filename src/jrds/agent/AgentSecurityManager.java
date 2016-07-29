@@ -186,7 +186,9 @@ public class AgentSecurityManager extends SecurityManager {
         }
         try {
             super.checkPermission(perm);
-            permUsed.add(perm.toString() + " =");
+            // Was acceped, but we should add it anyway
+            // Some accepted permissions make jrdsagent failed anyway
+            permUsed.add(perm.toString() + " ?");
         } catch (SecurityException e) {
             if(debugPerm) {
                 permUsed.add(perm.toString() + " -");
@@ -304,6 +306,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.util.PropertyPermission", "java.util.currency.data", "read" },
             new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read" },
             new String[] { "java.util.PropertyPermission", "jdk.net.revealLocalAddress", "read" },
+            new String[] { "java.util.PropertyPermission", "line.separator", "read" },
             new String[] { "java.util.PropertyPermission", "sun.timezone.ids.oldmapping", "read" },
             new String[] { "java.util.PropertyPermission", "user.country", "read" },
             new String[] { "java.util.PropertyPermission", "user.dir", "read" },
