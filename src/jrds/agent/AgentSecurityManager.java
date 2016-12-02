@@ -35,6 +35,7 @@ public class AgentSecurityManager extends SecurityManager {
     private final Set<String> permCreated;
 
     private final Pattern procinfoPattern =  Pattern.compile("/proc/[0-9]+/(cmdline|io|stat|statm)");
+    private final Pattern diskPattern =  Pattern.compile("/dev/((sd|hd|xvd|dm-|vd)[a-z]+[0-9]*|cciss/c[0-9]+d[0-9](p[0-9]+)?|nvme[0-9]+n[0-9]+(p[0-9]+)?|disk/by-[a-z]+/.*|mapper/.*)");
 
     private final boolean debugPerm;
     private final Permissions allowed = new Permissions();
@@ -146,10 +147,18 @@ public class AgentSecurityManager extends SecurityManager {
                 return;
             }
             // Perhaps it's in the allowed /proc/<pid>/... files
-            if(procinfoPattern.matcher(name).matches()) {
+            if(procinfoPattern.matcher(name).matches() && "read".equals(perm.getActions())) {
                 if(debugPerm) {
                     permUsed.add("(\"java.io.FilePermission\" \"" + procinfoPattern.pattern() + "\" \"read\") =");
                 }
+                return;
+            }
+            // Or it's block device
+            if(diskPattern.matcher(name).matches() && "read".equals(perm.getActions())) {
+                if(debugPerm) {
+                    permUsed.add("(\"java.io.FilePermission\" \"" + diskPattern.pattern() + "\" \"read\") =");
+                }
+                filesallowed.add(name);
                 return;
             }
             // Only non hidden folder are allowed, for file system usage
@@ -224,6 +233,8 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.io.FilePermission", "/proc/net/*", "read" },
             new String[] { "java.io.FilePermission", "/proc/net/rpc/*", "read" },
             new String[] { "java.io.FilePermission", "/sys/devices/system/node/-", "read" },
+            new String[] { "java.io.FilePermission", "/dev/mapper/-", "read" },
+            new String[] { "java.io.FilePermission", "/dev/disk/-", "read" },
         });
         permsDescription.put(PROTOCOL.rmi.name(), new String[][] {
             new String[] { "java.io.SerializablePermission", "enableSubstitution" },

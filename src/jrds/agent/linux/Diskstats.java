@@ -1,6 +1,7 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,12 +9,33 @@ import java.util.Map;
 import jrds.agent.Start;
 
 public class Diskstats extends LProbeProc {
-    String disk;
+    
+    static private final String[] PREFIXES = {"/dev/mapper/", "/dev/disk/", "/dev/"};
+    
+    private String disk;
     static private final int offset = 2;
 
     public Boolean configure(String disk) {
-        this.disk = disk;
-        return super.configure();
+        try {
+            File diskFile = null;
+            for (String tryprefix: PREFIXES) {
+                diskFile = new File(tryprefix + disk);
+                if (diskFile.exists()) {
+                    break;
+                } else {
+                    diskFile = null;
+                }
+            }
+            if (diskFile == null) {
+                throw new RuntimeException("Disk '" + disk + "' don't exists");
+            }
+            String realdisk = diskFile.getCanonicalPath();
+            realdisk = realdisk.replace("/dev/", "");
+            this.disk = realdisk;
+            return super.configure();
+        } catch (IOException e) {
+            throw new RuntimeException("can't resolve path to  '" + disk + "':" + e.getMessage(), e);
+        }
     }
 
     public Map<String, Number> parse(BufferedReader r) throws IOException {
