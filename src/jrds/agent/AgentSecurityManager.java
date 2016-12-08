@@ -35,7 +35,7 @@ public class AgentSecurityManager extends SecurityManager {
     private final Set<String> permCreated;
 
     private final Pattern procinfoPattern =  Pattern.compile("/proc/[0-9]+/(cmdline|io|stat|statm)");
-    private final Pattern diskPattern =  Pattern.compile("/dev/((sd|hd|xvd|dm-|vd)[a-z]+[0-9]*|cciss/c[0-9]+d[0-9](p[0-9]+)?|nvme[0-9]+n[0-9]+(p[0-9]+)?|disk/by-[a-z]+/.*|mapper/.*)");
+    private final Pattern diskPattern =  Pattern.compile("/dev/((sd|hd|xvd|vd)[a-z]+[0-9]*|cciss/c[0-9]+d[0-9](p[0-9]+)?|nvme[0-9]+n[0-9]+(p[0-9]+)?|disk/by-[a-z]+/.*|mapper/.*|dm-[0-9]+)");
 
     private final boolean debugPerm;
     private final Permissions allowed = new Permissions();
