@@ -222,6 +222,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.lang.RuntimePermission", "setContextClassLoader" },
             new String[] { "java.lang.RuntimePermission", "writeFileDescriptor" },
             new String[] { "java.lang.reflect.ReflectPermission", "suppressAccessChecks" },
+            new String[] { "java.net.NetPermission", "specifyStreamHandler" }, // Appears with jar in extensions directory
             new String[] { "java.util.logging.LoggingPermission", "control", "" },
             new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read" }, 
             new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.high", "read" },  // Needed on windows
@@ -244,7 +245,6 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.lang.RuntimePermission", "loadLibrary.rmi" },     // Needed on jdk 6
             new String[] { "java.lang.RuntimePermission", "reflectionFactoryAccess" },
             new String[] { "java.lang.RuntimePermission", "sun.rmi.runtime.RuntimeUtil.getInstance" },
-            new String[] { "java.net.NetPermission", "specifyStreamHandler" },
             new String[] { "java.net.SocketPermission", "*", "accept,resolve" },
             new String[] { "java.security.SecurityPermission", "getPolicy" },
             new String[] { "java.util.PropertyPermission", "java.rmi.server.RMIClassLoaderSpi", "read" },
@@ -342,6 +342,15 @@ public class AgentSecurityManager extends SecurityManager {
                 Permission newPerm = (Permission) c.newInstance((Object[])argVector);
                 current.add(newPerm);
             }
+        }
+        //Adding some autobuild permissions
+        for (String path: System.getProperty("java.endorsed.dirs", "").split(File.pathSeparator)) {
+            Permission newPerm = new java.io.FilePermission(path + "/*", "read");
+            permsSets.get("common").add(newPerm);
+        }
+        for (String path: System.getProperty("java.ext.dirs", "").split(File.pathSeparator)) {
+            Permission newPerm = new java.io.FilePermission(path + "/*", "read");
+            permsSets.get("common").add(newPerm);
         }
         return permsSets;
     }

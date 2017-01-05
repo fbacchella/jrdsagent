@@ -2,6 +2,7 @@ package jrds.agent;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +59,11 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             server.start();
             String url = server.getUrl();
             System.setProperty(JOLOKIA_AGENT_URL, url);
+            // Check that jolokia is started, before Security manager is started
+            URL jolokiaurl = new URL(url);
+            if (jolokiaurl.getContent() == null) {
+                throw new RuntimeException("Non working jolokia server");
+            }
             
             RProbeJMXImpl.registerinstance(new RProbeJolokiaImpl(actor));
         } catch (RuntimeException exp) {
