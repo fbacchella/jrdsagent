@@ -71,6 +71,10 @@ public class RProbeActor {
             probeClass = Class.forName(name);
             Constructor<?> theConst = probeClass.getConstructor();
             return (LProbe) theConst.newInstance();
+        } catch (ExceptionInInitializerError e) {
+            throw new InvocationTargetException(e.getCause(), "Class " + name + " can't be initialized");
+        } catch (NoClassDefFoundError e) {
+            throw new InvocationTargetException(e, "Class " + name + " not found");
         } catch (ClassNotFoundException e) {
             throw new InvocationTargetException(e, "Class " + name + " not found");
         } catch (IllegalArgumentException e) {
