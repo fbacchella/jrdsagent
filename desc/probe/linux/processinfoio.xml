@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
+<probedesc>
+    <name>ProcessInfoIO</name>
+    <probeName>piio-${index}</probeName>
+    <probeClass>jrds.probe.ProcessInfo</probeClass>
+    <specific name="remote">jrds.agent.linux.ProcessIO</specific>
+    <ds>
+        <dsName>count</dsName>
+        <dsType>gauge</dsType>
+        <collect>count</collect>
+    </ds>
+    <ds>
+        <dsName>rchar</dsName>
+        <dsType>counter</dsType>
+        <collect>io:rchar</collect>
+    </ds>
+    <ds>
+        <dsName>wchar</dsName>
+        <dsType>counter</dsType>
+        <collect>io:wchar</collect>
+    </ds>
+    <ds>
+        <dsName>syscr</dsName>
+        <dsType>counter</dsType>
+        <collect>io:syscr</collect>
+    </ds>
+    <ds>
+        <dsName>syscw</dsName>
+        <dsType>counter</dsType>
+        <collect>io:syscw</collect>
+    </ds>
+    <ds>
+        <dsName>read_bytes</dsName>
+        <dsType>counter</dsType>
+        <collect>io:read_bytes</collect>
+    </ds>
+    <ds>
+        <dsName>write_bytes</dsName>
+        <dsType>counter</dsType>
+        <collect>io:write_bytes</collect>
+    </ds>
+    <ds>
+        <dsName>cancelled_w_bytes</dsName>
+        <dsType>counter</dsType>
+        <collect>io:cancelled_write_bytes</collect>
+    </ds>
+    <graphs>
+        <name>ProcessInfo-BlkIO</name>
+    </graphs>
+</probedesc>

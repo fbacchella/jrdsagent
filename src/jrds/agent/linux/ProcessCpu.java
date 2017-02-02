@@ -3,7 +3,7 @@ package jrds.agent.linux;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProcessInfo26 extends AbstractProcessParser {
+public class ProcessCpu extends AbstractProcessParser {
     
     //See fs/proc/array.c
     static final String[] statKey = {
@@ -29,7 +29,7 @@ public class ProcessInfo26 extends AbstractProcessParser {
         "num_threads",                  //
         null,                           // it_real_value
         "start_time",                   // time the process started after system boot
-        "vsize",                        //
+        null,                        //
         null,                           // mm ? get_mm_rss(mm) : 0,
         null,                           // rsslim
         null,                           // mm ? mm->start_code : 0
@@ -52,27 +52,11 @@ public class ProcessInfo26 extends AbstractProcessParser {
         "gtime",                        // cputime_to_clock_t(gtime)
         "cgtime",                       // cputime_to_clock_t(cgtime))
     };
-    static final String[] statmKey = {
-        "size",
-        "resident",
-        "shared",
-        null,                           // text
-        null,                           //lib
-        "data",
-        null                            // dt
-    };
-
-    @Override
-   public String getName() {
-        return "pi26-" + cmdFilter.toString();
-    }
 
     @Override
     protected Map<String, Number> parseProc(int pid) {
         Map<String, Number> bufferMap = new HashMap<String, Number>();
         bufferMap.putAll(parseFile(pid, "stat", statKey));
-        bufferMap.putAll(parseFile(pid, "statm", statmKey));
-        bufferMap.putAll(parseKeyFile(pid, "io"));
         return bufferMap;
     }
 
@@ -84,6 +68,11 @@ public class ProcessInfo26 extends AbstractProcessParser {
             return -1;
         }
         return startTimeTickObject.longValue();
+    }
+
+    @Override
+    public String getName() {
+        return "picpu-" + cmdFilter.toString();
     }
 
 }

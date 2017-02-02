@@ -1,79 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
-	<name>ProcessInfo-time</name>
-	<graphName>pstime-{2}</graphName>
-	<graphTitle>CPU Time for {2}</graphTitle>
-	<verticalLabel>s</verticalLabel>
-	<lowerLimit>0</lowerLimit>
-	<add>
-		<name>utime</name>
-	</add>
-	<add>
-		<rpn>utime, 100, /</rpn>
-		<graphType>line</graphType>
-		<legend>User Time</legend>
-	</add>
-	<add>
-		<name>stime</name>
-	</add>
-	<add>
-		<rpn>stime , 100, /</rpn>
-		<graphType>line</graphType>
-		<legend>System Time</legend>
-	</add>
-	<add>
-		<name>gtime</name>
-	</add>
-	<add>
-		<rpn>gtime , 100, /</rpn>
-		<graphType>line</graphType>
-		<legend>Guest Time</legend>
-	</add>
-	<add>
-		<name>biotime</name>
-	</add>
-	<add>
-		<rpn>biotime , 100, /</rpn>
-		<graphType>line</graphType>
-		<legend>Blocked IO time</legend>
-	</add>
-	<add>
-		<name>cutime</name>
-	</add>
-	<add>
-		<rpn>cutime , 100, /</rpn>
-		<graphType>line</graphType>
-		<legend>Cumulated user Time</legend>
-	</add>
-	<add>
-		<name>cstime</name>
-	</add>
-	<add>
-		<rpn>cstime, 100, /</rpn>
-		<graphType>line</graphType>
-		<legend>Cumulated system Time</legend>
-	</add>
-	<add>
-		<name>cgtime</name>
-	</add>
-	<add>
-		<rpn>cgtime, 100, /</rpn>
-		<graphType>line</graphType>
-		<legend>Cumulated guest Time</legend>
-	</add>
-	<hosttree>
-		<pathelement>HOST</pathelement>
-		<pathelement>SYSTEM</pathelement>
-		<pathstring>Processus</pathstring>
-		<pathelement>INDEX</pathelement>
-		<pathstring>CPU Time</pathstring>
-	</hosttree>
-	<viewtree>
-		<pathelement>SYSTEM</pathelement>
-		<pathstring>Processus</pathstring>
-		<pathelement>HOST</pathelement>
-		<pathelement>INDEX</pathelement>
-		<pathstring>CPU Time</pathstring>
-	</viewtree>
+    <name>ProcessInfo-time</name>
+    <graphName>pstime-{index}</graphName>
+    <graphTitle>CPU Time for ${index} on ${host}</graphTitle>
+    <verticalLabel>s</verticalLabel>
+    <lowerLimit>0</lowerLimit>
+    <add>
+        <name>utime</name>
+    </add>
+    <add>
+        <rpn>utime, 100, /</rpn>
+        <graphType>line</graphType>
+        <legend>User Time</legend>
+    </add>
+    <add>
+        <name>stime</name>
+    </add>
+    <add>
+        <rpn>stime , 100, /</rpn>
+        <graphType>line</graphType>
+        <legend>System Time</legend>
+    </add>
+    <add>
+        <name>gtime</name>
+    </add>
+    <add>
+        <rpn>gtime , 100, /</rpn>
+        <graphType>line</graphType>
+        <legend>Guest Time</legend>
+    </add>
+    <add>
+        <name>biotime</name>
+    </add>
+    <add>
+        <rpn>biotime , 100, /</rpn>
+        <graphType>line</graphType>
+        <legend>Blocked IO time</legend>
+    </add>
+    <add>
+        <name>cutime</name>
+    </add>
+    <add>
+        <rpn>cutime , 100, /</rpn>
+        <graphType>line</graphType>
+        <legend>Cumulated user Time</legend>
+    </add>
+    <add>
+        <name>cstime</name>
+    </add>
+    <add>
+        <rpn>cstime, 100, /</rpn>
+        <graphType>line</graphType>
+        <legend>Cumulated system Time</legend>
+    </add>
+    <add>
+        <name>cgtime</name>
+    </add>
+    <add>
+        <rpn>cgtime, 100, /</rpn>
+        <graphType>line</graphType>
+        <legend>Cumulated guest Time</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>SYSTEM</pathelement>
+        <pathstring>Processus</pathstring>
+        <pathelement>INDEX</pathelement>
+        <pathstring>CPU Time</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>SYSTEM</pathelement>
+        <pathstring>Processus</pathstring>
+        <pathelement>HOST</pathelement>
+        <pathelement>INDEX</pathelement>
+        <pathstring>CPU Time</pathstring>
+    </viewtree>
 </graphdesc>

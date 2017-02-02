@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
-  <name>ProcessInfo-maj_faults</name>
-  <graphName>psi-maj_faults-{2}</graphName>
-  <graphTitle>VM faults for {2}</graphTitle>
-  <verticalLabel>faults/s</verticalLabel>
-  <lowerLimit>0</lowerLimit>
-  <add>
-    <name>maj_flt</name>
-    <graphType>line</graphType>
-    <legend>Major faults</legend>
-  </add>
-  <add>
-    <name>cmaj_flt</name>
-    <graphType>line</graphType>
-    <legend>Cumulated major faults</legend>
-  </add>
-  <hosttree>
-    <pathelement>HOST</pathelement>
-    <pathelement>SYSTEM</pathelement>
-    <pathstring>Processus</pathstring>
-    <pathelement>INDEX</pathelement>
-    <pathstring>VM faults</pathstring>
-  </hosttree>
-  <viewtree>
-    <pathelement>SYSTEM</pathelement>
-    <pathstring>Processus</pathstring>
-    <pathelement>HOST</pathelement>
-    <pathelement>INDEX</pathelement>
-    <pathstring>VM faults</pathstring>
-  </viewtree>
+    <name>ProcessInfo-maj_faults</name>
+    <graphName>psi-maj_faults-{index}</graphName>
+    <graphTitle>VM faults for ${index} on ${host}</graphTitle>
+    <verticalLabel>faults/s</verticalLabel>
+    <lowerLimit>0</lowerLimit>
+    <add>
+        <name>maj_flt</name>
+        <graphType>line</graphType>
+        <legend>Major faults</legend>
+    </add>
+    <add>
+        <name>cmaj_flt</name>
+        <graphType>line</graphType>
+        <legend>Cumulated major faults</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>SYSTEM</pathelement>
+        <pathstring>Processus</pathstring>
+        <pathelement>INDEX</pathelement>
+        <pathstring>VM faults</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>SYSTEM</pathelement>
+        <pathstring>Processus</pathstring>
+        <pathelement>HOST</pathelement>
+        <pathelement>INDEX</pathelement>
+        <pathstring>VM faults</pathstring>
+    </viewtree>
 </graphdesc>
