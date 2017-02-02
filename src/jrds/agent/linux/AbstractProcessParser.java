@@ -22,7 +22,7 @@ public abstract class AbstractProcessParser  extends LProbe {
     static private final int USER_HZ = 100; 
 
     static private final Pattern PIDDIRPATTERN = Pattern.compile("^(\\d+)$");
-    
+
     static protected final Charset LINUXFSCHARSET = Charset.forName("US-ASCII");
 
     protected Pattern cmdFilter = null;
@@ -97,11 +97,15 @@ public abstract class AbstractProcessParser  extends LProbe {
                             }
                         } while (cursor < pids.length);
                         return -1;
-                     }
-                    
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new UnsupportedOperationException("remove");
+                    }
                 };
             }
-            
+
         };
     }
 
@@ -141,7 +145,7 @@ public abstract class AbstractProcessParser  extends LProbe {
     }
 
     protected abstract Map<String, Number> parseProc(int pid);
-    
+
     protected abstract long getProcUptime(Map<String, Number> values);
 
     protected Map<String, Number> parseKeyFile(int pid, String file) {
