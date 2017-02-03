@@ -54,8 +54,8 @@
     <viewtree>
         <pathelement>SYSTEM</pathelement>
         <pathstring>Processus</pathstring>
-        <pathelement>HOST</pathelement>
         <pathstring>${index}</pathstring>
+        <pathelement>HOST</pathelement>
         <pathstring>Memory usage</pathstring>
     </viewtree>
 </graphdesc>

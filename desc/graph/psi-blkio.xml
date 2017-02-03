@@ -29,8 +29,8 @@
     <viewtree>
         <pathelement>SYSTEM</pathelement>
         <pathstring>Processus</pathstring>
-        <pathelement>HOST</pathelement>
         <pathelement>INDEX</pathelement>
+        <pathelement>HOST</pathelement>
         <pathstring>Block IO</pathstring>
     </viewtree>
 </graphdesc>

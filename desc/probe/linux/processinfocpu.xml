@@ -60,11 +60,6 @@
         <dsType>gauge</dsType>
         <collect>stat:num_threads</collect>
     </ds>
-    <ds>
-        <dsName>vsize</dsName>
-        <dsType>gauge</dsType>
-        <collect>stat:vsize</collect>
-    </ds>
     <graphs>
         <name>ProcessInfo-threads</name>
         <name>ProcessInfo-maj_faults</name>

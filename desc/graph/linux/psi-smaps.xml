@@ -15,10 +15,26 @@
         <name>anon:Anonymous</name>
     </add>
     <add>
+        <name>anonymous</name>
         <rpn>anon:Anonymous, mf:Anonymous, +</rpn>
-        <graphType>line</graphType>
-        <color>blue</color>
-        <legend>Anonymous memory usage</legend>
+    </add>
+    <add>
+        <name>mf:Swap</name>
+    </add>
+    <add>
+        <name>anon:Swap</name>
+    </add>
+    <add>
+        <rpn>anonymous</rpn>
+        <graphType>area</graphType>
+        <color>green</color>
+        <legend>Anonymous resident memory usage</legend>
+    </add>
+    <add>
+        <rpn>anon:Swap, mf:Swap, +</rpn>
+        <graphType>stack</graphType>
+        <color>red</color>
+        <legend>Anonymous swapped memory usage</legend>
     </add>
     <add>
         <name>mf:Pss</name>
@@ -29,20 +45,8 @@
     <add>
         <rpn>anon:Pss, mf:Pss, +</rpn>
         <graphType>line</graphType>
-        <color>green</color>
+        <color>black</color>
         <legend>Resident size</legend>
-    </add>
-    <add>
-        <name>mf:Swap</name>
-    </add>
-    <add>
-        <name>anon:Swap</name>
-    </add>
-    <add>
-        <rpn>anon:Swap, mf:Swap, +</rpn>
-        <graphType>line</graphType>
-        <color>red</color>
-        <legend>Swapped memory</legend>
     </add>
     <hosttree>
         <pathelement>HOST</pathelement>
@@ -54,8 +58,8 @@
     <viewtree>
         <pathelement>SYSTEM</pathelement>
         <pathstring>Processus</pathstring>
-        <pathelement>HOST</pathelement>
         <pathelement>INDEX</pathelement>
+        <pathelement>HOST</pathelement>
         <pathstring>Detailled memory usage</pathstring>
     </viewtree>
 </graphdesc>

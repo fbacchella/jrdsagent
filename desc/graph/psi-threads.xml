@@ -2,7 +2,7 @@
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
     <name>ProcessInfo-threads</name>
-    <graphName>psthreads-{index}</graphName>
+    <graphName>psthreads-${index}</graphName>
     <graphTitle>Thread count for ${index} on ${host}</graphTitle>
     <verticalLabel>Threads</verticalLabel>
     <lowerLimit>0</lowerLimit>
@@ -26,8 +26,8 @@
     <viewtree>
         <pathelement>SYSTEM</pathelement>
         <pathstring>Processus</pathstring>
-        <pathelement>HOST</pathelement>
         <pathelement>INDEX</pathelement>
+        <pathelement>HOST</pathelement>
         <pathstring>Threads count</pathstring>
     </viewtree>
 </graphdesc>

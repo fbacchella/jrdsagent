@@ -2,7 +2,7 @@
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
     <name>ProcessInfo-maj_faults</name>
-    <graphName>psi-maj_faults-{index}</graphName>
+    <graphName>psi-maj_faults-${index}</graphName>
     <graphTitle>VM faults for ${index} on ${host}</graphTitle>
     <verticalLabel>faults/s</verticalLabel>
     <lowerLimit>0</lowerLimit>
@@ -26,8 +26,8 @@
     <viewtree>
         <pathelement>SYSTEM</pathelement>
         <pathstring>Processus</pathstring>
-        <pathelement>HOST</pathelement>
         <pathelement>INDEX</pathelement>
+        <pathelement>HOST</pathelement>
         <pathstring>VM faults</pathstring>
     </viewtree>
 </graphdesc>
