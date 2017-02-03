@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+    <name>pgscan</name>
+    <graphName>pgscan</graphName>
+    <graphTitle>Page scan activity on ${host}</graphTitle>
+    <verticalLabel>Operation/s</verticalLabel>
+    <add>
+        <name>pgscan_kswapd_dma</name>
+    </add>
+    <add>
+        <name>pgscan_kswapd_dma32</name>
+    </add>
+    <add>
+        <name>pgscan_kswapd_normal</name>
+    </add>
+    <add>
+        <name>pgscan_kswapd_high</name>
+    </add>
+    <add>
+        <name>pgscan_direct_dma</name>
+    </add>
+    <add>
+        <name>pgscan_direct_dma32</name>
+    </add>
+    <add>
+        <name>pgscan_direct_normal</name>
+    </add>
+    <add>
+        <name>pgscan_direct_high</name>
+    </add>
+    <add>
+        <rpn>pgscan_kswapd_dma, pgscan_kswapd_dma32, +, pgscan_kswapd_normal, +, pgscan_kswapd_high, +</rpn>
+        <graphType>line</graphType>
+        <color>blue</color>
+        <legend>kswap page scan activity</legend>
+    </add>
+    <add>
+        <rpn>pgscan_direct_dma, pgscan_direct_dma32, +, pgscan_direct_normal, +, pgscan_direct_high, +</rpn>
+        <graphType>line</graphType>
+        <color>green</color>
+        <legend>direct page scan activity</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>SYSTEM</pathelement>
+        <pathelement>MEMORY</pathelement>
+        <pathstring>VM activity</pathstring>
+        <pathstring>page scan</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>SYSTEM</pathelement>
+        <pathelement>MEMORY</pathelement>
+        <pathstring>VM activity</pathstring>
+        <pathstring>page scan</pathstring>
+        <pathelement>HOST</pathelement>
+    </viewtree>
+</graphdesc>
