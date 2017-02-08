@@ -1,105 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc" >
 <graphdesc>
-	<name>NFS3allServer</name>
-	<graphName>nfs3alls</graphName>
-	<graphTitle>All NFS3 client activity ${host}</graphTitle>
-	<verticalLabel>operations/s</verticalLabel>
-	<add>
-		<name>proc3.getattr</name>
-	</add>
-	<add>
-		<name>proc3.lookup</name>
-	</add>
-	<add>
-		<name>proc3.access</name>
-	</add>
-	<add>
-		<rpn>proc3.getattr, proc3.lookup, +, proc3.access, +</rpn>
-		<graphType>area</graphType>
-		<legend>Get file informations</legend>
-	</add>
-	<add>
-		<name>proc3.write</name>
-		<graphType>stack</graphType>
-		<legend>Write to file</legend>
-	</add>
-	<add>
-		<name>proc3.read</name>
-		<graphType>stack</graphType>
-		<legend>Read from file</legend>
-	</add>
-	<add>
-		<name>proc3.commit</name>
-		<graphType>stack</graphType>
-		<legend>Commit cached data on a server to stable storage</legend>
-	</add>
-	<add>
-		<name>proc3.readdir</name>
-	</add>
-	<add>
-		<name>proc3.readdirplus</name>
-	</add>
-	<add>
-		<rpn>proc3.readdir, proc3.readdirplus, +</rpn>
-		<graphType>stack</graphType>
-		<legend>Read From Directory</legend>
-	</add>
+    <name>NFS3allServer</name>
+    <graphName>nfs3alls</graphName>
+    <graphTitle>All NFS3 server activity ${host}</graphTitle>
+    <verticalLabel>operations/s</verticalLabel>
+    <add>
+        <name>proc3.getattr</name>
+    </add>
+    <add>
+        <name>proc3.lookup</name>
+    </add>
+    <add>
+        <name>proc3.access</name>
+    </add>
+    <add>
+        <rpn>proc3.getattr, proc3.lookup, +, proc3.access, +</rpn>
+        <graphType>area</graphType>
+        <legend>Get file informations</legend>
+    </add>
+    <add>
+        <name>proc3.write</name>
+        <graphType>stack</graphType>
+        <legend>Write to file</legend>
+    </add>
+    <add>
+        <name>proc3.read</name>
+        <graphType>stack</graphType>
+        <legend>Read from file</legend>
+    </add>
+    <add>
+        <name>proc3.commit</name>
+        <graphType>stack</graphType>
+        <legend>Commit cached data on a server to stable storage</legend>
+    </add>
+    <add>
+        <name>proc3.readdir</name>
+    </add>
+    <add>
+        <name>proc3.readdirplus</name>
+    </add>
+    <add>
+        <rpn>proc3.readdir, proc3.readdirplus, +</rpn>
+        <graphType>stack</graphType>
+        <legend>Read From Directory</legend>
+    </add>
 
-	<add>
-		<name>proc3.create</name>
-	</add>
-	<add>
-		<name>proc3.mkdir</name>
-	</add>
-	<add>
-		<name>proc3.symlink</name>
-	</add>
-	<add>
-		<name>proc3.mknod</name>
-	</add>
-	<add>
-		<name>proc3.link</name>
-	</add>
-	<add>
-		<rpn>proc3.create, proc3.mkdir, +, proc3.symlink, +, proc3.mknod, +, proc3.link, +</rpn>
-		<graphType>stack</graphType>
-		<legend>Create an object</legend>
-	</add>
+    <add>
+        <name>proc3.create</name>
+    </add>
+    <add>
+        <name>proc3.mkdir</name>
+    </add>
+    <add>
+        <name>proc3.symlink</name>
+    </add>
+    <add>
+        <name>proc3.mknod</name>
+    </add>
+    <add>
+        <name>proc3.link</name>
+    </add>
+    <add>
+        <rpn>proc3.create, proc3.mkdir, +, proc3.symlink, +, proc3.mknod, +, proc3.link, +</rpn>
+        <graphType>stack</graphType>
+        <legend>Create an object</legend>
+    </add>
 
-	<add>
-		<name>proc3.remove</name>
-	</add>
-	<add>
-		<name>proc3.rmdir</name>
-	</add>
-	<add>
-		<rpn>proc3.remove, proc3.rmdir, +</rpn>
-		<graphType>stack</graphType>
-		<legend>Remove an object</legend>
-	</add>
+    <add>
+        <name>proc3.remove</name>
+    </add>
+    <add>
+        <name>proc3.rmdir</name>
+    </add>
+    <add>
+        <rpn>proc3.remove, proc3.rmdir, +</rpn>
+        <graphType>stack</graphType>
+        <legend>Remove an object</legend>
+    </add>
 
-	<add>
-		<name>proc3.fsstat</name>
-	</add>
-	<add>
-		<name>proc3.fsinfo</name>
-	</add>
-	<add>
-		<rpn>proc3.fsstat, proc3.fsinfo, +</rpn>
-		<graphType>stack</graphType>
-		<legend>Get file system Informations</legend>
-	</add>
-	<hosttree>
-		<pathelement>HOST</pathelement>
-		<pathelement>SERVICES</pathelement>
-		<pathstring>NFS 3 Server activity</pathstring>
-		<pathstring>All activity</pathstring>
-	</hosttree>
-	<viewtree>
-		<pathelement>SERVICES</pathelement>
-		<pathstring>NFS 3 Server activity</pathstring>
-		<pathstring>All activity</pathstring>
-		<pathelement>HOST</pathelement>
-	</viewtree>
+    <add>
+        <name>proc3.fsstat</name>
+    </add>
+    <add>
+        <name>proc3.fsinfo</name>
+    </add>
+    <add>
+        <rpn>proc3.fsstat, proc3.fsinfo, +</rpn>
+        <graphType>stack</graphType>
+        <legend>Get file system Informations</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>SERVICES</pathelement>
+        <pathstring>NFS 3 Server activity</pathstring>
+        <pathstring>All activity</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>SERVICES</pathelement>
+        <pathstring>NFS 3 Server activity</pathstring>
+        <pathstring>All activity</pathstring>
+        <pathelement>HOST</pathelement>
+    </viewtree>
 </graphdesc>

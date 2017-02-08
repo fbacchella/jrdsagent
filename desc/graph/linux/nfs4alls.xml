@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc" >
+<graphdesc>
+    <name>NFS4allServer</name>
+    <graphName>nfs4alls</graphName>
+    <graphTitle>All NFS4 server activity ${host}</graphTitle>
+    <verticalLabel>operations/s</verticalLabel>
+    <add>
+        <name>p4.access</name>
+    </add>
+    <add>
+        <name>p4.getattr</name>
+    </add>
+    <add>
+        <name>p4.lookup</name>
+    </add>
+    <add>
+        <name>p4.lookupp</name>
+    </add>
+    <add>
+        <rpn>p4.getattr, p4.lookup, +, p4.lookupp, +, p4.access, +</rpn>
+        <graphType>area</graphType>
+        <legend>Get file informations</legend>
+    </add>
+    <add>
+        <name>p4.write</name>
+        <graphType>stack</graphType>
+        <legend>Write to file</legend>
+    </add>
+    <add>
+        <name>p4.read</name>
+    </add>
+    <add>
+        <name>p4.read_plus</name>
+    </add>
+    <add>
+        <rpn>p4.read, p4.read_plus, ADDNAN</rpn>
+         <graphType>stack</graphType>
+        <legend>Read from file</legend>
+    </add>
+    <add>
+        <name>p4.commit</name>
+        <graphType>stack</graphType>
+        <legend>Commit cached data on a server to stable storage</legend>
+    </add>
+    <add>
+        <name>p4.readdir</name>
+        <graphType>stack</graphType>
+        <legend>Read From Directory</legend>
+    </add>
+    <add>
+        <name>p4.readlink</name>
+        <graphType>stack</graphType>
+        <legend>Read From a symbolic link</legend>
+    </add>
+
+    <add>
+        <name>p4.create</name>
+    </add>
+    <add>
+        <name>p4.link</name>
+    </add>
+
+    <add>
+        <rpn>p4.create, p4.link, +</rpn>
+        <graphType>stack</graphType>
+        <legend>Create an object</legend>
+    </add>
+
+    <add>
+        <name>p4.remove</name>
+        <graphType>stack</graphType>
+        <legend>Remove an object</legend>
+    </add>
+
+    <add>
+        <name>p4.lock</name>
+    </add>
+    <add>
+        <name>p4.lockt</name>
+    </add>
+    <add>
+        <name>p4.locku</name>
+    </add>
+    <add>
+        <name>p4.release_lockowner</name>
+    </add>
+    <add>
+        <rpn>p4.lock, p4.lockt, +, p4.locku, +, p4.release_lockowner, +</rpn>
+        <graphType>stack</graphType>
+        <legend>Lock operations</legend>
+    </add>
+
+    <add>
+        <name>p4.open</name>
+    </add>
+    <add>
+        <name>p4.openattr</name>
+    </add>
+    <add>
+        <name>p4.open_confirm</name>
+    </add>
+    <add>
+        <name>p4.open_downgrade</name>
+    </add>
+    <add>
+        <rpn>p4.open, p4.openattr, +, p4.open_confirm, +, p4.open_downgrade, +</rpn>
+        <graphType>stack</graphType>
+        <color>green</color>
+        <legend>Open operations</legend>
+    </add>
+
+    <add>
+        <name>p4.getfh</name>
+    </add>
+     <add>
+        <name>p4.putfh</name>
+    </add>
+    <add>
+        <name>p4.putpubfh</name>
+    </add>
+    <add>
+        <name>p4.putrootfh</name>
+    </add>
+    <add>
+        <name>p4.restorefh</name>
+    </add>
+    <add>
+        <name>p4.savefh</name>
+    </add>
+    <add>
+        <rpn>p4.getfh, p4.putfh, +, p4.putpubfh, +, p4.putrootfh, +, p4.restorefh, +, p4.savefh, +</rpn>
+        <graphType>stack</graphType>
+        <legend>Filehandle operations</legend>
+    </add>
+
+    <add>
+        <name>p4.close</name>
+    </add>
+    <add>
+        <name>p4.delegpurge</name>
+    </add>
+    <add>
+        <name>p4.delegreturn</name>
+    </add>
+    <add>
+        <name>p4.nverify</name>
+    </add>
+    <add>
+        <name>p4.rename</name>
+    </add>
+    <add>
+        <name>p4.renew</name>
+    </add>
+    <add>
+        <name>p4.secinfo</name>
+    </add>
+    <add>
+        <name>p4.setattr</name>
+    </add>
+    <add>
+        <name>p4.setclientid</name>
+    </add>
+    <add>
+        <name>p4.setcid_confirm</name>
+    </add>
+    <add>
+        <name>p4.verify</name>
+    </add>
+    <add>
+        <name>p4.backchannel_ctl</name>
+    </add>
+    <add>
+        <name>p4.bind_conn_2_ses</name>
+    </add>
+    <add>
+        <name>p4.exchange_id</name>
+    </add>
+    
+    <add>
+        <rpn>p4.close, p4.delegpurge, ADDNAN, p4.delegreturn, ADDNAN, p4.nverify, ADDNAN, p4.rename, ADDNAN, p4.renew, ADDNAN, p4.secinfo, ADDNAN, p4.setattr, ADDNAN, p4.setclientid, ADDNAN, p4.setcid_confirm, ADDNAN, p4.verify, ADDNAN, p4.backchannel_ctl, ADDNAN, p4.bind_conn_2_ses, ADDNAN, p4.exchange_id, ADDNAN</rpn>
+        <graphType>stack</graphType>
+        <color>red</color>
+        <legend>Other operations</legend>
+    </add>
+
+
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>SERVICES</pathelement>
+        <pathstring>NFS 4 Server activity</pathstring>
+        <pathstring>All activity</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>SERVICES</pathelement>
+        <pathstring>NFS 4 Server activity</pathstring>
+        <pathstring>All activity</pathstring>
+        <pathelement>HOST</pathelement>
+    </viewtree>
+</graphdesc>
