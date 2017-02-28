@@ -1,35 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
-    <name>pgswap</name>
-    <graphName>pgswap</graphName>
-    <graphTitle>Swapping activity on ${host}</graphTitle>
-    <verticalLabel>Operation/s</verticalLabel>
+    <name>pgfault</name>
+    <graphName>pgfault</graphName>
+    <graphTitle>Major page fault on ${host}</graphTitle>
+    <verticalLabel>Fault/s</verticalLabel>
     <add>
-        <name>pswpout</name>
+        <dsName>pgmajfault</dsName>
         <graphType>line</graphType>
         <color>blue</color>
-        <legend>Number of pages swapped out</legend>
-    </add>
-    <add>
-        <name>pswpin</name>
-        <reversed>true</reversed>
-        <graphType>line</graphType>
-        <color>green</color>
-        <legend>Number of pages swapped in</legend>
+        <legend>Major page fault</legend>
     </add>
     <hosttree>
         <pathelement>HOST</pathelement>
         <pathelement>SYSTEM</pathelement>
         <pathelement>MEMORY</pathelement>
         <pathstring>VM activity</pathstring>
-        <pathstring>Swap activity</pathstring>
+        <pathstring>Major page fault</pathstring>
     </hosttree>
     <viewtree>
         <pathelement>SYSTEM</pathelement>
         <pathelement>MEMORY</pathelement>
         <pathstring>VM activity</pathstring>
-        <pathstring>Swap activity</pathstring>
+        <pathstring>Major page fault</pathstring>
         <pathelement>HOST</pathelement>
     </viewtree>
 </graphdesc>
