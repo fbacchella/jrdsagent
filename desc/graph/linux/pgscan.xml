@@ -45,13 +45,13 @@
         <pathelement>HOST</pathelement>
         <pathelement>SYSTEM</pathelement>
         <pathelement>MEMORY</pathelement>
-        <pathstring>VM activity</pathstring>
+        <pathstring>VM activity details</pathstring>
         <pathstring>Page scan</pathstring>
     </hosttree>
     <viewtree>
         <pathelement>SYSTEM</pathelement>
         <pathelement>MEMORY</pathelement>
-        <pathstring>VM activity</pathstring>
+        <pathstring>VM activity details</pathstring>
         <pathstring>Page scan</pathstring>
         <pathelement>HOST</pathelement>
     </viewtree>

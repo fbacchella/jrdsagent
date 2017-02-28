@@ -22,13 +22,13 @@
         <pathelement>HOST</pathelement>
         <pathelement>SYSTEM</pathelement>
         <pathelement>MEMORY</pathelement>
-        <pathstring>VM activity</pathstring>
+        <pathstring>VM activity details</pathstring>
         <pathstring>Swap activity</pathstring>
     </hosttree>
     <viewtree>
         <pathelement>SYSTEM</pathelement>
         <pathelement>MEMORY</pathelement>
-        <pathstring>VM activity</pathstring>
+        <pathstring>VM activity details</pathstring>
         <pathstring>Swap activity</pathstring>
         <pathelement>HOST</pathelement>
     </viewtree>

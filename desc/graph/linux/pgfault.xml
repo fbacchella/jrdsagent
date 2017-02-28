@@ -15,13 +15,13 @@
         <pathelement>HOST</pathelement>
         <pathelement>SYSTEM</pathelement>
         <pathelement>MEMORY</pathelement>
-        <pathstring>VM activity</pathstring>
+        <pathstring>VM activity details</pathstring>
         <pathstring>Major page fault</pathstring>
     </hosttree>
     <viewtree>
         <pathelement>SYSTEM</pathelement>
         <pathelement>MEMORY</pathelement>
-        <pathstring>VM activity</pathstring>
+        <pathstring>VM activity details</pathstring>
         <pathstring>Major page fault</pathstring>
         <pathelement>HOST</pathelement>
     </viewtree>
