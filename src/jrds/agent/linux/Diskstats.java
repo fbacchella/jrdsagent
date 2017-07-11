@@ -3,35 +3,47 @@ package jrds.agent.linux;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.security.AccessControlException;
 import java.util.HashMap;
 import java.util.Map;
 
 import jrds.agent.Start;
 
 public class Diskstats extends LProbeProc {
-    
+
     static private final String[] PREFIXES = {"/dev/mapper/", "/dev/disk/", "/dev/"};
-    
+
     private String disk;
     static private final int offset = 2;
 
     public Boolean configure(String disk) {
         try {
             File diskFile = null;
+            // Search in standards prefix if the real IO device can be detected.
+            // It allows to use device mapper names instead of variable dm-xx
+            // or to look into /dev/disk/by-*
             for (String tryprefix: PREFIXES) {
-                diskFile = new File(tryprefix + disk);
-                if (diskFile.exists()) {
-                    break;
-                } else {
+                try {
+                    diskFile = new File(tryprefix + disk);
+                    if (diskFile.exists()) {
+                        break;
+                    } else {
+                        diskFile = null;
+                    }
+                } catch (AccessControlException e) {
+                    // Tried to resolve an invalid path, skip it
                     diskFile = null;
                 }
             }
-            if (diskFile == null) {
-                throw new RuntimeException("Disk '" + disk + "' don't exists");
+            if (diskFile != null) {
+                // We found the real path, that will be used in /proc/diskstats
+                String realdisk = diskFile.getCanonicalPath();
+                realdisk = realdisk.replace("/dev/", "");
+                this.disk = realdisk;
+            } else {
+                // Nothing found, hope user know what he do
+                this.disk = disk;
             }
-            String realdisk = diskFile.getCanonicalPath();
-            realdisk = realdisk.replace("/dev/", "");
-            this.disk = realdisk;
             return super.configure();
         } catch (IOException e) {
             throw new RuntimeException("can't resolve path to  '" + disk + "':" + e.getMessage(), e);
