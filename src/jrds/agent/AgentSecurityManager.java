@@ -195,9 +195,11 @@ public class AgentSecurityManager extends SecurityManager {
         }
         try {
             super.checkPermission(perm);
-            // Was acceped, but we should add it anyway
+            // Was accepted, but we should add it anyway
             // Some accepted permissions make jrdsagent failed anyway
-            permUsed.add(perm.toString() + " ?");
+            if(debugPerm) {
+                permUsed.add(perm.toString() + " ?");
+            }
         } catch (SecurityException e) {
             if(debugPerm) {
                 permUsed.add(perm.toString() + " -");
