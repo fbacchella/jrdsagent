@@ -17,31 +17,44 @@ public class Diskstats extends LProbeProc {
     static private final int offset = 2;
 
     public Boolean configure(String disk) {
+        return doConfigure(disk, true);
+    }
+
+    public Boolean configure(String disk, Boolean checkPath) {
+        return doConfigure(disk, checkPath);
+    }
+
+    private boolean doConfigure(String disk, boolean checkPath) {
         try {
             File diskFile = null;
-            // Search in standards prefix if the real IO device can be detected.
-            // It allows to use device mapper names instead of variable dm-xx
-            // or to look into /dev/disk/by-*
-            for (String tryprefix: PREFIXES) {
-                try {
-                    diskFile = new File(tryprefix + disk);
-                    if (diskFile.exists()) {
-                        break;
-                    } else {
+            if (checkPath) {
+                // Search in standards prefix if the real IO device can be detected.
+                // It allows to use device mapper names instead of variable dm-xx
+                // or to look into /dev/disk/by-*
+                for (String tryprefix: PREFIXES) {
+                    try {
+                        diskFile = new File(tryprefix + disk);
+                        if (diskFile.exists()) {
+                            break;
+                        } else {
+                            diskFile = null;
+                        }
+                    } catch (AccessControlException e) {
+                        // Tried to resolve an invalid path, skip it
                         diskFile = null;
                     }
-                } catch (AccessControlException e) {
-                    // Tried to resolve an invalid path, skip it
-                    diskFile = null;
                 }
-            }
-            if (diskFile != null) {
-                // We found the real path, that will be used in /proc/diskstats
-                String realdisk = diskFile.getCanonicalPath();
-                realdisk = realdisk.replace("/dev/", "");
-                this.disk = realdisk;
+                if (diskFile != null && checkPath) {
+                    // We found the real path, that will be used in /proc/diskstats
+                    String realdisk = diskFile.getCanonicalPath();
+                    realdisk = realdisk.replace("/dev/", "");
+                    this.disk = realdisk;
+                } else {
+                    // Nothing found, hope user know what he is doing
+                    this.disk = disk;
+                }
             } else {
-                // Nothing found, hope user know what he do
+                // Nothing checked, hope user know what he is doing
                 this.disk = disk;
             }
             return super.configure();

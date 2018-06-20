@@ -1,6 +1,6 @@
 package jrds.probe;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import jrds.Util;
@@ -15,7 +15,9 @@ public class RMIIndexed extends RMI implements IndexedProbe {
         if(!super.configure()) {
             return false;
         }
-        setArgs(Collections.singletonList(index));
+        List<Object> args = new ArrayList<Object>(1);
+        args.add(index);
+        setArgs(args);
         return true;
     }
 
@@ -30,7 +32,7 @@ public class RMIIndexed extends RMI implements IndexedProbe {
      * @param args the argument of the remote probe
      * @return true if configuration succeeds
      */
-    public Boolean configure(List<?> args) {
+    public Boolean configure(List<Object> args) {
         if(!super.configure(args)) {
             return false;
         }

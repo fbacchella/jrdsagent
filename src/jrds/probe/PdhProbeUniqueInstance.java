@@ -3,8 +3,6 @@ package jrds.probe;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Level;
-
 import jrds.factories.ProbeBean;
 
 @ProbeBean({"instance"})
@@ -20,10 +18,9 @@ public class PdhProbeUniqueInstance extends PdhProbe {
             getPd().addSpecific("remote", "jrds.agent.windows.pdh.PdhAgentUniqueInstance");
         }
 
-        log(Level.DEBUG, "remote args for this probe: %s", args);
         return super.configure();
     }
-    
+
     @Override
     protected void buildArgs(List<Object> args) {
         super.buildArgs(args);

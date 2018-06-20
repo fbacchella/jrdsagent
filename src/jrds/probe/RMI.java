@@ -17,13 +17,11 @@ import jrds.factories.ProbeMeta;
 
 import org.apache.log4j.Level;
 
-@ProbeMeta(
-        topStarter=JmxSocketFactory.class
-        )
+@ProbeMeta(topStarter=JmxSocketFactory.class)
 public class RMI extends ProbeConnected<String, Number, AgentConnection> {
-    List<?> args = new ArrayList<Object>(0);
+    private List<Object> args = new ArrayList<Object>(0);
     private String remoteName = null;
-    Map<String, String> remoteSpecifics = Collections.emptyMap();
+    private Map<String, String> remoteSpecifics = Collections.emptyMap();
 
     public RMI() {
         super(AgentConnection.CONNECTIONNAME);
@@ -34,7 +32,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
      * @param args the argument of the remote probe
      * @return true if configuration succeeds
      */
-    public Boolean configure(List<?> args) {
+    public Boolean configure(List<Object> args) {
         if (!configure()) {
             return false;
         }
@@ -58,6 +56,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
             }
         }
         log(Level.DEBUG, "remote specifics %s", remoteSpecifics);
+        log(Level.DEBUG, "remote args for this probe: %s", args);
 
         return true;
     }
@@ -99,11 +98,11 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
         return retValues;
     }
 
-    public List<?> getArgs() {
+    protected List<Object> getArgs() {
         return args;
     }
 
-    public void setArgs(List<?> l) {
+    protected void setArgs(List<Object> l) {
         this.args = l;
     }
 
