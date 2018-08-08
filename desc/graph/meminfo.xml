@@ -49,19 +49,7 @@
 		<name>MemTotal</name>
 	</add>
 	<add>
-		<name>Buffers</name>
-	</add>
-	<add>
 		<name>Cached</name>
-	</add>
-	<add>
-		<name>MemFree</name>
-	</add>
-	<add>
-		<name>AnonPages</name>
-	</add>
-	<add>
-		<name>Mapped</name>
 	</add>
 	<add>
 		<legend>Other memory</legend>
