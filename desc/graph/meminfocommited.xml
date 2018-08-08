@@ -16,9 +16,6 @@
 		<name>SwapFree</name>
 	</add>
 	<add>
-		<name>SwapCached</name>
-	</add>
-	<add>
 		<name>AnonPages</name>
 	</add>
 	<add>
