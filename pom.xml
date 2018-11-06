@@ -7,16 +7,13 @@
     <version>1.0-SNAPSHOT</version>
     <name>jrdsagent</name>
     <url>http://maven.apache.org</url>
-    <prerequisites>
-        <maven>2.2.1</maven>
-    </prerequisites>
     <properties>
         <!-- The project should have a source encoding set. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <buildSource>1.6</buildSource>
         <buildTarget>1.6</buildTarget>
         <!-- current year. -->
-        <year>2014</year>
+        <year>2018</year>
         <jrds.testloglevel>ERROR</jrds.testloglevel>
         <jolokia.version>1.5.0</jolokia.version>
     </properties>
@@ -173,4 +170,19 @@
             <email>fbacchella@spamcop.net</email>
         </developer>
     </developers>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/fbacchella/jrdsagent</url>
+    </ciManagement>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/fbacchella/jrdsagent/issues</url>
+    </issueManagement>
 </project>
