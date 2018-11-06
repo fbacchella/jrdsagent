@@ -10,12 +10,12 @@
     <properties>
         <!-- The project should have a source encoding set. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <buildSource>1.6</buildSource>
-        <buildTarget>1.6</buildTarget>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <!-- current year. -->
         <year>2018</year>
         <jrds.testloglevel>ERROR</jrds.testloglevel>
-        <jolokia.version>1.5.0</jolokia.version>
+        <jolokia.version>1.6.0</jolokia.version>
     </properties>
     <dependencies>
         <dependency>
@@ -81,8 +81,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>${buildSource}</source>
-                    <target>${buildTarget}</target>
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
