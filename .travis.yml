@@ -20,6 +20,9 @@ notifications:
     on_start: never
   irc:
     - irc.freenode.org#jrds
+addons:
+  sonarcloud:
+    organization: fbacchella-github
 matrix:
   include:
       # Sonarcloud don't work on jdk11 yet
