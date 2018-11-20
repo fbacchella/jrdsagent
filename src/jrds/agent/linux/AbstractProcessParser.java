@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
 import jrds.agent.LProbe;
@@ -37,10 +38,6 @@ public abstract class AbstractProcessParser  extends LProbe {
         int count = 0;
         long mostRecentTick = 0;
         for(int pid: getPids()) {
-            // getPids() might return -1 if reached end of processes
-            if (pid < 0) {
-                break;
-            }
             String cmdLine = getCmdLine(pid);
             if (cmdLine != null && cmdFilter.matcher(cmdLine).matches()) {
                 Map<String, Number> bufferMap = parseProc(pid);
@@ -96,7 +93,7 @@ public abstract class AbstractProcessParser  extends LProbe {
                                 return Integer.decode(current.getName());
                             }
                         } while (cursor < pids.length);
-                        return -1;
+                        throw new NoSuchElementException();
                     }
 
                     @Override
