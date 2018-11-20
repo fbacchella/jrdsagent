@@ -135,7 +135,7 @@ public abstract class AbstractProcessParser  extends LProbe {
                 try {
                     is.close();
                 } catch (IOException e1) {
-                    throw new RuntimeException(getName(), e1);
+                    // can't rethrow an exception
                 }
             }
         }
@@ -171,7 +171,7 @@ public abstract class AbstractProcessParser  extends LProbe {
                 try {
                     r.close();
                 } catch (IOException e1) {
-                    throw new RuntimeException(getName(), e1);
+                    // can't rethrow an exception
                 }
             }
         }
@@ -208,7 +208,7 @@ public abstract class AbstractProcessParser  extends LProbe {
                 try {
                     r.close();
                 } catch (IOException e1) {
-                    throw new RuntimeException(getName(), e1);
+                    // can't rethrow an exception
                 }
             }
         }
@@ -236,7 +236,7 @@ public abstract class AbstractProcessParser  extends LProbe {
                 try {
                     r.close();
                 } catch (IOException e1) {
-                    throw new RuntimeException(getName(), e1);
+                    // can't rethrow an exception
                 }
             }
         }
