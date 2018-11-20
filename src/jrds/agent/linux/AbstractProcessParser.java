@@ -184,7 +184,6 @@ public abstract class AbstractProcessParser  extends LProbe {
         try {
             r = new BufferedReader(new FileReader(stat));
             String statLine = r.readLine();
-            statLine.replaceFirst("(.*)", "()");
             String[] statArray = statLine.split(" +");
             Map<String, Number> retValues = new HashMap<String, Number>(statArray.length);
             //Number of column in /proc/<pid>/stat is unpredictable in linux
