@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>fr.jrds</groupId>
     <artifactId>jrdsagent</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -15,20 +14,35 @@
         <!-- current year. -->
         <year>2018</year>
         <jrds.testloglevel>ERROR</jrds.testloglevel>
+        <jrdsVersion>1.0-SNAPSHOT</jrdsVersion>
         <jolokia.version>1.6.0</jolokia.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>sonaytpe</id>
+            <name>Sonatype's snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots />
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>fr.jrds</groupId>
-            <artifactId>jrds</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <exclusions>
-                <!-- broken on central repository, but don't needed any way -->
-                <exclusion>
-                    <groupId>org.dojotoolkit</groupId>
-                    <artifactId>dojo</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>jrds-core</artifactId>
+            <version>${jrdsVersion}</version>
+            <scope>provided</scope>
+            <classifier>webapp</classifier>
+        </dependency>
+        <dependency>
+            <groupId>fr.jrds</groupId>
+            <artifactId>jrds-core</artifactId>
+            <version>${jrdsVersion}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -58,20 +72,6 @@
             </exclusions>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>jrds</id>
-            <name>JRDS' jenkins</name>
-            <url>http://jrds.fr/jenkins/plugin/repository/everything</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
     <build>
         <finalName>jrdsagent</finalName>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
@@ -183,4 +183,9 @@
         <system>GitHub</system>
         <url>https://github.com/fbacchella/jrdsagent/issues</url>
     </issueManagement>
+    <parent>
+        <groupId>fr.jrds</groupId>
+        <artifactId>jrds</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 </project>
