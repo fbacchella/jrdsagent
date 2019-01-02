@@ -29,10 +29,10 @@ public class Wmiprobe extends RMI {
         log(Level.DEBUG, "remote args for this probe: %s", args);
         return super.configure();
     }
-    
-    protected void buildArgs(List<Object> args) {        
+
+    protected void buildArgs(List<Object> args) {
         List<String> fields = new ArrayList<String>();
-        for(String key: getPd().getCollectStrings().keySet()) {
+        for(String key: getPd().getCollectMapping().keySet()) {
             fields.add(key);
         }
         fields.add("Timestamp_Sys100NS");
