@@ -65,8 +65,8 @@
         </dependency>
         <dependency>
             <groupId>com.arkanosis</groupId>
-            <artifactId>JPDH</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <artifactId>jpdh</artifactId>
+            <version>1.1.3</version>
         </dependency>
         <dependency>
             <groupId>org.jolokia</groupId>
