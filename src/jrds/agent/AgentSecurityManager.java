@@ -24,7 +24,7 @@ public class AgentSecurityManager extends SecurityManager {
         private boolean privileged = false;
     }
     private static final ThreadLocal<PrivilegHolder> Privilege =
-            new ThreadLocal<PrivilegHolder>() {
+                    new ThreadLocal<PrivilegHolder>() {
         @Override
         protected PrivilegHolder initialValue() {
             return new PrivilegHolder();
@@ -123,14 +123,14 @@ public class AgentSecurityManager extends SecurityManager {
         // They can be an undefined number of security.provider.*
         // Used by jmxmp
         if(perm instanceof java.security.SecurityPermission
-                && perm.getName().startsWith("getProperty.security.provider") ) {
+                        && perm.getName().startsWith("getProperty.security.provider") ) {
             if(debugPerm) {
                 permUsed.add(perm.toString() + " =");
             }
             return;
         }
         if(perm instanceof java.io.FilePermission
-                && "read".equals(perm.getActions()) ) {
+                        && "read".equals(perm.getActions()) ) {
             String name = perm.getName();
             if(filesallowed.contains(name)) {
                 if(debugPerm) {
@@ -216,6 +216,7 @@ public class AgentSecurityManager extends SecurityManager {
         permsDescription.put("common", new String[][] {
             new String[] { "java.lang.RuntimePermission", "accessDeclaredMembers" },
             new String[] { "java.lang.RuntimePermission", "createClassLoader" },
+            new String[] { "java.lang.RuntimePermission", "getClassLoader" },
             new String[] { "java.lang.RuntimePermission", "getFileSystemAttributes" },
             new String[] { "java.lang.RuntimePermission", "loadLibrary.net" }, // Needed on windows
             new String[] { "java.lang.RuntimePermission", "modifyThread" },
@@ -245,7 +246,6 @@ public class AgentSecurityManager extends SecurityManager {
         permsDescription.put(PROTOCOL.rmi.name(), new String[][] {
             new String[] { "java.io.SerializablePermission", "enableSubstitution" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect" },
-            new String[] { "java.lang.RuntimePermission", "getClassLoader" },
             new String[] { "java.lang.RuntimePermission", "getProtectionDomain" },
             new String[] { "java.lang.RuntimePermission", "loadLibrary.rmi" },     // Needed on jdk 6
             new String[] { "java.lang.RuntimePermission", "reflectionFactoryAccess" },
@@ -269,7 +269,6 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.io.SerializablePermission", "enableSubstitution" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect.misc" },
-            new String[] { "java.lang.RuntimePermission", "getClassLoader" },
             new String[] { "java.net.NetPermission", "getProxySelector" },
             new String[] { "java.net.SocketPermission", "*", "accept,listen,resolve" },
             new String[] { "java.security.SecurityPermission", "getPolicy" },
