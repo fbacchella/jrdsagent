@@ -36,7 +36,6 @@ public class RProbeRMIImpl extends UnicastRemoteObject implements RProbe, Serial
     }
 
     private RProbeRMIImpl(RProbeActor actor) throws RemoteException {
-        super();
         this.actor = actor;
     }
 
