@@ -64,7 +64,7 @@ public class ProcessInfo26 extends AbstractProcessParser {
 
     @Override
    public String getName() {
-        return "pi26-" + cmdFilter.toString();
+        return "pi26-" + getNameSuffix();
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,26 +21,42 @@ import jrds.agent.Start;
 
 public abstract class AbstractProcessParser  extends LProbe {
 
+    static private final int ARROBE = Character.hashCode('@');
+
     static private final int USER_HZ = 100; 
 
     static private final Pattern PIDDIRPATTERN = Pattern.compile("^(\\d+)$");
 
     static protected final Charset LINUXFSCHARSET = Charset.forName("US-ASCII");
 
-    protected Pattern cmdFilter = null;
+    private Pattern cmdFilter = null;
 
     public Boolean configure(String cmdFilter) {
         this.cmdFilter = Pattern.compile(cmdFilter);
         return true;
     }
 
+    /**
+     * Called when self is set to true
+     * @param self always true
+     * @return
+     */
+    public Boolean configure(Boolean self) {
+        this.cmdFilter = null;
+        return true;
+    }
+
+    public String getNameSuffix() {
+        return cmdFilter != null ? cmdFilter.toString() : "self";
+    }
+
     public Map<String, Number> query() {
         Map<String, Number> retValues = new HashMap<String, Number>();
         int count = 0;
         long mostRecentTick = 0;
-        for(int pid: getPids()) {
+        for (int pid: getPids()) {
             String cmdLine = getCmdLine(pid);
-            if (cmdLine != null && cmdFilter.matcher(cmdLine).matches()) {
+            if (cmdLine != null && (cmdFilter == null || cmdFilter.matcher(cmdLine).matches())) {
                 Map<String, Number> bufferMap = parseProc(pid);
                 long startTimeTick = getProcUptime(bufferMap);
                 if (startTimeTick < 0) {
@@ -47,7 +64,7 @@ public abstract class AbstractProcessParser  extends LProbe {
                 }
                 mostRecentTick = Math.max(startTimeTick, mostRecentTick);
                 count++;
-                for(Map.Entry<String, Number> e: bufferMap.entrySet()) {
+                for (Map.Entry<String, Number> e: bufferMap.entrySet()) {
                     Number previous = retValues.get(e.getKey());
                     if(previous == null)
                         retValues.put(e.getKey(), e.getValue());
@@ -64,46 +81,61 @@ public abstract class AbstractProcessParser  extends LProbe {
     }
 
     private Iterable<Integer> getPids() {
-        final File procFile = new File("/proc");
-        //If launched on a non linux os, avoid a NPE
-        if ( ! procFile.isDirectory())
-            return Collections.emptySet();
-        return new Iterable<Integer>() {
-            @Override
-            public Iterator<Integer> iterator() {
-                final File[] pids = procFile.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return PIDDIRPATTERN.matcher(name).matches();
-                    }
-                });
-                return new Iterator<Integer>() {
-                    int cursor = 0;
-
-                    @Override
-                    public boolean hasNext() {
-                        return cursor < pids.length;
-                    }
-
-                    @Override
-                    public Integer next() {
-                        do {
-                            File current = pids[cursor++];
-                            if (current.exists()) {
-                                return Integer.decode(current.getName());
-                            }
-                        } while (cursor < pids.length);
-                        throw new NoSuchElementException();
-                    }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException("remove");
-                    }
-                };
+        if (cmdFilter == null) {
+            String jvmName = ManagementFactory.getRuntimeMXBean().getName();
+            int separator = jvmName.indexOf(ARROBE);
+            if (separator < 0) {
+                return Collections.emptySet();
+            } else {
+                try {
+                    int pid = Integer.parseInt(jvmName.substring(0, separator));
+                    return Collections.singleton(pid);
+                } catch (NumberFormatException e) {
+                    return Collections.emptySet();
+                }
             }
+        } else {
+            final File procFile = new File("/proc");
+            //If launched on a non linux os, avoid a NPE
+            if ( ! procFile.isDirectory())
+                return Collections.emptySet();
+            return new Iterable<Integer>() {
+                @Override
+                public Iterator<Integer> iterator() {
+                    final File[] pids = procFile.listFiles(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File dir, String name) {
+                            return PIDDIRPATTERN.matcher(name).matches();
+                        }
+                    });
+                    return new Iterator<Integer>() {
+                        int cursor = 0;
 
-        };
+                        @Override
+                        public boolean hasNext() {
+                            return cursor < pids.length;
+                        }
+
+                        @Override
+                        public Integer next() {
+                            do {
+                                File current = pids[cursor++];
+                                if (current.exists()) {
+                                    return Integer.decode(current.getName());
+                                }
+                            } while (cursor < pids.length);
+                            throw new NoSuchElementException();
+                        }
+
+                        @Override
+                        public void remove() {
+                            throw new UnsupportedOperationException("remove");
+                        }
+                    };
+                }
+
+            };
+        }
     }
 
     protected String getCmdLine(int pid) {

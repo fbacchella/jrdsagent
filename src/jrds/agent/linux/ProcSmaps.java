@@ -93,7 +93,7 @@ public class ProcSmaps extends AbstractProcessParser {
 
     @Override
     public String getName() {
-        return "pismaps-" + cmdFilter.toString();
+        return "pismaps-" + getNameSuffix();
     }
 
     @Override

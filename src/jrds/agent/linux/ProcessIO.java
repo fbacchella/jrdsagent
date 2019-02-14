@@ -73,7 +73,7 @@ public class ProcessIO extends AbstractProcessParser {
 
     @Override
     public String getName() {
-        return "piio-" + cmdFilter.toString();
+        return "piio-" + getNameSuffix();
     }
 
 }

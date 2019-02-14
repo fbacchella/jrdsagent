@@ -72,7 +72,7 @@ public class ProcessCpu extends AbstractProcessParser {
 
     @Override
     public String getName() {
-        return "picpu-" + cmdFilter.toString();
+        return "picpu-" + getNameSuffix();
     }
 
 }
