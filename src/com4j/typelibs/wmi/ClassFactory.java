@@ -45,7 +45,7 @@ public abstract class ClassFactory {
   }
 
   /**
-   * Date & Time
+   * Date &amp; Time
    */
   public static com4j.typelibs.wmi.ISWbemDateTime createSWbemDateTime() {
     return COM4J.createInstance( com4j.typelibs.wmi.ISWbemDateTime.class, "{47DFBE54-CF76-11D3-B38F-00105A1F473A}" );
