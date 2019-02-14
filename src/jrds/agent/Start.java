@@ -44,8 +44,9 @@ public class Start implements Serializable {
             mbs = ManagementFactory.getPlatformMBeanServer();
             cs = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
             cs.start();
+            // load code before the security manager is started
             JMXServiceURL addr = cs.getAddress();
-            JMXConnectorFactory.connect(addr);
+            JMXConnectorFactory.connect(addr).close();
         }
     }
 
