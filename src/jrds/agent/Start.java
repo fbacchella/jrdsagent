@@ -87,8 +87,6 @@ public class Start implements Serializable {
     /**
      * start the listen thread with a predefined port and security manager, so jrdsagent can be used as a lib and not a standalone daemon
      * @param port
-     * @throws RemoteException
-     * @throws AlreadyBoundException
      */
     public static void start(int port, PROTOCOL proto) {
         try {

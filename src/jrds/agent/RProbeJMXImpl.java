@@ -57,7 +57,7 @@ public class RProbeJMXImpl extends StandardMBean implements RProbe {
      * @param args
      * @return
      * @throws RemoteException
-     * @see jrds.agent.RProbe#prepare(java.lang.String, java.util.List)
+     * @see jrds.agent.RProbe#prepare(String, Map, List)
      */
     public String prepare(String name, Map<String, String> specifics, List<?> args) throws RemoteException {
         try {
