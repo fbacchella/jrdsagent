@@ -22,7 +22,7 @@ jobs:
               environment:
                   discovery.type: single-node
         steps:
-            - attach_workspace
+            - attach_workspace:
                 at: /
             - run:
                 command: mvn compile -Djdk.compile.home=/usr/lib/jvm/java-8-openjdk-amd64
