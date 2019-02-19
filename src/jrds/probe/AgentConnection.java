@@ -15,8 +15,8 @@ import jrds.starter.Connection;
 @ProbeBean({"port", "protocol"})
 @ConnectionName(AgentConnection.CONNECTIONNAME)
 public class AgentConnection extends Connection<RProbe> {
-    final static String CONNECTIONNAME = "jrds.agent.AgentConnection";
-    public static enum PROTOCOL {
+    static final String CONNECTIONNAME = "jrds.agent.AgentConnection";
+    public enum PROTOCOL {
         rmi {
             @Override
             RProbe getRemoteProbe(Connection<?> proxy) {
@@ -78,7 +78,7 @@ public class AgentConnection extends Connection<RProbe> {
         abstract RProbe getRemoteProbe(Connection<?>proxy);
         abstract void configure(AgentConnection cnx, PropertiesManager pm);
         abstract Connection<?> getProxy();
-    };
+    }
 
     private static final int AGENTPORT = 2002;
     protected int port = AGENTPORT;

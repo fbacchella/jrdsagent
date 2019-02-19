@@ -5,9 +5,8 @@ import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.rmi.AlreadyBoundException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.management.MBeanServer;
 import javax.management.remote.JMXConnectorFactory;
@@ -18,7 +17,7 @@ import javax.management.remote.JMXServiceURL;
 public class Start implements Serializable {
     static final private int defaultPort = 2002;
     static final private String defaultProto = "rmi";
-    public static enum PROTOCOL {
+    public enum PROTOCOL {
         rmi,
         jmx,
         jmxmp,
@@ -32,7 +31,7 @@ public class Start implements Serializable {
         JMXServiceURL url;
         JMXConnectorServer cs;
 
-        public JrdsMBeanInfo(PROTOCOL protocol, String host, int port) throws IOException, NotBoundException {
+        public JrdsMBeanInfo(PROTOCOL protocol, String host, int port) throws IOException {
             String path = "/";
             String protocolString = protocol.toString();
             if (protocol == PROTOCOL.jmx) {

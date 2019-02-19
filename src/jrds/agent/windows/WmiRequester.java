@@ -84,6 +84,7 @@ public abstract class WmiRequester {
         } catch (ComException e) {
             throw new RuntimeException(e.getMessage());
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException("can't refresh wmi objects", e);
         } catch (ExecutionException e) {
             throw new RuntimeException("can't refresh wmi objects", e);
@@ -104,6 +105,7 @@ public abstract class WmiRequester {
         } catch (ComException e) {
             throw new RuntimeException(e.getMessage());
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException("Interrupted", e);
         } catch (ExecutionException e) {
             throw new RuntimeException("can't read WMI object " + name, e);
@@ -116,7 +118,7 @@ public abstract class WmiRequester {
             executor.awaitTermination(100, TimeUnit.MILLISECONDS);
             executor.shutdownNow();
         } catch (InterruptedException e) {
-            // don't care
+            Thread.currentThread().interrupt();
         }
     }
 
