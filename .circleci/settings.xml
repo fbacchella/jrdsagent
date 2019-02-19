@@ -1,0 +1,25 @@
+<settings>
+    <servers>
+        <server>
+            <id>sonatype-nexus-snapshots</id>
+            <username>${env.CI_DEPLOY_USERNAME}</username>
+            <password>${env.CI_DEPLOY_PASSWORD}</password>
+        </server>
+    </servers>
+    <profiles>
+        <profiles>
+            <profile>
+                <id>sonar</id>
+                <activation>
+                    <activeByDefault>true</activeByDefault>
+                </activation>
+                <properties>
+                    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                    <sonar.projectKey>${env.SONARCLOUD_PROJECT_KEY}</sonar.projectKey>
+                    <sonar.login>${env.SONARCLOUD_LOGIN}</sonar.login>
+                    <sonar.organization>${env.SONARCLOUD_ORG}</sonar.organization>
+                </properties>
+            </profile>
+        </profiles>
+    </profiles>
+</settings>
