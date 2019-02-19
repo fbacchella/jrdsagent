@@ -21,7 +21,7 @@ import jrds.agent.Start;
 
 public abstract class AbstractProcessParser  extends LProbe {
 
-    static private final int ARROBE = Character.hashCode('@');
+    static private final int ARROBE = Character.codePointAt("@", 0);
 
     static private final int USER_HZ = 100; 
 
