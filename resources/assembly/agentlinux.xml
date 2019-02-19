@@ -21,6 +21,7 @@
                 <exclude>jrds/probe/**</exclude>
                 <exclude>desc/**</exclude>
                 <exclude>org/jolokia/client/**</exclude>
+                <exclude>jnijpdh.dll</exclude>
             </excludes>
             </unpackOptions>
         </dependencySet>
