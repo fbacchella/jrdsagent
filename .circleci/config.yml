@@ -1,9 +1,10 @@
 version: 2
 jobs:
     checkout:
-        - image: circleci/openjdk:11-jdk
-          environment:
-              discovery.type: single-node
+        docker:
+            - image: circleci/openjdk:11-jdk
+              environment:
+                  discovery.type: single-node
         steps:
             - checkout
             - run: sudo apt-get install openjdk-11-jdk-headless openjdk-8-jdk-headless
@@ -17,7 +18,7 @@ jobs:
                   discovery.type: single-node
         steps:
             - run:
-                command: mvn compile -Djdk.compile.home=/usr/lib/jvm/java-87-openjdk-amd64
+                command: mvn compile -Djdk.compile.home=/usr/lib/jvm/java-8-openjdk-amd64
                 environment:
                     JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
             - run:
