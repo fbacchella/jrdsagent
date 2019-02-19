@@ -18,7 +18,7 @@ jobs:
             - persist_to_workspace:
                 root: /
                 paths:
-                    - /usr/lib/jvm/java-11-openjdk-amd64
+                    - usr/lib/jvm/java-11-openjdk-amd64
     build:
         docker:
             - image: circleci/openjdk:11-jdk
