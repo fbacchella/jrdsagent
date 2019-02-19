@@ -16,6 +16,7 @@ jobs:
                 paths:
                     - usr/lib/jvm/java-11-openjdk-amd64
                     - home/travis/.m2
+                    - home/circleci/project
     build:
         docker:
             - image: circleci/openjdk:8-jdk
@@ -23,11 +24,13 @@ jobs:
                   discovery.type: single-node
         steps:
             - attach_workspace:
-                at: /
+                at: /tmp/ws
+            - run: sudo apt-get install rsync
+            - run: rsync -avR /tmp/ws /
             - run:
                 command: mvn compile -Djdk.compile.home=/usr/lib/jvm/java-8-openjdk-amd64
                 environment:
-                    JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+                    JAVA_HOME: /tmp/ws/usr/lib/jvm/java-11-openjdk-amd64
             - run:
                 command: |
                     # If no symbolic name, it's a PR, will not deploy
