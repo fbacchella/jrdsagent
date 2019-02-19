@@ -12,19 +12,18 @@ jobs:
                 key: jrdsagent-{{ checksum "pom.xml" }}
             - run: mvn -B dependency:go-offline dependency:resolve-plugins
             - persist_to_workspace:
-                root: workspace
-                paths:
-                    .m2
-            - persist_to_workspace:
                 root: /
                 paths:
                     - usr/lib/jvm/java-11-openjdk-amd64
+                    - home/travis/.m2
     build:
         docker:
-            - image: circleci/openjdk:11-jdk
+            - image: circleci/openjdk:8-jdk
               environment:
                   discovery.type: single-node
         steps:
+            - attach_workspace
+                at: /
             - run:
                 command: mvn compile -Djdk.compile.home=/usr/lib/jvm/java-8-openjdk-amd64
                 environment:
