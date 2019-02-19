@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
     checkout:
         docker:
@@ -10,7 +10,15 @@ jobs:
             - run: sudo apt-get install openjdk-11-jdk-headless openjdk-8-jdk-headless
             - restore_cache:
                 key: jrdsagent-{{ checksum "pom.xml" }}
-            - run: mvn dependency:go-offline dependency:resolve-plugins
+            - run: mvn -B dependency:go-offline dependency:resolve-plugins
+            - persist_to_workspace:
+                root: ~
+                paths:
+                    .m2
+            - persist_to_workspace:
+                root: /
+                paths:
+                    /usr/lib/jvm/java-11-openjdk-amd64
     build:
         docker:
             - image: circleci/openjdk:11-jdk
@@ -36,8 +44,10 @@ jobs:
             - store_test_results:
                 path: target/surefire-reports
 workflows:
-  version: 2
+  version: 2.1
   build_and_test:
     jobs:
       - checkout
-      - build
+      - build:
+          requires: 
+              -checkout
