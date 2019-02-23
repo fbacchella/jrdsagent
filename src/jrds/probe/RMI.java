@@ -66,7 +66,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
         // a loop because if one query fails, we try again after a prepare
         for (int step = 0; step < 2; step++) {
             try {
-                RProbe rp = (RProbe) cnx.getConnection();
+                RProbe rp = cnx.getConnection();
                 if(remoteName == null) {
                     log(Level.DEBUG, "name not found, needs to be reconfigure, iteration %d", step);
                     step++;

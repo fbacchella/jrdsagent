@@ -40,8 +40,8 @@ public class TcpQueue extends LProbeProc {
             }
         }
         if(num != 0) {
-            retValues.put("tx", new Double((double)tx/num));
-            retValues.put("rx", new Double((double)rx/num));
+            retValues.put("tx", (double)tx/num);
+            retValues.put("rx", (double)rx/num);
         }
         return retValues;
     }

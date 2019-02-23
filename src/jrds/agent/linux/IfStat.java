@@ -25,7 +25,7 @@ public class IfStat extends LProbeProc {
             if(line.indexOf(" " + ifName + ":") >= 0) {
                 String[] ifvalues = line.trim().split(":");
                 String[] values = ifvalues[1].trim().split("\\s+");
-                retValues.put("rxbits", new Double( 8 * Double.parseDouble(values[0])));
+                retValues.put("rxbits", 8 * Double.parseDouble(values[0]));
                 retValues.put("rxpackets", Double.valueOf(values[1]));
                 retValues.put("rxerrs", Double.valueOf(values[2]));
                 retValues.put("rxdrop", Double.valueOf(values[3]));
@@ -33,7 +33,7 @@ public class IfStat extends LProbeProc {
                 retValues.put("rxframe", Double.valueOf(values[5]));
                 retValues.put("rxcompressed", Double.valueOf(values[6]));
                 retValues.put("rxmulticast", Double.valueOf(values[7]));
-                retValues.put("txbits", new Double( 8 * Double.parseDouble(values[8])));
+                retValues.put("txbits", 8 * Double.parseDouble(values[8]));
                 retValues.put("txpackets", Double.valueOf(values[9]));
                 retValues.put("txerrs", Double.valueOf(values[10]));
                 retValues.put("txdrop", Double.valueOf(values[11]));

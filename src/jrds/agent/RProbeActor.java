@@ -35,12 +35,20 @@ public class RProbeActor {
         try {
             @SuppressWarnings("unchecked")
             Class<SystemUptime> uptimeClass = (Class<SystemUptime>) RProbeActor.class.getClassLoader().loadClass(uptimeClassName.trim());
-            uptime = uptimeClass.newInstance();
+            uptime = uptimeClass.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
         } catch (InstantiationException e) {
             throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
         } catch (IllegalAccessException e) {
+            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
+        } catch (SecurityException e) {
             throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
         }
     }

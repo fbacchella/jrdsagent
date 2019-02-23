@@ -11,7 +11,7 @@ public class TestProbe extends LProbe {
 
     public Map<String,Number> query() {
         Map<String,Number> m = new HashMap<String,Number>(1);
-        m.put("time", new Double(System.currentTimeMillis()));
+        m.put("time", System.currentTimeMillis());
         return m;
     }
 
