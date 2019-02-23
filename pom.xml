@@ -17,6 +17,7 @@
         <jrds.testloglevel>ERROR</jrds.testloglevel>
         <jrdsVersion>1.0-SNAPSHOT</jrdsVersion>
         <jolokia.version>1.6.0</jolokia.version>
+        <jdk.compile.home>${java.home}</jdk.compile.home>
     </properties>
 
     <repositories>
@@ -107,6 +108,10 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
+                    <compilerArgs>
+                         <arg>-Xlint</arg>
+                         <arg>-Xbootclasspath/p:${jdk.compile.home}/lib/rt.jar</arg>
+                     </compilerArgs>
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
