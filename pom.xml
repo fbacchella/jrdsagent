@@ -111,7 +111,6 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint</arg>
-                        <arg>-Xbootclasspath/p:${jdk.compile.home}/lib/rt.jar</arg>
                     </compilerArgs>
                     <showWarnings>true</showWarnings>
                 </configuration>
