@@ -109,9 +109,9 @@
                 <version>3.8.0</version>
                 <configuration>
                     <compilerArgs>
-                         <arg>-Xlint</arg>
-                         <arg>-Xbootclasspath/p:${jdk.compile.home}/lib/rt.jar</arg>
-                     </compilerArgs>
+                        <arg>-Xlint</arg>
+                        <arg>-Xbootclasspath/p:${jdk.compile.home}/lib/rt.jar</arg>
+                    </compilerArgs>
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
