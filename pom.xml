@@ -4,7 +4,7 @@
     <groupId>fr.jrds</groupId>
     <artifactId>jrdsagent</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-RC1</version>
     <name>jrdsagent</name>
     <url>http://maven.apache.org</url>
     <properties>
@@ -94,6 +94,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
+                <plugin> <!-- Needed by mvn help:evaluate -Dexpression=project.version -q -DforceStdout -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-help-plugin</artifactId>
                     <version>3.1.1</version>
                 </plugin>
             </plugins>
