@@ -10,6 +10,7 @@ jobs:
             - restore_cache:
                 key: jrdsagent-{{ checksum "pom.xml" }}
             - run: mkdir -p /home/circleci/.sonar/cache /home/circleci/.m2/repository
+            - run: "mvn -B dependency:go-offline"
             - persist_to_workspace:
                 root: /
                 paths:
@@ -30,7 +31,7 @@ jobs:
                     mv -n /tmp/ws/home/circleci/project/* /home/circleci/project/
                     mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
             - run:
-                command: mvn clean compile -Djdk.compile.home=/usr/lib/jvm/java-8-openjdk-amd64/jre
+                command: mvn -B clean compile -Djdk.compile.home=/usr/lib/jvm/java-8-openjdk-amd64/jre
                 environment:
                     JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
             - persist_to_workspace:
@@ -53,7 +54,7 @@ jobs:
                     mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
             - run:
                 command: |
-                    mvn package -Dmaven.test.skip=true -Dmaven.main.skip=true -s .circleci/settings.xml
+                    mvn -B package -Dmaven.test.skip=true -Dmaven.main.skip=true -s .circleci/settings.xml
                 environment:
                     JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
             - store_test_results:
@@ -81,7 +82,7 @@ jobs:
                         PUBLISH="package"
                     fi
                     echo "publishing jobs: $PUBLISH"
-                    mvn $PUBLISH -Dmaven.test.skip=true -Dmaven.main.skip=true -s .circleci/settings.xml -Dsonar.login=$SONARCLOUD_LOGIN
+                    mvn -B $PUBLISH -Dmaven.test.skip=true -Dmaven.main.skip=true -s .circleci/settings.xml -Dsonar.login=$SONARCLOUD_LOGIN
                 environment:
                     JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
             - store_test_results:
