@@ -164,7 +164,6 @@
                 </executions>
                 <configuration>
                     <keywords>true</keywords>
-                    <bootclasspath>${jdk.compile.home}/lib/rt.jar</bootclasspath>
                     <source>${maven.compiler.source}</source>
                 </configuration>
             </plugin>
