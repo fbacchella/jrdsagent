@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
 <probedesc>
-    <name>IfStat</name>
+    <name>IfStatAll</name>
     <probeName>ifstat:${index}</probeName>
     <probeClass>jrds.probe.LinuxInterface</probeClass>
     <specific name="remote">jrds.agent.linux.IfStat</specific>
@@ -72,6 +72,9 @@
         <dsType>counter</dsType>
     </ds>
     <graphs>
+        <name>IfTrafficpktps</name>
+        <name>IfTrafficbps</name>
         <name>IfTrafficErrors</name>
+        <name>IfTrafficPktssz</name>
     </graphs>
 </probedesc>

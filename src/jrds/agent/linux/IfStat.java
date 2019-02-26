@@ -2,11 +2,53 @@ package jrds.agent.linux;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class IfStat extends LProbeProc {
-    String ifName;
+
+    private static final Path NETROUTEFILE = Paths.get("/proc/net/route");
+    private static final String DEFAULTROUTE = "00000000";
+
+    private String ifName;
+
+    /**
+     * Will resolve to the interface that carries the default route
+     * @see jrds.agent.linux.LProbeProc#configure()
+     */
+    public Boolean configure(String ifName, Boolean autoroute) {
+        if (! autoroute) {
+            return configure(ifName);
+        } else {
+            try {
+                List<String> lines = Files.readAllLines(NETROUTEFILE, StandardCharsets.US_ASCII);
+                // Removing first line as it's the header
+                lines.remove(0);
+                for (String line : lines) {
+                    if (!line.equals("")) {
+                        String[] lineSplit = line.trim().split("\\s+");
+                        if (lineSplit.length < 2) {
+                            continue;
+                        }
+                        String itf = lineSplit[0];
+                        String destination = lineSplit[1];
+                        if (DEFAULTROUTE.equals(destination)) {
+                            this.ifName = itf;
+                            break;
+                        }
+                    }
+                }
+                return super.configure();
+            } catch (Exception e) {
+                throw new RuntimeException("Impossible to initialize IfStat probe", e);
+            }
+        }
+    }
 
     public Boolean configure(String ifName) {
         this.ifName = ifName;

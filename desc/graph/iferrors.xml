@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
-  <name>IfErrors</name>
+  <name>IfTrafficErrors</name>
   <graphName>iferrors-${index}</graphName>
   <graphTitle>Interface errors on interface ${index} on ${host}</graphTitle>
   <verticalLabel>error/s</verticalLabel>
@@ -12,27 +12,27 @@
   <add>
     <name>txerrs</name>
     <graphType>line</graphType>
-    <legend>The total number of transmit errors detected by the device</legend>
+    <legend>Number of transmit errors</legend>
   </add>
   <add>
     <name>txdrop</name>
     <graphType>line</graphType>
-    <legend>The total number of packets dropped by the device</legend>
+    <legend>Number of packets dropped</legend>
   </add>
   <add>
     <name>txfifo</name>
     <graphType>line</graphType>
-    <legend>Number of FIFO buffer errors.</legend>
+    <legend>Number of FIFO buffer errors</legend>
   </add>
   <add>
     <name>txcolls</name>
     <graphType>line</graphType>
-    <legend>Number of collisions detected on the interface</legend>
+    <legend>Number of collisions</legend>
   </add>
   <add>
     <name>txcarrier</name>
     <graphType>line</graphType>
-    <legend>Number of carrier losses detected by the device</legend>
+    <legend>Number of carrier losses</legend>
   </add>
   <add>
     <legend>Received (upward graph)</legend>
@@ -42,13 +42,13 @@
     <reversed>true</reversed>
     <graphType>line</graphType>
     <color>green</color>
-    <legend>Number of receive errors detected by the device</legend>
+    <legend>Number of receive errors</legend>
   </add>
   <add>
     <name>rxdrop</name>
     <reversed>true</reversed>
     <graphType>line</graphType>
-    <legend>Number of packets dropped by the device</legend>
+    <legend>Number of packets dropped</legend>
   </add>
   <add>
     <name>rxfifo</name>
