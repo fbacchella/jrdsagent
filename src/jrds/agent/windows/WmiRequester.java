@@ -3,7 +3,6 @@ package jrds.agent.windows;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,21 +17,18 @@ import com4j.typelibs.wmi.ISWbemServices;
 
 public abstract class WmiRequester {
 
-    private final static Callable<Object> refresher = new Callable<Object>() {
+    private final static Runnable refresher = new Runnable() {
         private long lastUpdate = 0;
         @Override
-        public Object call() {
+        public void run() {
             if(cache.size() <= 0) {
-                return null;
             }
             Date now = new Date();
             // Only one refresh / second
-            if(now.getTime() - lastUpdate < 1000) {
-                return null;
+            if(now.getTime() - lastUpdate > 1000) {
+                wbemRefresher.refresh(0);
+                lastUpdate = now.getTime();
             }
-            wbemRefresher.refresh(0);
-            lastUpdate = now.getTime();
-            return null;
         }
     };
 
