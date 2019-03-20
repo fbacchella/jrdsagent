@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+    <name>MpStatHeat</name>
+    <graphName>mpstatheat</graphName>
+    <graphTitle>Detailled CPU Utilization on ${host}</graphTitle>
+    <verticalLabel>%</verticalLabel>
+    <upperLimit>100.0</upperLimit>
+    <hosttree>
+        <pathelement>host</pathelement>
+        <pathelement>system</pathelement>
+        <pathelement>load</pathelement>
+        <pathstring>Detailled CPU usage</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>system</pathelement>
+        <pathelement>load</pathelement>
+        <pathstring>Detailled CPU usage</pathstring>
+        <pathelement>host</pathelement>
+    </viewtree>
+</graphdesc>
