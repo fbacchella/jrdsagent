@@ -28,6 +28,9 @@ public abstract class LProbeProc extends LProbe {
 
     @Override
     public Boolean configure() {
+        if (statFile == null || ! statFile.canRead()) {
+            throw new RuntimeException("file '" + statFile + "' not usable");
+        }
         try {
             if (!statFile.getCanonicalPath().startsWith("/proc") && !statFile.getCanonicalPath().startsWith("/sys") ) {
                 FilePermission p = new FilePermission(statFile.getPath(), "read");
@@ -37,9 +40,6 @@ public abstract class LProbeProc extends LProbe {
             throw new RuntimeException(e);
         }
 
-        if (statFile == null || ! statFile.canRead()) {
-            throw new RuntimeException("file '" + statFile + "' not usable");
-        }
         if (name == null || name.isEmpty()) {
             name = statFile.getAbsoluteFile().getName();
         }
