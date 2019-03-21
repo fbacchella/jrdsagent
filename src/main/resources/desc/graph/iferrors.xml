@@ -1,79 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
-  <name>IfTrafficErrors</name>
-  <graphName>iferrors-${index}</graphName>
-  <graphTitle>Interface errors on interface ${index} on ${host}</graphTitle>
-  <verticalLabel>error/s</verticalLabel>
-  <lowerLimit>NaN</lowerLimit>
-  <add>
-    <legend>Transmit (downward graph)</legend>
-  </add>
-  <add>
-    <name>txerrs</name>
-    <graphType>line</graphType>
-    <legend>Number of transmit errors</legend>
-  </add>
-  <add>
-    <name>txdrop</name>
-    <graphType>line</graphType>
-    <legend>Number of packets dropped</legend>
-  </add>
-  <add>
-    <name>txfifo</name>
-    <graphType>line</graphType>
-    <legend>Number of FIFO buffer errors</legend>
-  </add>
-  <add>
-    <name>txcolls</name>
-    <graphType>line</graphType>
-    <legend>Number of collisions</legend>
-  </add>
-  <add>
-    <name>txcarrier</name>
-    <graphType>line</graphType>
-    <legend>Number of carrier losses</legend>
-  </add>
-  <add>
-    <legend>Received (upward graph)</legend>
-  </add>
-  <add>
-    <name>rxerrs</name>
-    <reversed>true</reversed>
-    <graphType>line</graphType>
-    <color>green</color>
-    <legend>Number of receive errors</legend>
-  </add>
-  <add>
-    <name>rxdrop</name>
-    <reversed>true</reversed>
-    <graphType>line</graphType>
-    <legend>Number of packets dropped</legend>
-  </add>
-  <add>
-    <name>rxfifo</name>
-    <reversed>true</reversed>
-    <graphType>line</graphType>
-    <legend>Number of FIFO buffer errors</legend>
-  </add>
-  <add>
-    <name>rxframe</name>
-    <reversed>true</reversed>
-    <graphType>line</graphType>
-    <legend>Number of packet framing errors</legend>
-  </add>
-  <hosttree>
-    <pathelement>HOST</pathelement>
-    <pathelement>NETWORK</pathelement>
-    <pathelement>INTERFACES</pathelement>
-    <pathelement>INDEX</pathelement>
-    <pathstring>Interface errors</pathstring>
-  </hosttree>
-  <viewtree>
-    <pathelement>NETWORK</pathelement>
-    <pathelement>INTERFACES</pathelement>
-    <pathstring>Interface errors</pathstring>
-    <pathelement>HOST</pathelement>
-    <pathelement>INDEX</pathelement>
-  </viewtree>
+    <name>IfTrafficErrors</name>
+    <graphName>iferrors-${index}</graphName>
+    <graphTitle>Interface errors on interface ${index} on ${host}</graphTitle>
+    <verticalLabel>error/s</verticalLabel>
+    <lowerLimit>NaN</lowerLimit>
+    <add>
+        <legend>Transmit errors</legend>
+    </add>
+    <add>
+        <name>txerrs</name>
+        <graphType>line</graphType>
+        <legend>Transmit errors</legend>
+    </add>
+    <add>
+        <name>txdrop</name>
+        <graphType>line</graphType>
+        <legend>Number of packets dropped</legend>
+    </add>
+    <add>
+        <name>txfifo</name>
+        <graphType>line</graphType>
+        <legend>Number of FIFO buffer errors</legend>
+    </add>
+    <add>
+        <name>txcolls</name>
+        <graphType>line</graphType>
+        <legend>Number of collisions</legend>
+    </add>
+    <add>
+        <name>txcarrier</name>
+        <graphType>line</graphType>
+        <legend>Number of carrier losses</legend>
+    </add>
+    <add>
+        <legend>Received errors</legend>
+    </add>
+    <add>
+        <name>rxerrs</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <legend>Number of receive errors</legend>
+    </add>
+    <add>
+        <name>rxdrop</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <legend>Number of packets dropped</legend>
+    </add>
+    <add>
+        <name>rxfifo</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <legend>Number of FIFO buffer errors</legend>
+    </add>
+    <add>
+        <name>rxframe</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <legend>Number of packet framing errors</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>NETWORK</pathelement>
+        <pathelement>INTERFACES</pathelement>
+        <pathelement>INDEX</pathelement>
+        <pathstring>Interface errors</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>NETWORK</pathelement>
+        <pathelement>INTERFACES</pathelement>
+        <pathstring>Interface errors</pathstring>
+        <pathelement>HOST</pathelement>
+        <pathelement>INDEX</pathelement>
+    </viewtree>
 </graphdesc>
