@@ -8,53 +8,46 @@ import jrds.GraphDesc.GraphType;
 import jrds.GraphNode;
 import jrds.factories.ProbeBean;
 
-import org.apache.log4j.Logger;
-import org.rrd4j.ConsolFun;
-
 @ProbeBean({"count"})
 public class NodeMemoryGraph extends Graph {
-    static final private Logger logger = Logger.getLogger(NodeMemoryGraph.class);
 
-    int count;
+    private int count;
     private GraphDesc gd = null;
 
     public NodeMemoryGraph(GraphNode node) {
         super(node);
-        logger.trace(gd);
     }
 
     @Override
     protected synchronized GraphDesc getGraphDesc() {
-        if(gd == null) {
-            try {
-                String hostName = getNode().getProbe().getHost().getName();
-                gd = (GraphDesc) getNode().getGraphDesc().clone();
-                for (int i = 0; i < count; i++) {
-                    gd.add("used." + i, "used", null, GraphType.NONE, null,
-                            null, ConsolFun.AVERAGE, false, null, hostName,
-                            "nodemem" + i);
-                    gd.add("free." + i, "free", null, GraphType.NONE,
-                            null, null, ConsolFun.AVERAGE, false, null,
-                            hostName, "nodemem" + i);
-                    if (i == 0) {
-                        gd.add("used.rpn" + i, null, "used." + i + ", 1024, *",
-                                GraphType.AREA, Color.BLUE,
-                                "Node0 memory used", ConsolFun.AVERAGE,
-                                false, null, null, null);
-                    } else {
-                        gd.add("used.rpn" + i, null, "used." + i + ", 1024, *",
-                                GraphType.STACK, Color.BLUE,
-                                "Node" + i + " memory used", ConsolFun.AVERAGE,
-                                false, null, null, null);
-                    }
-                    gd.add("free.rpn" + i, null, "free." + i + ", 1024, *",
-                            GraphType.STACK, Color.GREEN,
-                            "Node" + i + " memory free", ConsolFun.AVERAGE,
-                            false, null, null, null);
-                }
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException("Can't clone this graphdesc", e);
+        if (gd == null) {
+            String hostName = getNode().getProbe().getHost().getName();
+            GraphDesc.Builder builder = GraphDesc.getBuilder().fromGraphDesc(getNode().getGraphDesc());
+            for (int i = 0; i < count; i++) {
+                builder.addDsDesc(GraphDesc.getDsDescBuilder()
+                                        .setName("used." + i)
+                                        .setDsName("used")
+                                        .setGraphType(GraphType.NONE)
+                                        .setPath(hostName, "nodemem" + i));
+                builder.addDsDesc(GraphDesc.getDsDescBuilder()
+                                        .setName("free." + i)
+                                        .setDsName("free")
+                                        .setGraphType(GraphType.NONE)
+                                        .setPath(hostName, "nodemem" + i));
+                builder.addDsDesc(GraphDesc.getDsDescBuilder()
+                                        .setName("used.rpn" + i)
+                                        .setRpn("used." + i + ", 1024, *")
+                                        .setGraphType( i== 0 ? GraphType.AREA : GraphType.STACK)
+                                        .setColor(Color.BLUE)
+                                        .setLegend("Node" + i + " memory used"));
+                builder.addDsDesc(GraphDesc.getDsDescBuilder()
+                                        .setName("free.rpn" + i)
+                                        .setRpn("free." + i + ", 1024, *")
+                                        .setGraphType(GraphType.STACK)
+                                        .setColor(Color.GREEN)
+                                        .setLegend("Node" + i + " memory free"));
             }
+            gd = builder.build();
         }
         return gd;
     }
