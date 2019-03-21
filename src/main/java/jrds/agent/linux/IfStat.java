@@ -20,6 +20,10 @@ public class IfStat extends LProbeProc {
     /**
      * Will resolve to the interface that carries the default route
      * @see jrds.agent.linux.LProbeProc#configure()
+     *
+     * @param ifName
+     * @param autoroute
+     * @return
      */
     public Boolean configure(String ifName, Boolean autoroute) {
         if (! autoroute) {

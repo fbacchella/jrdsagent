@@ -87,6 +87,7 @@ public class Start implements Serializable {
     /**
      * start the listen thread with a predefined port and security manager, so jrdsagent can be used as a lib and not a standalone daemon
      * @param port
+     * @param proto
      */
     public static void start(int port, PROTOCOL proto) {
         try {
@@ -114,7 +115,7 @@ public class Start implements Serializable {
 
     /**
      * <p>A compact and exception free number parser.<p>
-     * <p>If the string can be parsed as the specified type, it return the default value<p>
+     * <p>If the string can be parsed as the specified type, it return the default value</p>
      * @param toParse The string to parse
      * @param defaultVal A default value to use it the string can't be parsed
      * @return An Number object using the same type than the default value.
