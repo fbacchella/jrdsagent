@@ -17,22 +17,22 @@
     <add>
         <name>txdrop</name>
         <graphType>line</graphType>
-        <legend>Number of packets dropped</legend>
+        <legend>Packets dropped</legend>
     </add>
     <add>
         <name>txfifo</name>
         <graphType>line</graphType>
-        <legend>Number of FIFO buffer errors</legend>
+        <legend>FIFO buffer errors</legend>
     </add>
     <add>
         <name>txcolls</name>
         <graphType>line</graphType>
-        <legend>Number of collisions</legend>
+        <legend>Collisions</legend>
     </add>
     <add>
         <name>txcarrier</name>
         <graphType>line</graphType>
-        <legend>Number of carrier losses</legend>
+        <legend>Carrier losses</legend>
     </add>
     <add>
         <legend>Received errors</legend>
@@ -41,25 +41,25 @@
         <name>rxerrs</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
-        <legend>Number of receive errors</legend>
+        <legend>Receive errors</legend>
     </add>
     <add>
         <name>rxdrop</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
-        <legend>Number of packets dropped</legend>
+        <legend>Packets dropped</legend>
     </add>
     <add>
         <name>rxfifo</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
-        <legend>Number of FIFO buffer errors</legend>
+        <legend>FIFO buffer errors</legend>
     </add>
     <add>
         <name>rxframe</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
-        <legend>Number of packet framing errors</legend>
+        <legend>Packet framing errors</legend>
     </add>
     <hosttree>
         <pathelement>HOST</pathelement>
