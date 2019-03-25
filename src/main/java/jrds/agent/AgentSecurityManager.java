@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,6 +49,7 @@ public class AgentSecurityManager extends SecurityManager {
             permUsed = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
             permCreated = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
             Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
                 public void run() {
                     for(String i: new HashSet<String>(permCreated)) {
                         if(permUsed.contains(i + " =")) {
@@ -78,19 +80,8 @@ public class AgentSecurityManager extends SecurityManager {
         Map<String, Set<Permission>> permsSets;
         try {
             permsSets = getPermsSets();
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
+        } catch (SecurityException | IllegalArgumentException | ClassNotFoundException | NoSuchMethodException 
+                        | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
 
@@ -119,6 +110,7 @@ public class AgentSecurityManager extends SecurityManager {
 
     }
 
+    @Override
     public void checkPermission(Permission perm) {
         // They can be an undefined number of security.provider.*
         // Used by jmxmp
@@ -224,7 +216,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.lang.RuntimePermission", "readFileDescriptor" },
             new String[] { "java.lang.RuntimePermission", "setContextClassLoader" },
             new String[] { "java.lang.RuntimePermission", "writeFileDescriptor" },
-            // Welcom java's modules
+            // Welcome java's modules
             new String[] { "java.lang.RuntimePermission", "accessSystemModules" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.jdk.internal.reflect" },
             new String[] { "java.lang.reflect.ReflectPermission", "suppressAccessChecks" },
@@ -335,14 +327,15 @@ public class AgentSecurityManager extends SecurityManager {
             new Class[] { String.class },
             new Class[] { String.class, String.class },
         };
-        for(String name: permsDescription.keySet()) {
-            Set<Permission> current = new HashSet<Permission>();
+        for (Entry<String, String[][]> e: permsDescription.entrySet()) {
+            String name = e.getKey();
+            Set<Permission> current = new HashSet<>();
             permsSets.put(name, current);
-            for(String[] a: permsDescription.get(name)) {
+            for (String[] a: e.getValue()) {
                 String className = a[0];
                 String[] argVector = Arrays.copyOfRange(a, 1, a.length);
                 Class<?> cl = Start.class.getClassLoader().loadClass(className);
-                Constructor<?> c = cl.getConstructor( typeVector[argVector.length - 1]);
+                Constructor<?> c = cl.getConstructor(typeVector[argVector.length - 1]);
                 Permission newPerm = (Permission) c.newInstance((Object[])argVector);
                 current.add(newPerm);
             }

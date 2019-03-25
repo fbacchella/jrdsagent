@@ -16,24 +16,19 @@ import javax.management.StandardMBean;
 
 
 public class RProbeJMXImpl extends StandardMBean implements RProbe {
-    public final static String NAME = "jrds:type=agent";
+
+    public static final String NAME = "jrds:type=agent";
     protected final RProbeActor actor;
     static public final void register(RProbeActor rp) throws InvocationTargetException {
         registerinstance(new RProbeJMXImpl(rp));
     }
-    
+
     protected static void registerinstance(RProbeJMXImpl instance) throws InvocationTargetException {
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
             ObjectName name = new ObjectName(NAME);
             mbs.registerMBean(instance, name); 
-        } catch (MalformedObjectNameException e) {
-            throw new InvocationTargetException(e, "Error registring JMX");
-        } catch (InstanceAlreadyExistsException e) {
-            throw new InvocationTargetException(e, "Error registring JMX");
-        } catch (MBeanRegistrationException e) {
-            throw new InvocationTargetException(e, "Error registring JMX");
-        } catch (NotCompliantMBeanException e) {
+        } catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException e) {
             throw new InvocationTargetException(e, "Error registring JMX");
         }
     }

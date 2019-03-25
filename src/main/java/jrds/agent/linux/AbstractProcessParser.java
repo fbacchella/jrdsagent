@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import jrds.agent.LProbe;
 import jrds.agent.Start;
 
-public abstract class AbstractProcessParser  extends LProbe {
+public abstract class AbstractProcessParser extends LProbe {
 
     static private final int ARROBE = Character.codePointAt("@", 0);
 
@@ -179,10 +179,8 @@ public abstract class AbstractProcessParser  extends LProbe {
 
     protected Map<String, Number> parseKeyFile(int pid, String file) {
         File stat = new File("/proc/" + pid + "/" + file);
-        BufferedReader r = null;
         Map<String, Number> retValues = new HashMap<String, Number>();
-        try {
-            r = new BufferedReader(new FileReader(stat));
+        try (BufferedReader r = new BufferedReader(new FileReader(stat))){
             String line;
             while((line = r.readLine()) != null) {
                 String[] values = line.trim().split(":");
@@ -198,23 +196,13 @@ public abstract class AbstractProcessParser  extends LProbe {
             return Collections.emptyMap();
         } catch (Exception e) {
             throw new RuntimeException(getName(), e);
-        } finally {
-            if(r != null) {
-                try {
-                    r.close();
-                } catch (IOException e1) {
-                    // can't rethrow an exception
-                }
-            }
         }
 
     }
 
     protected Map<String, Number> parseFile(int pid, String file, String[] keys) {
         File stat = new File("/proc/" + pid + "/" + file);
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(stat));
+        try (BufferedReader r = new BufferedReader(new FileReader(stat))) {
             String statLine = r.readLine();
             String[] statArray = statLine.split(" +");
             Map<String, Number> retValues = new HashMap<String, Number>(statArray.length);
@@ -234,14 +222,6 @@ public abstract class AbstractProcessParser  extends LProbe {
             return Collections.emptyMap();
         } catch (Exception e) {
             throw new RuntimeException(getName(), e);
-        } finally {
-            if(r != null) {
-                try {
-                    r.close();
-                } catch (IOException e1) {
-                    // can't rethrow an exception
-                }
-            }
         }
     }
 

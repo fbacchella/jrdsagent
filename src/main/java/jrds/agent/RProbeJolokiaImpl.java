@@ -49,7 +49,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
 
     static public final void register(RProbeActor actor, int port) throws InvocationTargetException {
         try {
-            Map<String,String> config = new HashMap<String, String>();
+            Map<String,String> config = new HashMap<>();
             config.put("port", String.valueOf(port));
             config.put("discoveryEnabled", "false");
             config.put("host", "*");
@@ -66,10 +66,8 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             }
             
             RProbeJMXImpl.registerinstance(new RProbeJolokiaImpl(actor));
-        } catch (RuntimeException exp) {
-            throw new InvocationTargetException(exp, "Error registring Jolokia agent");
-        } catch (IOException exp) {
-            throw new InvocationTargetException(exp, "Error registring Jolokia agent");
+        } catch (RuntimeException | IOException ex) {
+            throw new InvocationTargetException(ex, "Error registring Jolokia agent");
         }
     }
 

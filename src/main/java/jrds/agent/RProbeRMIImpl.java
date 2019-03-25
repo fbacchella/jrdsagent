@@ -18,7 +18,7 @@ import java.util.Map;
 public class RProbeRMIImpl extends UnicastRemoteObject implements RProbe, Serializable {
     static final long serialVersionUID = -7914792289084645089L;
 
-    final private RProbeActor actor;
+    transient private final RProbeActor actor;
 
     //RProbeRMIImpl should not be eligible to gc, so keep it un a useless variable
     private static RProbe dispatcher;

@@ -15,8 +15,8 @@ import javax.naming.NameNotFoundException;
 
 public class RProbeActor {
 
-    final private Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
-    final private SystemUptime uptime;
+    private final Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
+    private final SystemUptime uptime;
 
     public RProbeActor() {
         String uptimeClassName = System.getProperty("jrds.uptimeClass", "");
@@ -36,25 +36,14 @@ public class RProbeActor {
             @SuppressWarnings("unchecked")
             Class<SystemUptime> uptimeClass = (Class<SystemUptime>) RProbeActor.class.getClassLoader().loadClass(uptimeClassName.trim());
             uptime = uptimeClass.getDeclaredConstructor().newInstance();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
-        } catch (InstantiationException e) {
-            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
-        } catch (SecurityException e) {
-            throw new RuntimeException("Unable to find uptime class " + uptimeClassName);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | 
+                        IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            throw new RuntimeException("Unable to find uptime class " + uptimeClassName, e);
         }
     }
 
     public Map<String,Number> query(String name) throws NameNotFoundException {
-        Map<String,Number> retValue = new HashMap<String,Number>(0);
+        Map<String,Number> retValue = new HashMap<>(0);
         LProbe p =  probeMap.get(name);
         if(p != null) {
             retValue = p.query();
@@ -81,19 +70,9 @@ public class RProbeActor {
             return (LProbe) theConst.newInstance();
         } catch (ExceptionInInitializerError e) {
             throw new InvocationTargetException(e.getCause(), "Class " + name + " can't be initialized");
-        } catch (NoClassDefFoundError e) {
+        } catch (NoClassDefFoundError | ClassNotFoundException e) {
             throw new InvocationTargetException(e, "Class " + name + " not found");
-        } catch (ClassNotFoundException e) {
-            throw new InvocationTargetException(e, "Class " + name + " not found");
-        } catch (IllegalArgumentException e) {
-            throw new InvocationTargetException(e, "Error instanciating probe " + name);
-        } catch (InstantiationException e) {
-            throw new InvocationTargetException(e, "Error instanciating probe " + name);
-        } catch (IllegalAccessException e) {
-            throw new InvocationTargetException(e, "Error instanciating probe " + name);
-        } catch (SecurityException e) {
-            throw new InvocationTargetException(e, "Error instanciating probe " + name);
-        } catch (NoSuchMethodException e) {
+        } catch (IllegalArgumentException | InstantiationException | IllegalAccessException | SecurityException | NoSuchMethodException e) {
             throw new InvocationTargetException(e, "Error instanciating probe " + name);
         }
     }
@@ -110,14 +89,8 @@ public class RProbeActor {
         try {
             Method m = p.getClass().getMethod("configure", argsType);
             Object result = m.invoke(p, argsVal);
-            return(Boolean) result;
-        } catch (SecurityException e) {
-            throw new InvocationTargetException(e, "Error configuring probe " + p);
-        } catch (NoSuchMethodException e) {
-            throw new InvocationTargetException(e, "Error configuring probe " + p);
-        } catch (IllegalArgumentException e) {
-            throw new InvocationTargetException(e, "Error configuring probe " + p);
-        } catch (IllegalAccessException e) {
+            return (Boolean) result;
+        } catch (SecurityException | NoSuchMethodException | IllegalArgumentException | IllegalAccessException e) {
             throw new InvocationTargetException(e, "Error configuring probe " + p);
         }
     }
