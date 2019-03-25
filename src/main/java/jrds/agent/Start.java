@@ -5,8 +5,6 @@ import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.management.MBeanServer;
 import javax.management.remote.JMXConnectorFactory;
@@ -15,8 +13,9 @@ import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
 
 public class Start implements Serializable {
-    static final private int defaultPort = 2002;
-    static final private String defaultProto = "rmi";
+
+    private static final int DEFAULTPORT = 2002;
+    private static final String DEFAULTPROTOCOL = "rmi";
     public enum PROTOCOL {
         rmi,
         jmx,
@@ -24,9 +23,9 @@ public class Start implements Serializable {
         jolokia,
     }
 
-    public final static RProbeActor actor = new RProbeActor();
+    public static final RProbeActor actor = new RProbeActor();
 
-    static private final class JrdsMBeanInfo {
+    private static final class JrdsMBeanInfo {
         MBeanServer mbs;
         JMXServiceURL url;
         JMXConnectorServer cs;
@@ -55,11 +54,11 @@ public class Start implements Serializable {
      */
     public static void main(String[] args) throws Exception {
         String portProp = System.getProperty("jrds.port");
-        int port = parseStringNumber(portProp, defaultPort);
+        int port = parseStringNumber(portProp, DEFAULTPORT);
         if(port == 0)
-            port = defaultPort;
+            port = DEFAULTPORT;
 
-        PROTOCOL proto = PROTOCOL.valueOf(defaultProto);
+        PROTOCOL proto = PROTOCOL.valueOf(DEFAULTPROTOCOL);
         String protoProp = System.getProperty("jrds.proto", proto.toString()).trim().toLowerCase();
         if( ! "".equals(protoProp) )
             proto = PROTOCOL.valueOf(protoProp);
@@ -104,7 +103,7 @@ public class Start implements Serializable {
                 RProbeJMXImpl.register(actor);
                 break;
             }
-            //Check if actor can read uptime;
+            //Check if actor can read uptime
             actor.getUptime();
         } catch (InvocationTargetException e) {
             throw new RuntimeException("failed to start jrdsagent", e.getCause());
@@ -122,21 +121,18 @@ public class Start implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <NumberClass extends Number> NumberClass parseStringNumber(String toParse, NumberClass defaultVal) {
-        if(toParse == null || "".equals(toParse))
+        toParse = toParse.trim();
+        if(toParse == null || toParse.isEmpty())
             return defaultVal;
 
         try {
             Class<NumberClass> clazz = (Class<NumberClass>) defaultVal.getClass();
             Constructor<NumberClass> c = clazz.getConstructor(String.class);
             return c.newInstance(toParse);
-        } catch (SecurityException e) {
-        } catch (NoSuchMethodException e) {
-        } catch (IllegalArgumentException e) {
-        } catch (InstantiationException e) {
-        } catch (IllegalAccessException e) {
-        } catch (InvocationTargetException e) {
+        } catch (SecurityException | NoSuchMethodException | IllegalArgumentException |
+                        InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            return defaultVal;
         }
-        return defaultVal;
     }
 
 }

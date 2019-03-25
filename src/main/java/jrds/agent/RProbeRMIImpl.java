@@ -18,25 +18,19 @@ import java.util.Map;
 public class RProbeRMIImpl extends UnicastRemoteObject implements RProbe, Serializable {
     static final long serialVersionUID = -7914792289084645089L;
 
-    transient private final RProbeActor actor;
+    private final transient RProbeActor actor;
 
     //RProbeRMIImpl should not be eligible to gc, so keep it un a useless variable
     private static RProbe dispatcher;
 
-    static public final void register(RProbeActor actor, int port) throws InvocationTargetException {
+    public static final void register(RProbeActor actor, int port) throws InvocationTargetException {
         try {
             dispatcher = new RProbeRMIImpl(port, actor);
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind(RProbe.NAME, dispatcher);
-        } catch (RemoteException e) {
-            throw new InvocationTargetException(e, "Error registring RMI");
-        } catch (AlreadyBoundException e) {
+        } catch (RemoteException | AlreadyBoundException e) {
             throw new InvocationTargetException(e, "Error registring RMI");
         }
-    }
-
-    private RProbeRMIImpl(RProbeActor actor) throws RemoteException {
-        this.actor = actor;
     }
 
     private RProbeRMIImpl(int port, RProbeActor actor) throws RemoteException {

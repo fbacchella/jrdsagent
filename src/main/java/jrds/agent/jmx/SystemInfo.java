@@ -15,6 +15,7 @@ import com.sun.management.OperatingSystemMXBean;
  * @author bacchell
  *
  */
+@SuppressWarnings("restriction")
 public class SystemInfo extends LProbe {
 
     private enum OSBEAN {
@@ -56,7 +57,7 @@ public class SystemInfo extends LProbe {
             }
         };
         public abstract Number getValue(OperatingSystemMXBean bean);
-    };
+    }
 
     public String getName() {
         return "jmxsysteminfo";
@@ -64,7 +65,7 @@ public class SystemInfo extends LProbe {
 
     public Map<String, Number> query() {
         com.sun.management.OperatingSystemMXBean systemBean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        Map<String, Number> retValues = new HashMap<String, Number>();
+        Map<String, Number> retValues = new HashMap<>();
         for(OSBEAN value: OSBEAN.values()) {
             retValues.put(value.name(), value.getValue(systemBean));
         }

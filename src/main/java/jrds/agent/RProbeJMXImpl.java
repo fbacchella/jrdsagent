@@ -19,7 +19,7 @@ public class RProbeJMXImpl extends StandardMBean implements RProbe {
 
     public static final String NAME = "jrds:type=agent";
     protected final RProbeActor actor;
-    static public final void register(RProbeActor rp) throws InvocationTargetException {
+    public static final void register(RProbeActor rp) throws InvocationTargetException {
         registerinstance(new RProbeJMXImpl(rp));
     }
 

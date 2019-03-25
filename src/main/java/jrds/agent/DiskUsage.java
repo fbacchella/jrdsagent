@@ -4,7 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiskUsage extends LProbe{
+public class DiskUsage extends LProbe {
+
     String path;
 
     public Boolean configure(String path) {
@@ -18,7 +19,7 @@ public class DiskUsage extends LProbe{
         if(! pathFile.isDirectory()) {
             throw new RuntimeException("Path " + path + " is not a directory");
         }
-        Map<String, Number> values = new HashMap<String, Number>();
+        Map<String, Number> values = new HashMap<>();
         values.put("free", pathFile.getFreeSpace());
         values.put("total", pathFile.getTotalSpace());
         values.put("usable", pathFile.getUsableSpace());

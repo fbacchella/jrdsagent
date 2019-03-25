@@ -17,7 +17,7 @@ import org.jolokia.util.LogHandler;
 
 public class RProbeJolokiaImpl extends RProbeJMXImpl {
 
-    public final static class JrdsLogHandler implements LogHandler {
+    public static final class JrdsLogHandler implements LogHandler {
 
         private static final Logger julilogger = Logger.getLogger(RProbeJolokiaImpl.class.getCanonicalName());
         @Override
@@ -35,19 +35,19 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             julilogger.log(Level.WARNING, message, t);
         }
 
-    };
+    }
 
-    static public final class RemoteNamingException extends RemoteException {
+    public static final class RemoteNamingException extends RemoteException {
         public RemoteNamingException(String string, NameNotFoundException e) {
             super(string, e);
         }
-    };
+    }
 
-    public final static String NAME = "jrds:type=agent";
+    public static final String NAME = "jrds:type=agent";
     private static JolokiaServer server;
     public static final String JOLOKIA_AGENT_URL = "jolokia.agent";
 
-    static public final void register(RProbeActor actor, int port) throws InvocationTargetException {
+    public static final void register(RProbeActor actor, int port) throws InvocationTargetException {
         try {
             Map<String,String> config = new HashMap<>();
             config.put("port", String.valueOf(port));
@@ -71,7 +71,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
         }
     }
 
-    static public final void stop() {
+    public static final void stop() {
         server.stop();
         System.clearProperty(JOLOKIA_AGENT_URL);
     }

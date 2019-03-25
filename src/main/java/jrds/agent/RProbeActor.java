@@ -15,7 +15,7 @@ import javax.naming.NameNotFoundException;
 
 public class RProbeActor {
 
-    private final Map<String,LProbe> probeMap = new HashMap<String,LProbe>();
+    private static final Map<String,LProbe> probeMap = new HashMap<>();
     private final SystemUptime uptime;
 
     public RProbeActor() {
@@ -43,7 +43,7 @@ public class RProbeActor {
     }
 
     public Map<String,Number> query(String name) throws NameNotFoundException {
-        Map<String,Number> retValue = new HashMap<>(0);
+        Map<String,Number> retValue;
         LProbe p =  probeMap.get(name);
         if(p != null) {
             retValue = p.query();
