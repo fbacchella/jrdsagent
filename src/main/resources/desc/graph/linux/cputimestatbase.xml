@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+    <name>CPUTimeStatLinuxBase</name>
+    <graphName>cputimestatlinux</graphName>
+    <graphTitle>CPU Utilization on ${host}</graphTitle>
+    <verticalLabel>%</verticalLabel>
+    <upperLimit>100.0</upperLimit>
+    <add>
+        <name>nice</name>
+    </add>
+    <add>
+        <name>user</name>
+    </add>
+    <add>
+        <name>system</name>
+    </add>
+    <add>
+        <name>iowait</name>
+    </add>
+    <add>
+        <name>idle</name>
+    </add>
+    <add>
+        <name>irq</name>
+    </add>
+    <add>
+        <name>softirq</name>
+    </add>
+    <add>
+        <name>total</name>
+        <rpn>nice, user, +, system,+, iowait, +, idle, +, irq, +, softirq, +, idle, +</rpn>
+    </add>
+    <add>
+        <name>intr_pc</name>
+        <rpn>irq, softirq, + , total, /, 100, *</rpn>
+        <graphType>area</graphType>
+        <color>black</color>
+        <legend>Time processing interrupts</legend>
+    </add>
+    <add>
+        <name>system_pc</name>
+        <rpn>system, total, /, 100, *</rpn>
+        <graphType>stack</graphType>
+        <color>red</color>
+        <legend>System CPU time</legend>
+    </add>
+    <add>
+        <name>user_pc</name>
+        <rpn>user, total, /, 100, *</rpn>
+        <graphType>stack</graphType>
+        <color>blue</color>
+        <legend>User CPU time</legend>
+    </add>
+    <add>
+        <name>nice_pc</name>
+        <rpn>nice, total, /, 100, *</rpn>
+        <graphType>stack</graphType>
+        <color>orange</color>
+        <legend>Nice CPU time</legend>
+    </add>
+    <add>
+        <name>iowait_pc</name>
+        <rpn>iowait, total, /, 100, *</rpn>
+        <graphType>stack</graphType>
+        <color>teal</color>
+        <legend>IO wait CPU time</legend>
+    </add>
+    <add>
+        <name>idle_pc</name>
+        <rpn>idle, total, /, 100, *</rpn>
+        <graphType>stack</graphType>
+        <color>green</color>
+        <legend>Idle CPU time</legend>
+    </add>
+    <hosttree>
+        <pathelement>host</pathelement>
+        <pathelement>system</pathelement>
+        <pathelement>load</pathelement>
+        <pathstring>CPU usage</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>system</pathelement>
+        <pathelement>load</pathelement>
+        <pathstring>CPU usage</pathstring>
+        <pathelement>host</pathelement>
+    </viewtree>
+</graphdesc>
