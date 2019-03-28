@@ -53,6 +53,12 @@
         <defaultValue>0</defaultValue>
     </ds>
     <ds>
+        <dsName>guest_nice</dsName>
+        <dsType>counter</dsType>
+        <collect>cpu.10</collect>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
         <dsName>interrupts</dsName>
         <dsType>counter</dsType>
         <collect>intr.1</collect>
