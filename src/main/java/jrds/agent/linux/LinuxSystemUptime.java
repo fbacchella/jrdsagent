@@ -15,9 +15,7 @@ public class LinuxSystemUptime extends SystemUptime {
     @Override
     public long getSystemUptime() {
         File uptimef = new File(UPTIMEFILE);
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(uptimef));
+        try (BufferedReader r = new BufferedReader(new FileReader(uptimef))){
             String uptimes[] = r.readLine().trim().split(" ");
             long uptime = (long)( Start.parseStringNumber(uptimes[0], 0.0) * 1000);
             return uptime;
@@ -25,14 +23,6 @@ public class LinuxSystemUptime extends SystemUptime {
             throw new RuntimeException("/proc/uptime not found", e);
         } catch (IOException e) {
             throw new RuntimeException("cant' read /proc/uptime", e);
-        } finally {
-            if (r != null) {
-                try {
-                    r.close();
-                } catch (IOException e) {
-                    // can't rethrow an exception
-                }
-            }
         }
     }
 }

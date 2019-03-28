@@ -27,11 +27,9 @@ public class ProcSmaps extends AbstractProcessParser {
 
     @Override
     protected Map<String, Number> parseProc(int pid) {
-        BufferedReader r = null;
-        try {
+        File smaps = new File("/proc/" + pid + "/smaps");
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(smaps), LINUXFSCHARSET))){
             Map<String, Map<String, Long>> areadetails = new HashMap<>();
-            File smaps = new File("/proc/" + pid + "/smaps");
-            r = new BufferedReader(new InputStreamReader(new FileInputStream(smaps), LINUXFSCHARSET));
             String line;
             Map<String, Long> currentareaddetails = null;
             while ((line = r.readLine()) != null) {
@@ -75,13 +73,6 @@ public class ProcSmaps extends AbstractProcessParser {
         } catch (FileNotFoundException e) {
             return Collections.emptyMap();
         } catch (IOException e) {
-        } finally {
-            if (r != null) {
-                try {
-                    r.close();
-                } catch (IOException e) {
-                }
-            }
         }
         return Collections.emptyMap();
     }

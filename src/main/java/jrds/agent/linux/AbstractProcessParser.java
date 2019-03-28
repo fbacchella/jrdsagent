@@ -139,11 +139,9 @@ public abstract class AbstractProcessParser extends LProbe {
     }
 
     protected String getCmdLine(int pid) {
-        FileInputStream is = null;
         File cmdFile = new File("/proc/" + pid + "/cmdline");
-        try {
+        try (FileInputStream is = new FileInputStream(cmdFile)){
             byte[] content = new byte[4096];
-            is = new FileInputStream(cmdFile);
             int read;
             StringBuilder buffer = new StringBuilder();
             while ((read = is.read(content)) > 0) {
@@ -162,14 +160,6 @@ public abstract class AbstractProcessParser extends LProbe {
             return null;
         } catch (IOException e) {
             throw new RuntimeException("unable to read " + cmdFile.getPath() + " for " + getName(), e);
-        } finally {
-            if(is != null) {
-                try {
-                    is.close();
-                } catch (IOException e1) {
-                    // can't rethrow an exception
-                }
-            }
         }
     }
 
@@ -233,23 +223,13 @@ public abstract class AbstractProcessParser extends LProbe {
     protected long computeUpTime(long startTime) {
         if(startTime == 0)
             return 0;
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(new File("/proc/uptime")));
+        try (BufferedReader r = new BufferedReader(new FileReader(new File("/proc/uptime")))){
             String uptimeLine = r.readLine();
             // We talks minutes here, so a precision down to second is good enough
             long uptimeSystem = (long) Double.parseDouble(uptimeLine.split(" ")[0]);
             return uptimeSystem - startTime / USER_HZ;
         } catch (Exception e) {
             throw new RuntimeException(getName(), e);
-        } finally {
-            if(r != null) {
-                try {
-                    r.close();
-                } catch (IOException e1) {
-                    // can't rethrow an exception
-                }
-            }
         }
 
     }
