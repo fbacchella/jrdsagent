@@ -16,7 +16,7 @@ import jrds.factories.ProbeBean;
 @ProbeBean({"count"})
 public class MpStat extends RMI {
 
-    private short count;
+    private short count = 1;
     private String[] columns;
 
     @Override
@@ -48,12 +48,12 @@ public class MpStat extends RMI {
     @Override
     public void addGraph(GraphDesc gd) {
         if("MpStatHeat".equals(gd.getName())) {
-            GraphDesc.Builder builder = GraphDesc.getBuilder().fromGraphDesc(gd).setWithSummary(false);
-            Color color = new Color(0.0f, 0.0f, 1.0f, 1f/count);
+            GraphDesc.Builder builder = GraphDesc.getBuilder().fromGraphDesc(gd).setWithSummary(true);
+            Color color = new Color(0, 0, 255, (int) Math.ceil(255.0/count));
             for(int i = 0 ; i < count ; i++) {
                 StringBuilder rpn = new StringBuilder("0");
-                for(String key: columns ) {
-                    if ("idle".equals(key) || "iowait".equals(key)) {
+                for(String key: columns) {
+                    if ("idle".equals(key) || "iowait".equals(key) || "guest".equals(key) || "guestnice".equals(key)) {
                         continue;
                     }
                     builder.addDsDesc(GraphDesc.getDsDescBuilder()
@@ -66,6 +66,7 @@ public class MpStat extends RMI {
                     rpn.append(",ADDNAN");
                 }
                 builder.addDsDesc(GraphDesc.getDsDescBuilder()
+                                  .setName("cpu" + i)
                                   .setColor(color)
                                   .setRpn(rpn.toString())
                                   .setGraphType(GraphType.AREA)
