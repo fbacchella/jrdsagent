@@ -69,7 +69,7 @@ public class ProcessInfo26 extends AbstractProcessParser {
 
     @Override
     protected Map<String, Number> parseProc(int pid) {
-        Map<String, Number> bufferMap = new HashMap<String, Number>();
+        Map<String, Number> bufferMap = new HashMap<>();
         bufferMap.putAll(parseFile(pid, "stat", statKey));
         bufferMap.putAll(parseFile(pid, "statm", statmKey));
         bufferMap.putAll(parseKeyFile(pid, "io"));

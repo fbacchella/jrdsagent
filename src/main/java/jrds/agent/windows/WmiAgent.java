@@ -39,7 +39,7 @@ public class WmiAgent extends LProbe {
     public Map<String, Number> query() {
         WmiRequester.refresh();
         Object[] values = doQuery();
-        Map<String, Number> returned = new HashMap<String, Number>();
+        Map<String, Number> returned = new HashMap<>();
         for(int i=0; i < fields.length; i++) {
             Object o = values[i];
             if(o instanceof Number) {

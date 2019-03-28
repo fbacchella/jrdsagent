@@ -15,7 +15,7 @@ public class RMIIndexed extends RMI implements IndexedProbe {
         if(!super.configure()) {
             return false;
         }
-        List<Object> args = new ArrayList<Object>(1);
+        List<Object> args = new ArrayList<>(1);
         args.add(index);
         setArgs(args);
         return true;

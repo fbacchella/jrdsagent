@@ -12,7 +12,7 @@ public class MultiNoKeys extends RMI implements IndexedProbe {
 
     @Override
     public Boolean configure() {
-        List<Object> args = new ArrayList<Object>(2);
+        List<Object> args = new ArrayList<>(2);
 
         // The colon key index
         Integer keyIndex = jrds.Util.parseStringNumber(getPd().getSpecific("keyIndex"), 0);

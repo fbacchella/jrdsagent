@@ -20,7 +20,7 @@ public class ProcSmaps extends AbstractProcessParser {
     private static final String HEADERPATTERN = "[0-9a-f]+-[0-9a-f]+ (?<perm>....) [0-9a-f]+ (?<majorminor>..:..) \\d+ *(?<filename>.+)?";
     private static final String SIZEPATTERN = "(?<key>.*): +(?<value>\\d+) kB";
     private static final Pattern LINEPATTERN = Pattern.compile(String.format("^(?:%s)|(?:%s)$", HEADERPATTERN, SIZEPATTERN));
-    private static final Set<String> IGNORE = new HashSet<String>();
+    private static final Set<String> IGNORE = new HashSet<>();
     static {
         IGNORE.addAll(Arrays.asList("KernelPageSize", "MMUPageSize"));
     }
@@ -29,7 +29,7 @@ public class ProcSmaps extends AbstractProcessParser {
     protected Map<String, Number> parseProc(int pid) {
         BufferedReader r = null;
         try {
-            Map<String, Map<String, Long>> areadetails = new HashMap<String, Map<String, Long>>();
+            Map<String, Map<String, Long>> areadetails = new HashMap<>();
             File smaps = new File("/proc/" + pid + "/smaps");
             r = new BufferedReader(new InputStreamReader(new FileInputStream(smaps), LINUXFSCHARSET));
             String line;
@@ -65,7 +65,7 @@ public class ProcSmaps extends AbstractProcessParser {
                     }
                 }
             }
-            Map<String, Number> collected = new HashMap<String, Number>();
+            Map<String, Number> collected = new HashMap<>();
             for(Map.Entry<String, Map<String, Long>> i: areadetails.entrySet()) {
                 for (Map.Entry<String, Long> j: i.getValue().entrySet()) {
                     collected.put(String.format("%s:%s", i.getKey(), j.getKey()), j.getValue());

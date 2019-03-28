@@ -16,7 +16,7 @@ public class LinuxInterface extends RMI implements IndexedProbe {
         if (!super.configure()) {
             return false;
         }
-        List<Object> args = new ArrayList<Object>(1);
+        List<Object> args = new ArrayList<>(1);
         args.add(Util.parseTemplate(ifName, this));
         // the arg autoroute is used only if true
         // this allows to use old jrdsagent

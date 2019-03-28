@@ -34,7 +34,7 @@ public class MultiNoKeys extends LProbeProc {
     }
 
     public Map<String, Number> parse(BufferedReader r) throws IOException {
-        Map<String, Number> retValues = new HashMap<String, Number>();
+        Map<String, Number> retValues = new HashMap<>();
 
         String line;
         while ((line = r.readLine()) != null) {

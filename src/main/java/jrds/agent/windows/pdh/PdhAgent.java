@@ -18,7 +18,7 @@ public class PdhAgent extends LProbe {
 
     // Constructed
     protected Query query;
-    protected Map<String, Counter> counters = new HashMap<String, Counter>();
+    protected Map<String, Counter> counters = new HashMap<>();
 
     @Override
     public Boolean configure() {
@@ -55,7 +55,7 @@ public class PdhAgent extends LProbe {
 
     @Override
     public Map<String, Number> query() {
-        Map<String, Number> m = new HashMap<String, Number>();
+        Map<String, Number> m = new HashMap<>();
         try {
             query.collectData();
         } catch (JPDHException e) {

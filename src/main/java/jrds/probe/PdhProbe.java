@@ -13,7 +13,7 @@ public class PdhProbe extends RMI {
             getPd().addSpecific("remote", "jrds.agent.windows.pdh.PdhAgent");
         }
 
-        List<Object> args = new ArrayList<Object>();
+        List<Object> args = new ArrayList<>();
         buildArgs(args);
         setArgs(args);
 

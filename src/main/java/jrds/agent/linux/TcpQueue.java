@@ -17,7 +17,7 @@ public class TcpQueue extends LProbeProc {
     }
 
     public Map<String, Number> parse(BufferedReader r) throws IOException {
-        Map<String, Number> retValues = new HashMap<String, Number>();
+        Map<String, Number> retValues = new HashMap<>();
         String line;
         int portCol = 2;
         if(local)

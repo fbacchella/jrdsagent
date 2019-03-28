@@ -14,7 +14,7 @@ public class TcpStat extends LProbe {
     private final static String SNMPFILE = "/proc/net/snmp";
 
     public Map<String, Number> query() {
-        Map<String, Number> retValues = new HashMap<String, Number>();
+        Map<String, Number> retValues = new HashMap<>();
         queryFile(SNMPFILE, "Tcp:", retValues);
         queryFile(STATFILE, "TcpExt:", retValues);
         return retValues;

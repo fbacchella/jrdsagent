@@ -25,7 +25,7 @@ public class PdhProbeUniqueInstance extends PdhProbe {
     protected void buildArgs(List<Object> args) {
         super.buildArgs(args);
         args.add(instance);
-        List<String> counters = new ArrayList<String>();
+        List<String> counters = new ArrayList<>();
         for (String key: getPd().getCollectMapping().keySet()) {
             counters.add(key);
         }

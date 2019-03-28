@@ -202,8 +202,8 @@ public class AgentSecurityManager extends SecurityManager {
     }
 
     private Map<String, Set<Permission>> getPermsSets() throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        Map<String, String[][]> permsDescription = new HashMap<String, String[][]>();
-        Map<String, Set<Permission>> permsSets = new HashMap<String, Set<Permission>>();
+        Map<String, String[][]> permsDescription = new HashMap<>();
+        Map<String, Set<Permission>> permsSets = new HashMap<>();
 
         permsDescription.put("common", new String[][] {
             new String[] { "java.lang.RuntimePermission", "accessDeclaredMembers" },

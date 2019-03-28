@@ -19,7 +19,7 @@ import org.apache.log4j.Level;
 
 @ProbeMeta(topStarter=JmxSocketFactory.class)
 public class RMI extends ProbeConnected<String, Number, AgentConnection> {
-    private List<Object> args = new ArrayList<Object>(0);
+    private List<Object> args = new ArrayList<>(0);
     private String remoteName = null;
     private Map<String, String> remoteSpecifics = Collections.emptyMap();
 
@@ -46,7 +46,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
         // and store them in the remoteProperties set
         String remoteSpecificsNames = getPd().getSpecific("remoteSpecifics");
         if (remoteSpecificsNames != null && ! remoteSpecificsNames.trim().isEmpty()) {
-            remoteSpecifics = new HashMap<String, String>();
+            remoteSpecifics = new HashMap<>();
             for (String remoteSpecific: remoteSpecificsNames.split(",")) {
                 String trimed = remoteSpecific.trim();
                 if (trimed.isEmpty()) {

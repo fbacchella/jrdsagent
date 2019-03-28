@@ -15,7 +15,7 @@ public class Wmiprobe extends RMI {
         if(getPd().getSpecific("remote") == null) {
             getPd().addSpecific("remote", "jrds.agent.windows.WmiAgent");
         }
-        List<Object> args = new ArrayList<Object>();
+        List<Object> args = new ArrayList<>();
         buildArgs(args);
         setArgs(args);
         log(Level.DEBUG, "remote args for this probe: %s", args);
@@ -23,7 +23,7 @@ public class Wmiprobe extends RMI {
     }
 
     protected void buildArgs(List<Object> args) {
-        List<String> fields = new ArrayList<String>();
+        List<String> fields = new ArrayList<>();
         for(String key: getPd().getCollectMapping().keySet()) {
             fields.add(key);
         }

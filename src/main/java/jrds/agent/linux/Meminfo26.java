@@ -17,7 +17,7 @@ public class Meminfo26 extends LProbeProc {
     }
 
     public Map<String, Number> parse(BufferedReader r) throws IOException {
-        Map<String, Number> retValues = new HashMap<String, Number>();
+        Map<String, Number> retValues = new HashMap<>();
         //This value is not always present, put a sensible default
         retValues.put("Hugepagesize", 2048 * 1024);
         String line;

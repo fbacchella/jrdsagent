@@ -33,7 +33,7 @@ public abstract class WmiRequester {
     };
 
     private final static ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final static Map<String, ISWbemRefreshableItem> cache = new HashMap<String, ISWbemRefreshableItem>();
+    private final static Map<String, ISWbemRefreshableItem> cache = new HashMap<>();
     private final static ISWbemRefresher wbemRefresher;
     private final static ISWbemServices wbemServices;
     static {

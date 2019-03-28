@@ -55,7 +55,7 @@ public class ProcessCpu extends AbstractProcessParser {
 
     @Override
     protected Map<String, Number> parseProc(int pid) {
-        Map<String, Number> bufferMap = new HashMap<String, Number>();
+        Map<String, Number> bufferMap = new HashMap<>();
         bufferMap.putAll(parseFile(pid, "stat", statKey));
         return bufferMap;
     }

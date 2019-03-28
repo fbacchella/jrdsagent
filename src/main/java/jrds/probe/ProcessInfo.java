@@ -22,7 +22,7 @@ public class ProcessInfo extends RMIIndexed {
             log(Level.ERROR, "No proccess indentification given");
             return false;
         }
-        List<Object> args = new ArrayList<Object>(1);
+        List<Object> args = new ArrayList<>(1);
         if (! self) {
             args.add(super.getIndex());
         } else {

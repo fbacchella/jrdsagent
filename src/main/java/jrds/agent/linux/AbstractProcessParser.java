@@ -51,7 +51,7 @@ public abstract class AbstractProcessParser extends LProbe {
     }
 
     public Map<String, Number> query() {
-        Map<String, Number> retValues = new HashMap<String, Number>();
+        Map<String, Number> retValues = new HashMap<>();
         int count = 0;
         long mostRecentTick = 0;
         for (int pid: getPids()) {
@@ -179,7 +179,7 @@ public abstract class AbstractProcessParser extends LProbe {
 
     protected Map<String, Number> parseKeyFile(int pid, String file) {
         File stat = new File("/proc/" + pid + "/" + file);
-        Map<String, Number> retValues = new HashMap<String, Number>();
+        Map<String, Number> retValues = new HashMap<>();
         try (BufferedReader r = new BufferedReader(new FileReader(stat))){
             String line;
             while((line = r.readLine()) != null) {
@@ -205,7 +205,7 @@ public abstract class AbstractProcessParser extends LProbe {
         try (BufferedReader r = new BufferedReader(new FileReader(stat))) {
             String statLine = r.readLine();
             String[] statArray = statLine.split(" +");
-            Map<String, Number> retValues = new HashMap<String, Number>(statArray.length);
+            Map<String, Number> retValues = new HashMap<>(statArray.length);
             //Number of column in /proc/<pid>/stat is unpredictable in linux
             int column = Math.min(keys.length, statArray.length);
             for(int i=0; i < column; i++ ) {
