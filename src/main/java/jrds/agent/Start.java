@@ -121,7 +121,7 @@ public class Start implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public static <NumberClass extends Number> NumberClass parseStringNumber(String toParse, NumberClass defaultVal) {
-        toParse = toParse.trim();
+        toParse = toParse != null ? toParse.trim() : null;
         if(toParse == null || toParse.isEmpty())
             return defaultVal;
 
