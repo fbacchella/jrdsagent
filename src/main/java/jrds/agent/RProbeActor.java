@@ -43,10 +43,17 @@ public class RProbeActor {
     }
 
     public Map<String,Number> query(String name) throws NameNotFoundException {
-        Map<String,Number> retValue;
         LProbe p =  probeMap.get(name);
         if(p != null) {
-            retValue = p.query();
+            Map<String,Number> collected = p.query();
+            // Remove NaN, it brake Jolokia
+            Map<String,Number> retValue = new HashMap<>(collected.size());
+            for (Map.Entry<String, Number> e: collected.entrySet()) {
+                if (! Double.isNaN(e.getValue().doubleValue())) {
+                    retValue.put(e.getKey(), e.getValue());
+                }
+            }
+            return retValue;
         }
         else {
             NameNotFoundException e = new NameNotFoundException("'" + name + "' not founds, needs to prepare");
@@ -59,7 +66,6 @@ public class RProbeActor {
             e.setRemainingName(cn);
             throw e;
         }
-        return retValue;
     }
 
     private LProbe getLProbe(String name) throws InvocationTargetException {
