@@ -12,28 +12,26 @@ public class MultiNoKeys extends RMI implements IndexedProbe {
 
     @Override
     public Boolean configure() {
-        List<Object> args = new ArrayList<Object>();
+        List<Object> args = new ArrayList<Object>(2);
 
         // The colon key index
-        Integer keyIndex = jrds.Util.parseStringNumber(getPd().getSpecific("keyIndex"), -1);
+        Integer keyIndex = jrds.Util.parseStringNumber(getPd().getSpecific("keyIndex"), 0);
         args.add(keyIndex);
 
         // The regex to use as a separator
         String separator = getPd().getSpecific("separator");
-        if(separator == null || separator.isEmpty()) {
-            separator = "\\s+";
+        if(separator != null && ! separator.isEmpty()) {
+            args.add(separator);
+        } else {
+            args.add("\\s+");
         }
-        args.add(separator);
+        setArgs(args);
 
         if(getPd().getSpecific("remote") == null) {
             getPd().addSpecific("remote", "jrds.agent.linux.MultiNoKeys");
         }
         if(getPd().getSpecific("remoteSpecifics") == null) {
             getPd().addSpecific("remoteSpecifics", "statFile");
-        }
-        // Only set args if one parsing specific is set, so old jrdsagent and old probes are still usable
-        if(getPd().getSpecific("separator") != null || getPd().getSpecific("keyIndex") != null) {
-            setArgs(args);
         }
         return super.configure();
     }
