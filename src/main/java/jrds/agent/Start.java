@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.management.MBeanServer;
 import javax.management.remote.JMXConnectorFactory;
@@ -47,6 +49,8 @@ public class Start implements Serializable {
             JMXConnectorFactory.connect(addr).close();
         }
     }
+
+    private static final Map<Number, Constructor<? extends Number>> constructors = new HashMap<>();
 
     /**
      * @param args
@@ -120,15 +124,36 @@ public class Start implements Serializable {
      * @return An Number object using the same type than the default value.
      */
     @SuppressWarnings("unchecked")
-    public static <NumberClass extends Number> NumberClass parseStringNumber(String toParse, NumberClass defaultVal) {
+    public static <NC extends Number> NC parseStringNumber(String toParse, NC defaultVal) {
         toParse = toParse != null ? toParse.trim() : null;
-        if(toParse == null || toParse.isEmpty())
+        if(toParse == null || toParse.isEmpty()) {
             return defaultVal;
+        }
 
         try {
-            Class<NumberClass> clazz = (Class<NumberClass>) defaultVal.getClass();
-            Constructor<NumberClass> c = clazz.getConstructor(String.class);
-            return c.newInstance(toParse);
+            Constructor<? extends Number> c;
+            if (constructors.containsKey(defaultVal)) {
+                c = constructors.get(defaultVal);
+            } else {
+                // Does a permission check, so avoid it if possible
+                Class<? extends Number> clazz = defaultVal.getClass();
+                c = (Constructor<? extends Number>) clazz.getConstructor(String.class);
+                constructors.put(defaultVal, c);
+            }
+            // Integer.valueOf and Long.valueOf can reuse the value cache, less object allocation
+            // .newInstance does many check, avoid them if possible
+            switch (c.getDeclaringClass().getSimpleName()) {
+            case "Integer":
+                return (NC) Integer.valueOf(toParse);
+            case "Long":
+                return (NC) Long.valueOf(toParse);
+            case "Double":
+                return (NC) Double.valueOf(toParse);
+            case "Float":
+                return (NC) Float.valueOf(toParse);
+            default:
+                return (NC) c.newInstance(toParse);
+            }
         } catch (SecurityException | NoSuchMethodException | IllegalArgumentException |
                         InstantiationException | IllegalAccessException | InvocationTargetException e) {
             return defaultVal;
