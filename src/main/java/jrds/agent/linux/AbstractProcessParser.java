@@ -4,11 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,8 +25,6 @@ public abstract class AbstractProcessParser extends LProbe {
     static private final int USER_HZ = 100; 
 
     static private final Pattern PIDDIRPATTERN = Pattern.compile("^(\\d+)$");
-
-    static protected final Charset LINUXFSCHARSET = Charset.forName("US-ASCII");
 
     private Pattern cmdFilter = null;
 
@@ -150,7 +147,7 @@ public abstract class AbstractProcessParser extends LProbe {
                         content[i] = ' ';
                     }
                 }
-                buffer.append(new String(content, 0, read, LINUXFSCHARSET));
+                buffer.append(new String(content, 0, read, StandardCharsets.US_ASCII));
             }
             // The last character is an extra space
             // Some command don't have a cmdline
@@ -170,7 +167,7 @@ public abstract class AbstractProcessParser extends LProbe {
     protected Map<String, Number> parseKeyFile(int pid, String file) {
         File stat = new File("/proc/" + pid + "/" + file);
         Map<String, Number> retValues = new HashMap<>();
-        try (BufferedReader r = new BufferedReader(new FileReader(stat))){
+        try (BufferedReader r = newAsciiReader(stat)){
             String line;
             while((line = r.readLine()) != null) {
                 String[] values = line.trim().split(":");
@@ -192,7 +189,7 @@ public abstract class AbstractProcessParser extends LProbe {
 
     protected Map<String, Number> parseFile(int pid, String file, String[] keys) {
         File stat = new File("/proc/" + pid + "/" + file);
-        try (BufferedReader r = new BufferedReader(new FileReader(stat))) {
+        try (BufferedReader r = newAsciiReader(stat)){
             String statLine = r.readLine();
             String[] statArray = statLine.split(" +");
             Map<String, Number> retValues = new HashMap<>(statArray.length);
@@ -223,7 +220,7 @@ public abstract class AbstractProcessParser extends LProbe {
     protected long computeUpTime(long startTime) {
         if(startTime == 0)
             return 0;
-        try (BufferedReader r = new BufferedReader(new FileReader(new File("/proc/uptime")))){
+        try (BufferedReader r = newAsciiReader("/proc/uptime")){
             String uptimeLine = r.readLine();
             // We talks minutes here, so a precision down to second is good enough
             long uptimeSystem = (long) Double.parseDouble(uptimeLine.split(" ")[0]);

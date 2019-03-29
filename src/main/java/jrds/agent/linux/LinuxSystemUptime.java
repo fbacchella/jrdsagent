@@ -1,10 +1,11 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import jrds.agent.Start;
 import jrds.agent.SystemUptime;
@@ -14,8 +15,7 @@ public class LinuxSystemUptime extends SystemUptime {
 
     @Override
     public long getSystemUptime() {
-        File uptimef = new File(UPTIMEFILE);
-        try (BufferedReader r = new BufferedReader(new FileReader(uptimef))){
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(UPTIMEFILE), StandardCharsets.US_ASCII))) {
             String uptimes[] = r.readLine().trim().split(" ");
             long uptime = (long)( Start.parseStringNumber(uptimes[0], 0.0) * 1000);
             return uptime;

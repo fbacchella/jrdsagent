@@ -2,10 +2,8 @@ package jrds.agent.linux;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +26,7 @@ public class ProcSmaps extends AbstractProcessParser {
     @Override
     protected Map<String, Number> parseProc(int pid) {
         File smaps = new File("/proc/" + pid + "/smaps");
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(smaps), LINUXFSCHARSET))){
+        try (BufferedReader r = newAsciiReader(smaps)){
             Map<String, Map<String, Long>> areadetails = new HashMap<>();
             String line;
             Map<String, Long> currentareaddetails = null;

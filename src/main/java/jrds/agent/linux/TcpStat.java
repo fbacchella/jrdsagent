@@ -1,7 +1,7 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +10,7 @@ import jrds.agent.LProbe;
 import jrds.agent.Start;
 
 public class TcpStat extends LProbe {
+
     private final static String STATFILE = "/proc/net/netstat";
     private final static String SNMPFILE = "/proc/net/snmp";
 
@@ -21,9 +22,7 @@ public class TcpStat extends LProbe {
     }
 
     public void queryFile(String file, String prefix, Map<String, Number> retValues) {
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(file));
+        try (BufferedReader r = newAsciiReader(file)){
             String line;
 
             while((line = r.readLine()) != null) {
@@ -39,15 +38,10 @@ public class TcpStat extends LProbe {
                 }
             }
             r.close();
-        } catch (Exception e) {
-            if(r != null) {
-                try {
-                    r.close();
-                } catch (IOException e1) {
-                    throw new RuntimeException(getName(), e1);
-                }
-            }
-            throw new RuntimeException(getName(), e);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File not found  " + file + " for " + getName());
+        } catch (IOException e) {
+            throw new RuntimeException("unable to read " + file + " for " + getName(), e);
         }
     }
 

@@ -3,7 +3,6 @@ package jrds.agent.linux;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilePermission;
-import java.io.FileReader;
 import java.io.IOException;
 import java.security.AccessControlException;
 import java.util.Map;
@@ -58,13 +57,11 @@ public abstract class LProbeProc extends LProbe {
     }
 
     public Map<String, Number> query() {
-        try {
-            BufferedReader r = new BufferedReader(new FileReader(statFile));
+        try (BufferedReader r = newAsciiReader(statFile)) {
             Map<String, Number> values = parse(r);
-            r.close();
             return values;
-        } catch (Exception e) {
-            throw new RuntimeException(getName(), e);
+        } catch (IOException e) {
+            throw new RuntimeException("unable to read " + statFile + " for " + getName(), e);
         }
     }
 

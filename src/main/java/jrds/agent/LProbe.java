@@ -1,5 +1,11 @@
 package jrds.agent;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public abstract class LProbe {
@@ -28,4 +34,11 @@ public abstract class LProbe {
     public void setProperty(String specific, String value) {
     }
 
+    public BufferedReader newAsciiReader(String file) throws FileNotFoundException {
+        return newAsciiReader(new File(file));
+    }
+
+    public BufferedReader newAsciiReader(File file) throws FileNotFoundException {
+        return new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.US_ASCII));
+    }
 }
