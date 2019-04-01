@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 
 import jrds.PropertiesManager;
+import jrds.agent.CollectException;
 import jrds.agent.RProbe;
 import jrds.agent.RProbeActor;
 import jrds.agent.RProbeLocalImpl;
@@ -31,10 +32,9 @@ public class LocalAgentConnection extends AgentConnection {
     public long setUptime() {
         try {
             return rp.getUptime();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e.getCause());
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e.getCause());
+        } catch (RemoteException | InvocationTargetException e) {
+            Throwable root = e.getCause() != null ? e.getCause(): e;
+            throw new CollectException("Unable to get uptime local: " + root.getMessage(), root);
         }
     }
 

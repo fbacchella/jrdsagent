@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jrds.agent.CollectException;
+
 public class IfStat extends LProbeProc {
 
     private static final Path NETROUTEFILE = Paths.get("/proc/net/route");
@@ -48,8 +50,8 @@ public class IfStat extends LProbeProc {
                     }
                 }
                 return super.configure();
-            } catch (Exception e) {
-                throw new RuntimeException("Impossible to initialize IfStat probe", e);
+            } catch (IOException e) {
+                throw new CollectException("Impossible to initialize IfStat probe: " + e.getMessage(), e);
             }
         }
     }

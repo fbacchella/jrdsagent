@@ -9,6 +9,7 @@ import com.arkanosis.jpdh.JPDH;
 import com.arkanosis.jpdh.JPDHException;
 import com.arkanosis.jpdh.Query;
 
+import jrds.agent.CollectException;
 import jrds.agent.LProbe;
 
 public class PdhAgent extends LProbe {
@@ -59,13 +60,13 @@ public class PdhAgent extends LProbe {
         try {
             query.collectData();
         } catch (JPDHException e) {
-            throw new RuntimeException(e);
+            throw new CollectException("Query for " + getName() + " failed: " + e.getMessage(), e);
         }
         for (Map.Entry<String, Counter> entry : this.counters.entrySet()) {
             try {
                 m.put(entry.getKey(), entry.getValue().getDoubleValue());
             } catch (JPDHException e) {
-                throw new RuntimeException(e);
+                throw new CollectException("Query for " + getName() + " failed: " + e.getMessage(), e);
             }
         }
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.arkanosis.jpdh.JPDHException;
 
+import jrds.agent.CollectException;
+
 public class PdhAgentUniqueInstance extends PdhAgent {
 
     // Coming from configuration
@@ -23,13 +25,13 @@ public class PdhAgentUniqueInstance extends PdhAgent {
                 this.query.close();
             } catch (JPDHException e1) {
             }
-            throw new RuntimeException(e);
+            throw new CollectException("Configuration for " + name + ":" + instance + " failed: " + e.getMessage(), e);
         } catch (JPDHException e) {
             try {
                 this.query.close();
             } catch (JPDHException e1) {
             }
-            throw new RuntimeException(e);
+            throw new CollectException("Configuration for " + name + ":" + instance + " failed: " + e.getMessage(), e);
         }
         return true;
     }

@@ -38,7 +38,7 @@ public class RProbeActor {
             uptime = uptimeClass.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | 
                         IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            throw new RuntimeException("Unable to find uptime class " + uptimeClassName, e);
+            throw new IllegalArgumentException("Unable to find uptime class " + uptimeClassName + ": " + e.getMessage(), e);
         }
     }
 
@@ -60,8 +60,8 @@ public class RProbeActor {
             Name cn = new CompositeName();
             try {
                 cn.add(name);
-            } catch (InvalidNameException e1) {
-                throw new RuntimeException(e1);
+            } catch (InvalidNameException ex) {
+                throw new CollectException("Invalid collect name: " + name, ex);
             }
             e.setRemainingName(cn);
             throw e;
@@ -108,7 +108,7 @@ public class RProbeActor {
         }
         boolean configured = configure(p, args);
         if( ! configured)
-            throw new RuntimeException("configure failed for " + p.getName());
+            throw new CollectException("Configuration failed for " + p.getName());
 
         String iname = p.getName();
         probeMap.put(iname, p);

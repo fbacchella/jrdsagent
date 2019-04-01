@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.security.AccessControlException;
 import java.util.Map;
 
+import jrds.agent.CollectException;
 import jrds.agent.LProbe;
 
 public abstract class LProbeProc extends LProbe {
@@ -28,7 +29,7 @@ public abstract class LProbeProc extends LProbe {
     @Override
     public Boolean configure() {
         if (statFile == null || ! statFile.canRead()) {
-            throw new RuntimeException("file '" + statFile + "' not usable");
+            throw new CollectException("File '" + statFile + "' not readable");
         }
         try {
             if (!statFile.getCanonicalPath().startsWith("/proc") && !statFile.getCanonicalPath().startsWith("/sys") ) {
@@ -36,7 +37,7 @@ public abstract class LProbeProc extends LProbe {
                 throw new AccessControlException("access denied " + p);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new CollectException("Failed to configure using " + statFile + ": " + e.getMessage(), e);
         }
 
         if (name == null || name.isEmpty()) {
@@ -61,7 +62,7 @@ public abstract class LProbeProc extends LProbe {
             Map<String, Number> values = parse(r);
             return values;
         } catch (IOException e) {
-            throw new RuntimeException("unable to read " + statFile + " for " + getName(), e);
+            throw new CollectException("Unable to read " + statFile + " for " + getName(), e);
         }
     }
 

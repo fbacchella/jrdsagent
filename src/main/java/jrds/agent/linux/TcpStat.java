@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import jrds.agent.CollectException;
 import jrds.agent.LProbe;
 import jrds.agent.Start;
 
@@ -39,9 +40,9 @@ public class TcpStat extends LProbe {
             }
             r.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found  " + file + " for " + getName());
+            throw new CollectException("File not found  " + file + " for " + getName());
         } catch (IOException e) {
-            throw new RuntimeException("unable to read " + file + " for " + getName(), e);
+            throw new CollectException("Unable to read " + file + " for " + getName() + ": " + e.getMessage(), e);
         }
     }
 

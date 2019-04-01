@@ -62,7 +62,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             // Check that jolokia is started, before Security manager is started
             URL jolokiaurl = new URL(url);
             if (jolokiaurl.getContent() == null) {
-                throw new RuntimeException("Non working jolokia server");
+                throw new CollectException("Non working jolokia server");
             }
             
             RProbeJMXImpl.registerinstance(new RProbeJolokiaImpl(actor));

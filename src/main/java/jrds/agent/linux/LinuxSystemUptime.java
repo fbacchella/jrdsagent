@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import jrds.agent.CollectException;
 import jrds.agent.Start;
 import jrds.agent.SystemUptime;
 
@@ -20,9 +21,9 @@ public class LinuxSystemUptime extends SystemUptime {
             long uptime = (long)( Start.parseStringNumber(uptimes[0], 0.0) * 1000);
             return uptime;
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("/proc/uptime not found", e);
+            throw new CollectException("/proc/uptime not found", e);
         } catch (IOException e) {
-            throw new RuntimeException("cant' read /proc/uptime", e);
+            throw new CollectException("Cant' read /proc/uptime: " + e.getMessage(), e);
         }
     }
 }

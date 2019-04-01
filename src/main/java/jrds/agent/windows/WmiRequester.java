@@ -14,6 +14,7 @@ import com4j.typelibs.wmi.ISWbemLocator;
 import com4j.typelibs.wmi.ISWbemRefreshableItem;
 import com4j.typelibs.wmi.ISWbemRefresher;
 import com4j.typelibs.wmi.ISWbemServices;
+import jrds.agent.CollectException;
 
 public abstract class WmiRequester {
 
@@ -42,7 +43,7 @@ public abstract class WmiRequester {
             ISWbemLocator wbemLocator = ClassFactory.createSWbemLocator();
             wbemServices = wbemLocator.connectServer(".", "Root\\CIMv2", "", "", "", "", 0, null);
         } catch (ComException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new CollectException(e.getMessage(), e);
         }
     }        
 
@@ -65,25 +66,20 @@ public abstract class WmiRequester {
                 item = cache.get(query);
             }
             return item;
-        } catch (com4j.ExecutionException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (ComException e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (com4j.ExecutionException | ComException e) {
+            throw new CollectException(e.getMessage(), e);
         }
     }
 
     static void refresh() {
         try {
             executor.submit(refresher).get();
-        } catch (com4j.ExecutionException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (ComException e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (com4j.ExecutionException | ComException e) {
+            throw new CollectException(e.getMessage(), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("can't refresh wmi objects", e);
         } catch (ExecutionException e) {
-            throw new RuntimeException("can't refresh wmi objects", e);
+            throw new CollectException("Can't refresh wmi objects", e);
         }
 
     }
@@ -93,18 +89,16 @@ public abstract class WmiRequester {
     }
 
     static Object[] getFromClassIndexed(String name, String key, String index, String... fields ) {
+        String resolvedName = buildQuery(name, key, index);
         try {
-            String resolvedName = buildQuery(name, key, index);
             return executor.submit(new WmiGetFields(resolvedName, fields)).get();
-        } catch (com4j.ExecutionException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (ComException e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (com4j.ExecutionException | ComException e) {
+            throw new CollectException(e.getMessage(), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Interrupted", e);
+            throw new CollectException(resolvedName + " operation interrupted", e);
         } catch (ExecutionException e) {
-            throw new RuntimeException("can't read WMI object " + name, e);
+            throw new CollectException("Can't read WMI object " + name, e);
         }
     }
 

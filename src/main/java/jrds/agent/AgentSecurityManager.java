@@ -77,13 +77,7 @@ public class AgentSecurityManager extends SecurityManager {
             permCreated.add(newPerm.toString());
         }
 
-        Map<String, Set<Permission>> permsSets;
-        try {
-            permsSets = getPermsSets();
-        } catch (SecurityException | IllegalArgumentException | ClassNotFoundException | NoSuchMethodException 
-                        | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        Map<String, Set<Permission>> permsSets = getPermsSets();
 
         for(Permission i: permsSets.get("common")) {
             allowed.add(i);
@@ -165,8 +159,6 @@ public class AgentSecurityManager extends SecurityManager {
                 boolean allowed = false;
                 try {
                     allowed = fullpath.isDirectory() && ! fullpath.isHidden();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
                 } finally {
                     privileged.privileged = false;
                 }
@@ -201,7 +193,7 @@ public class AgentSecurityManager extends SecurityManager {
         }
     }
 
-    private Map<String, Set<Permission>> getPermsSets() throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    private Map<String, Set<Permission>> getPermsSets() {
         Map<String, String[][]> permsDescription = new HashMap<>();
         Map<String, Set<Permission>> permsSets = new HashMap<>();
 
@@ -334,10 +326,15 @@ public class AgentSecurityManager extends SecurityManager {
             for (String[] a: e.getValue()) {
                 String className = a[0];
                 String[] argVector = Arrays.copyOfRange(a, 1, a.length);
-                Class<?> cl = Start.class.getClassLoader().loadClass(className);
-                Constructor<?> c = cl.getConstructor(typeVector[argVector.length - 1]);
-                Permission newPerm = (Permission) c.newInstance((Object[])argVector);
-                current.add(newPerm);
+                try {
+                    Class<?> cl = Start.class.getClassLoader().loadClass(className);
+                    Constructor<?> c = cl.getConstructor(typeVector[argVector.length - 1]);
+                    Permission newPerm = (Permission) c.newInstance((Object[])argVector);
+                    current.add(newPerm);
+                } catch (InstantiationException | IllegalAccessException
+                         | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+                    throw new IllegalArgumentException("Can't add permission " + className + "(" + argVector[0] + ")", ex);
+                }
             }
         }
         //Adding some autobuild permissions

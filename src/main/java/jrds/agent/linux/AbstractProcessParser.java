@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
+import jrds.agent.CollectException;
 import jrds.agent.LProbe;
 import jrds.agent.Start;
 
@@ -156,7 +157,7 @@ public abstract class AbstractProcessParser extends LProbe {
             //An file not found is not a problem just return null
             return null;
         } catch (IOException e) {
-            throw new RuntimeException("unable to read " + cmdFile.getPath() + " for " + getName(), e);
+            throw new CollectException("Unable to read " + cmdFile.getPath() + " for " + getName(), e);
         }
     }
 
@@ -181,10 +182,9 @@ public abstract class AbstractProcessParser extends LProbe {
         } catch (FileNotFoundException e){
             //An file not found is not a problem just return nothing
             return Collections.emptyMap();
-        } catch (Exception e) {
-            throw new RuntimeException(getName(), e);
+        } catch (IOException e) {
+            throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
         }
-
     }
 
     protected Map<String, Number> parseFile(int pid, String file, String[] keys) {
@@ -207,8 +207,8 @@ public abstract class AbstractProcessParser extends LProbe {
         } catch (FileNotFoundException e){
             //An file not found is not a problem just return nothing
             return Collections.emptyMap();
-        } catch (Exception e) {
-            throw new RuntimeException(getName(), e);
+        } catch (IOException e) {
+            throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
         }
     }
 
@@ -225,9 +225,9 @@ public abstract class AbstractProcessParser extends LProbe {
             // We talks minutes here, so a precision down to second is good enough
             long uptimeSystem = (long) Double.parseDouble(uptimeLine.split(" ")[0]);
             return uptimeSystem - startTime / USER_HZ;
-        } catch (Exception e) {
-            throw new RuntimeException(getName(), e);
+        } catch (IOException e) {
+            throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
         }
-
     }
+
 }

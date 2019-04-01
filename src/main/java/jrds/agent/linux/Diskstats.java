@@ -7,6 +7,7 @@ import java.security.AccessControlException;
 import java.util.HashMap;
 import java.util.Map;
 
+import jrds.agent.CollectException;
 import jrds.agent.Start;
 
 public class Diskstats extends LProbeProc {
@@ -59,7 +60,7 @@ public class Diskstats extends LProbeProc {
             }
             return super.configure();
         } catch (IOException e) {
-            throw new RuntimeException("can't resolve path to  '" + disk + "':" + e.getMessage(), e);
+            throw new CollectException("can't resolve path to  '" + disk + "':" + e.getMessage(), e);
         }
     }
 
