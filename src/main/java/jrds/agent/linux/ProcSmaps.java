@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jrds.agent.CollectException;
+
 public class ProcSmaps extends AbstractProcessParser {
 
     private static final String HEADERPATTERN = "[0-9a-f]+-[0-9a-f]+ (?<perm>....) [0-9a-f]+ (?<majorminor>..:..) \\d+ *(?<filename>.+)?";
@@ -71,8 +73,8 @@ public class ProcSmaps extends AbstractProcessParser {
         } catch (FileNotFoundException e) {
             return Collections.emptyMap();
         } catch (IOException e) {
+            throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
         }
-        return Collections.emptyMap();
     }
 
     @Override
@@ -85,6 +87,10 @@ public class ProcSmaps extends AbstractProcessParser {
         return "pismaps-" + getNameSuffix();
     }
 
+    /**
+     * Don't care about uptime, it collect only gauge
+     * @see jrds.agent.linux.AbstractProcessParser#computeUpTime(long)
+     */
     @Override
     protected long computeUpTime(long startTime) {
         return Long.MAX_VALUE;

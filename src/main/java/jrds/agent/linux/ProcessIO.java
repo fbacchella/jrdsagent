@@ -3,10 +3,10 @@ package jrds.agent.linux;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProcessIO extends AbstractProcessParser {
+public class ProcessIO extends AbstractStatProcessParser {
 
     //See fs/proc/array.c
-    static final String[] statKey = {
+    static private final String[] statKey = {
             null,                           // pid_nr_ns(pid, ns)
             null,                           // tcomm
             null,                           // state
@@ -56,24 +56,19 @@ public class ProcessIO extends AbstractProcessParser {
     @Override
     protected Map<String, Number> parseProc(int pid) {
         Map<String, Number> bufferMap = new HashMap<>();
-        bufferMap.putAll(parseFile(pid, "stat", statKey));
+        bufferMap.putAll(parseStatFile(pid, "stat", statKey));
         bufferMap.putAll(parseKeyFile(pid, "io"));
         return bufferMap;
     }
 
     @Override
-    protected long getProcUptime(Map<String, Number> values) {
-        Number startTimeTickObject = values.remove("stat:start_time");
-        if (startTimeTickObject == null) {
-            //invalid start_time, or empty map, skip this process
-            return -1;
-        }
-        return startTimeTickObject.longValue();
+    public String getName() {
+        return "piio-" + getNameSuffix();
     }
 
     @Override
-    public String getName() {
-        return "piio-" + getNameSuffix();
+    public String[] getStatkeys() {
+        return statKey;
     }
 
 }

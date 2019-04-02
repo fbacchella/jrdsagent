@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 
 import jrds.agent.CollectException;
 import jrds.agent.LProbe;
-import jrds.agent.Start;
 
 public abstract class AbstractProcessParser extends LProbe {
 
@@ -163,54 +162,7 @@ public abstract class AbstractProcessParser extends LProbe {
 
     protected abstract Map<String, Number> parseProc(int pid);
 
-    protected abstract long getProcUptime(Map<String, Number> values);
-
-    protected Map<String, Number> parseKeyFile(int pid, String file) {
-        File stat = new File("/proc/" + pid + "/" + file);
-        Map<String, Number> retValues = new HashMap<>();
-        try (BufferedReader r = newAsciiReader(stat)){
-            String line;
-            while((line = r.readLine()) != null) {
-                String[] values = line.trim().split(":");
-                if (values.length == 2) {
-                    String key = values[0].trim();
-                    Number value = Start.parseStringNumber(values[1].trim(), 0l);
-                    retValues.put(file + ":" + key, value);
-                }
-            }
-            return retValues;
-        } catch (FileNotFoundException e){
-            //An file not found is not a problem just return nothing
-            return Collections.emptyMap();
-        } catch (IOException e) {
-            throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
-        }
-    }
-
-    protected Map<String, Number> parseFile(int pid, String file, String[] keys) {
-        File stat = new File("/proc/" + pid + "/" + file);
-        try (BufferedReader r = newAsciiReader(stat)){
-            String statLine = r.readLine();
-            String[] statArray = statLine.split(" +");
-            Map<String, Number> retValues = new HashMap<>(statArray.length);
-            //Number of column in /proc/<pid>/stat is unpredictable in linux
-            int column = Math.min(keys.length, statArray.length);
-            for(int i=0; i < column; i++ ) {
-                String value = statArray[i];
-                String key = keys[i];
-                if(key != null) {
-                    Number dvalue = Start.parseStringNumber(value, 0l);
-                    retValues.put(file + ":" + key, dvalue);
-                }
-            }
-            return retValues;
-        } catch (FileNotFoundException e){
-            //An file not found is not a problem just return nothing
-            return Collections.emptyMap();
-        } catch (IOException e) {
-            throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
-        }
-    }
+    protected abstract long getProcUptime(Map<String, Number> bufferMap);
 
     /**
      * Compute the uptime, given the relative start time of a process

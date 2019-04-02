@@ -3,10 +3,10 @@ package jrds.agent.linux;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProcessInfo26 extends AbstractProcessParser {
-    
+public class ProcessInfo26 extends AbstractStatProcessParser {
+
     //See fs/proc/array.c
-    static final String[] statKey = {
+    static private final String[] statKey = {
         null,                           // pid_nr_ns(pid, ns)
         null,                           // tcomm
         null,                           // state
@@ -52,7 +52,7 @@ public class ProcessInfo26 extends AbstractProcessParser {
         "gtime",                        // cputime_to_clock_t(gtime)
         "cgtime",                       // cputime_to_clock_t(cgtime))
     };
-    static final String[] statmKey = {
+    static private final String[] statmKey = {
         "size",
         "resident",
         "shared",
@@ -63,27 +63,22 @@ public class ProcessInfo26 extends AbstractProcessParser {
     };
 
     @Override
-   public String getName() {
+    public String getName() {
         return "pi26-" + getNameSuffix();
     }
 
     @Override
     protected Map<String, Number> parseProc(int pid) {
         Map<String, Number> bufferMap = new HashMap<>();
-        bufferMap.putAll(parseFile(pid, "stat", statKey));
-        bufferMap.putAll(parseFile(pid, "statm", statmKey));
+        bufferMap.putAll(parseStatFile(pid, "stat", statKey));
+        bufferMap.putAll(parseStatFile(pid, "statm", statmKey));
         bufferMap.putAll(parseKeyFile(pid, "io"));
         return bufferMap;
     }
 
     @Override
-    protected long getProcUptime(Map<String, Number> values) {
-        Number startTimeTickObject = values.remove("stat:start_time");
-        if (startTimeTickObject == null) {
-            //invalid start_time, or empty map, skip this process
-            return -1;
-        }
-        return startTimeTickObject.longValue();
+    public String[] getStatkeys() {
+        return statKey;
     }
 
 }

@@ -3,10 +3,10 @@ package jrds.agent.linux;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProcessCpu extends AbstractProcessParser {
-    
+public class ProcessCpu extends AbstractStatProcessParser {
+
     //See fs/proc/array.c
-    static final String[] statKey = {
+    static private final String[] statKey = {
         null,                           // pid_nr_ns(pid, ns)
         null,                           // tcomm
         null,                           // state
@@ -55,9 +55,7 @@ public class ProcessCpu extends AbstractProcessParser {
 
     @Override
     protected Map<String, Number> parseProc(int pid) {
-        Map<String, Number> bufferMap = new HashMap<>();
-        bufferMap.putAll(parseFile(pid, "stat", statKey));
-        return bufferMap;
+        return new HashMap<>(parseStatFile(pid, "stat", statKey));
     }
 
     @Override
@@ -73,6 +71,11 @@ public class ProcessCpu extends AbstractProcessParser {
     @Override
     public String getName() {
         return "picpu-" + getNameSuffix();
+    }
+
+    @Override
+    public String[] getStatkeys() {
+        return statKey;
     }
 
 }
