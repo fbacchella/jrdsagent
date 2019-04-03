@@ -172,6 +172,21 @@
         <dsType>gauge</dsType>
         <defaultValue>0</defaultValue>
     </ds>
+    <ds>
+        <dsName>DirectMap4k</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>DirectMap2M</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>DirectMap1G</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
     <graphs>
         <name>MeminfoRAM</name>
         <name>MeminfoAnonymous</name>
