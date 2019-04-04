@@ -33,13 +33,12 @@ public class JolokiaConnection extends AgentConnection {
     public RProbe getRemoteProbe() {
         return new RProbe() {
 
-            @SuppressWarnings("unchecked")
             @Override
             public Map<String, Number> query(String name) throws RemoteException, InvocationTargetException {
                 try {
                     J4pExecRequest req = new J4pExecRequest("jrds:type=agent", "query", name);
                     J4pExecResponse resp = doRequest(req, name);
-                    return (Map<String, Number>) resp.getValue();
+                    return resp.getValue();
                 } catch (MalformedObjectNameException e) {
                     throw new InvocationTargetException(e);
                 }
@@ -51,7 +50,7 @@ public class JolokiaConnection extends AgentConnection {
                     J4pExecRequest req = new J4pExecRequest("jrds:type=agent", "prepare", name, specifics, args);
                     req.setPreferredHttpMethod("POST");
                     J4pExecResponse resp = doRequest(req, name);
-                    return (String) resp.getValue();
+                    return resp.getValue();
                 } catch (MalformedObjectNameException e) {
                     throw new InvocationTargetException(e);
                 }

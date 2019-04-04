@@ -137,7 +137,7 @@ public class Start implements Serializable {
             } else {
                 // Does a permission check, so avoid it if possible
                 Class<? extends Number> clazz = defaultVal.getClass();
-                c = (Constructor<? extends Number>) clazz.getConstructor(String.class);
+                c = clazz.getConstructor(String.class);
                 constructors.put(defaultVal, c);
             }
             // Integer.valueOf and Long.valueOf can reuse the value cache, less object allocation
