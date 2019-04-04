@@ -19,14 +19,14 @@ public class PdhAgent extends LProbe {
 
     // Constructed
     protected Query query;
-    protected Map<String, Counter> counters = new HashMap<>();
+    protected final Map<String, Counter> counters = new HashMap<>();
 
     @Override
     public Boolean configure() {
         try {
-            this.query = JPDH.openQuery();
+            query = JPDH.openQuery();
         } catch (JPDHException e) {
-            throw new RuntimeException(e);
+            throw new CollectException("Unable to prepare JPDH", e);
         }
         return true;
     }
@@ -51,18 +51,18 @@ public class PdhAgent extends LProbe {
     protected void addCounter(String counterPath) throws JPDHException {
         Counter tmp = query.addCounter(counterPath);
         String[] elements = tmp.getFullPath().split("\\\\");
-        this.counters.put(elements[elements.length - 1], tmp);
+        counters.put(elements[elements.length - 1], tmp);
     }
 
     @Override
     public Map<String, Number> query() {
-        Map<String, Number> m = new HashMap<>();
         try {
             query.collectData();
         } catch (JPDHException e) {
             throw new CollectException("Query for " + getName() + " failed: " + e.getMessage(), e);
         }
-        for (Map.Entry<String, Counter> entry : this.counters.entrySet()) {
+        Map<String, Number> m = new HashMap<>(counters.size() + 1);
+        for (Map.Entry<String, Counter> entry : counters.entrySet()) {
             try {
                 m.put(entry.getKey(), entry.getValue().getDoubleValue());
             } catch (JPDHException e) {
