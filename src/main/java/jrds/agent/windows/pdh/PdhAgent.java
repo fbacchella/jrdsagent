@@ -37,8 +37,7 @@ public class PdhAgent extends LProbe {
     }
 
     protected void addCounterList(String object, String instance,
-                                  List<String> counters) throws IllegalArgumentException,
-                                                         JPDHException {
+                                  List<String> counters) throws JPDHException {
         for (String s : counters) {
             addCounter(PdhHelper.constructPdhPath(object, instance, s));
         }
