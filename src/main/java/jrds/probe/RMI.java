@@ -41,6 +41,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
         return true;
     }
 
+    @Override
     public Boolean configure() {
         // Extract all the list of remote properties of the remote probe
         // and store them in the remoteProperties set

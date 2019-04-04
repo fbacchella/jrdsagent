@@ -37,6 +37,7 @@ public class ProcessInfo extends RMIIndexed {
         return configure(pattern);
     }
 
+    @Override
     public String getIndexName() {
         return processName;
     }

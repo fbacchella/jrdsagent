@@ -46,6 +46,7 @@ public class TcpQueue extends LProbeProc {
         return retValues;
     }
 
+    @Override
     public String getName() {
         return "tcpq:" + port;
     }

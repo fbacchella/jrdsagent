@@ -12,6 +12,7 @@ public class LinuxInterface extends RMI implements IndexedProbe {
     private String ifName = null;
     private boolean defaultroute = false;
 
+    @Override
     public Boolean configure() {
         if (!super.configure()) {
             return false;

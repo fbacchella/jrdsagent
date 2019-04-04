@@ -11,6 +11,7 @@ public class RMIIndexed extends RMI implements IndexedProbe {
     private String index;
     private String label;
 
+    @Override
     public Boolean configure() {
         if(!super.configure()) {
             return false;
@@ -32,6 +33,7 @@ public class RMIIndexed extends RMI implements IndexedProbe {
      * @param args the argument of the remote probe
      * @return true if configuration succeeds
      */
+    @Override
     public Boolean configure(List<Object> args) {
         if(!super.configure(args)) {
             return false;
@@ -44,10 +46,12 @@ public class RMIIndexed extends RMI implements IndexedProbe {
         return index;
     }
 
+    @Override
     public String getLabel() {
         return label;
     }
 
+    @Override
     public void setLabel(String label) {
         this.label = label;
     }

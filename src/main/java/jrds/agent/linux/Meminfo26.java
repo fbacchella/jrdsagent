@@ -12,6 +12,7 @@ import jrds.agent.Start;
 public class Meminfo26 extends LProbeProc {
     private static final Pattern linePattern = Pattern.compile("(\\w+):\\s*(\\d+).*");
 
+    @Override
     public String getName() {
         return "meminfo";
     }

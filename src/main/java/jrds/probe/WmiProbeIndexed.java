@@ -32,10 +32,12 @@ public class WmiProbeIndexed extends Wmiprobe implements IndexedProbe {
         return index;
     }
 
+    @Override
     public String getLabel() {
         return label;
     }
 
+    @Override
     public void setLabel(String label) {
         this.label = label;
     }

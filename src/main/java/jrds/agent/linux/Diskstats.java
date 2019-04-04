@@ -97,6 +97,7 @@ public class Diskstats extends LProbeProc {
         return retValues;
     }
 
+    @Override
     public String getName() {
         return "ds-" + disk;
     }

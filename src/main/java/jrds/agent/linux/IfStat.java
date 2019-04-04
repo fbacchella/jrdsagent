@@ -94,6 +94,7 @@ public class IfStat extends LProbeProc {
         return retValues;
     }
 
+    @Override
     public String getName() {
         return "ifstat:" + ifName;
     }
