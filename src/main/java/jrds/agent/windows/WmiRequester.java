@@ -18,7 +18,7 @@ import jrds.agent.CollectException;
 
 public abstract class WmiRequester {
 
-    private final static Runnable refresher = new Runnable() {
+    private static final Runnable refresher = new Runnable() {
         private long lastUpdate = 0;
         @Override
         public void run() {
@@ -33,10 +33,10 @@ public abstract class WmiRequester {
         }
     };
 
-    private final static ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final static Map<String, ISWbemRefreshableItem> cache = new HashMap<>();
-    private final static ISWbemRefresher wbemRefresher;
-    private final static ISWbemServices wbemServices;
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private static final Map<String, ISWbemRefreshableItem> cache = new HashMap<>();
+    private static final ISWbemRefresher wbemRefresher;
+    private static final ISWbemServices wbemServices;
     static {
         try {
             wbemRefresher = ClassFactory.createSWbemRefresher();
@@ -47,16 +47,16 @@ public abstract class WmiRequester {
         }
     }        
 
-    final synchronized static ISWbemRefreshableItem getItem(String name) {
+    static final synchronized ISWbemRefreshableItem getItem(String name) {
         return getItemIndexed(name, "", "@");
     }
 
-    final synchronized static ISWbemRefreshableItem getItemIndexed(String name, String key, String index) {
+    static final synchronized ISWbemRefreshableItem getItemIndexed(String name, String key, String index) {
         String query = buildQuery(name, key, index);
         return getItemByQuery(query);
     }
 
-    final synchronized static ISWbemRefreshableItem getItemByQuery(String query) {
+    static final synchronized ISWbemRefreshableItem getItemByQuery(String query) {
         try {
             ISWbemRefreshableItem item;
             if(! cache.containsKey(query)) {

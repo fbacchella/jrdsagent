@@ -12,7 +12,7 @@ import jrds.agent.Start;
 import jrds.agent.SystemUptime;
 
 public class LinuxSystemUptime extends SystemUptime {
-    final static private String UPTIMEFILE = "/proc/uptime";
+    static private final String UPTIMEFILE = "/proc/uptime";
 
     @Override
     public long getSystemUptime() {

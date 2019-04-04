@@ -6,7 +6,7 @@ import java.util.Map;
 public class ProcessInfo26 extends AbstractStatProcessParser {
 
     //See fs/proc/array.c
-    static private final String[] statKey = {
+    private static final String[] statKey = {
         null,                           // pid_nr_ns(pid, ns)
         null,                           // tcomm
         null,                           // state
@@ -52,7 +52,7 @@ public class ProcessInfo26 extends AbstractStatProcessParser {
         "gtime",                        // cputime_to_clock_t(gtime)
         "cgtime",                       // cputime_to_clock_t(cgtime))
     };
-    static private final String[] statmKey = {
+    private static final String[] statmKey = {
         "size",
         "resident",
         "shared",

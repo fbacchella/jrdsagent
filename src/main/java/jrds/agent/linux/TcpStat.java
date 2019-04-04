@@ -12,8 +12,8 @@ import jrds.agent.Start;
 
 public class TcpStat extends LProbe {
 
-    private final static String STATFILE = "/proc/net/netstat";
-    private final static String SNMPFILE = "/proc/net/snmp";
+    private static final String STATFILE = "/proc/net/netstat";
+    private static final String SNMPFILE = "/proc/net/snmp";
 
     public Map<String, Number> query() {
         Map<String, Number> retValues = new HashMap<>();

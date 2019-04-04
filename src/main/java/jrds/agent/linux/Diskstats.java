@@ -12,10 +12,10 @@ import jrds.agent.Start;
 
 public class Diskstats extends LProbeProc {
 
-    static private final String[] PREFIXES = {"/dev/mapper/", "/dev/disk/", "/dev/"};
+    private static final String[] PREFIXES = {"/dev/mapper/", "/dev/disk/", "/dev/"};
 
     private String disk;
-    static private final int offset = 2;
+    private static final int offset = 2;
 
     public Boolean configure(String disk) {
         return doConfigure(disk, true);

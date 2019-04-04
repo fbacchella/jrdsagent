@@ -6,7 +6,7 @@ import java.util.Map;
 public class ProcessIO extends AbstractStatProcessParser {
 
     //See fs/proc/array.c
-    static private final String[] statKey = {
+    private static final String[] statKey = {
             null,                           // pid_nr_ns(pid, ns)
             null,                           // tcomm
             null,                           // state

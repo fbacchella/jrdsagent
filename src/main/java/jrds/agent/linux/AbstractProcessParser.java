@@ -20,11 +20,11 @@ import jrds.agent.LProbe;
 
 public abstract class AbstractProcessParser extends LProbe {
 
-    static private final int ARROBE = Character.codePointAt("@", 0);
+    private static final int ARROBE = Character.codePointAt("@", 0);
 
-    static private final int USER_HZ = 100; 
+    private static final int USER_HZ = 100; 
 
-    static private final Pattern PIDDIRPATTERN = Pattern.compile("^(\\d+)$");
+    private static final Pattern PIDDIRPATTERN = Pattern.compile("^(\\d+)$");
 
     private Pattern cmdFilter = null;
 

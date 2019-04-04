@@ -21,7 +21,7 @@ import jrds.agent.Start.PROTOCOL;
 
 public class AgentSecurityManager extends SecurityManager {
 
-    private final static class PrivilegHolder  {
+    private static final class PrivilegHolder  {
         private boolean privileged = false;
     }
     private static final ThreadLocal<PrivilegHolder> Privilege =
