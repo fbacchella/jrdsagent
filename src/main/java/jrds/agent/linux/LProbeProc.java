@@ -59,8 +59,7 @@ public abstract class LProbeProc extends LProbe {
 
     public Map<String, Number> query() {
         try (BufferedReader r = newAsciiReader(statFile)) {
-            Map<String, Number> values = parse(r);
-            return values;
+            return parse(r);
         } catch (IOException e) {
             throw new CollectException("Unable to read " + statFile + " for " + getName(), e);
         }

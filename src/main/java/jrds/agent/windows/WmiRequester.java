@@ -114,8 +114,7 @@ public abstract class WmiRequester {
 
     static String buildQuery(String name, String key, String index) {
         String newIndex = key.isEmpty() ? "@" : '"' + index + '"';
-        String resolvedName = name + (key.isEmpty() ? "" : "." + key) + "=" + newIndex;
-        return resolvedName;
+        return name + (key.isEmpty() ? "" : "." + key) + "=" + newIndex;
     }
 
 }
