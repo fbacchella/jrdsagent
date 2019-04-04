@@ -122,10 +122,7 @@ public class AgentConnection extends Connection<RProbe> {
                 // Needed to make the instance resolve it, because
                 // because only AgentConnexion used it, not the sub classes
                 uptime = getConnection().getUptime();
-            } catch (RemoteException e) {
-                log(Level.ERROR, e, "uptime failed: %s", e.getCause());
-                uptime = 0;
-            } catch (InvocationTargetException e) {
+            } catch (RemoteException | InvocationTargetException e) {
                 log(Level.ERROR, e, "uptime failed: %s", e.getCause());
                 uptime = 0;
             }

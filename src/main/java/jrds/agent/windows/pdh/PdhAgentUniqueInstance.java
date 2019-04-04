@@ -20,14 +20,7 @@ public class PdhAgentUniqueInstance extends PdhAgent {
         }
         try {
             addCounterList(object, this.instance, counters);
-        } catch (IllegalArgumentException e) {
-            try {
-                query.close();
-            } catch (JPDHException e1) {
-                // Don't re-handle a failed close
-            }
-            throw new CollectException("Configuration for " + name + ":" + instance + " failed: " + e.getMessage(), e);
-        } catch (JPDHException e) {
+        } catch (IllegalArgumentException | JPDHException e) {
             try {
                 query.close();
             } catch (JPDHException e1) {
