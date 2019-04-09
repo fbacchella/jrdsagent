@@ -26,7 +26,7 @@ public class RProbeActor {
                 uptimeClassName = "jrds.agent.linux.LinuxSystemUptime";
             }
             else if(osname.startsWith("Windows")) {
-                uptimeClassName = "jrds.agent.windows.WindowsSystemUptime";
+                uptimeClassName = "jrds.agent.windows.pdh.WindowsSystemUptime";
             }
             else {
                 uptimeClassName = "jrds.agent.jmx.JmxSystemUptime";
