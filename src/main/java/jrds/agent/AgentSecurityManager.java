@@ -338,7 +338,7 @@ public class AgentSecurityManager extends SecurityManager {
                     Permission newPerm = (Permission) c.newInstance((Object[])argVector);
                     current.add(newPerm);
                 } catch (InstantiationException | IllegalAccessException
-                         | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
+                                | IllegalArgumentException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException | SecurityException ex) {
                     throw new IllegalArgumentException("Can't add permission " + className + "(" + argVector[0] + ")", ex);
                 }
             }

@@ -43,7 +43,6 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
         }
     }
 
-    public static final String NAME = "jrds:type=agent";
     private static JolokiaServer server;
     public static final String JOLOKIA_AGENT_URL = "jolokia.agent";
 
