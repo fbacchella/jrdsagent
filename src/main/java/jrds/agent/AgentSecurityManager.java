@@ -200,8 +200,10 @@ public class AgentSecurityManager extends SecurityManager {
         permsDescription.put("common", new String[][] {
             new String[] { "java.lang.RuntimePermission", "accessDeclaredMembers" },
             new String[] { "java.lang.RuntimePermission", "createClassLoader" },
+            new String[] { "java.lang.RuntimePermission", "fileSystemProvider" },
             new String[] { "java.lang.RuntimePermission", "getClassLoader" },
             new String[] { "java.lang.RuntimePermission", "getFileSystemAttributes" },
+            new String[] { "java.lang.RuntimePermission", "getProtectionDomain" },
             new String[] { "java.lang.RuntimePermission", "loadLibrary.net" }, // Needed on windows
             new String[] { "java.lang.RuntimePermission", "modifyThread" },
             new String[] { "java.lang.RuntimePermission", "modifyThreadGroup" },
@@ -214,9 +216,12 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.lang.reflect.ReflectPermission", "suppressAccessChecks" },
             new String[] { "java.net.NetPermission", "specifyStreamHandler" }, // Appears with jar in extensions directory
             new String[] { "java.util.logging.LoggingPermission", "control", "" },
+            new String[] { "java.util.PropertyPermission", "java.nio.file.spi.DefaultFileSystemProvider", "read" }, 
             new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read" }, 
             new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.high", "read" },  // Needed on windows
             new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.low", "read" },   // Needed on windows
+            new String[] { "java.util.PropertyPermission", "sun.jnu.encoding", "read" }, 
+            new String[] { "java.util.PropertyPermission", "sun.nio.fs.chdirAllowed", "read" }, 
         });
         permsDescription.put("forprobes", new String[][] {
             new String[] { "java.io.FilePermission", "/proc", "read" },
@@ -251,6 +256,7 @@ public class AgentSecurityManager extends SecurityManager {
         });
         permsDescription.put(PROTOCOL.jmx.name(), new String[][] {
             new String[] { "java.io.SerializablePermission", "enableSubstitution" },
+            new String[] { "java.io.SerializablePermission", "serialFilter" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.reflect.misc" },
             new String[] { "java.net.NetPermission", "getProxySelector" },
