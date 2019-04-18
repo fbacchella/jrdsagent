@@ -5,10 +5,15 @@ import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.management.JMX;
 import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
@@ -44,9 +49,20 @@ public class Start implements Serializable {
             mbs = ManagementFactory.getPlatformMBeanServer();
             cs = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
             cs.start();
+        }
+        
+        private void check() throws IOException, MalformedObjectNameException, InvocationTargetException {
             // load code before the security manager is started
             JMXServiceURL addr = cs.getAddress();
-            JMXConnectorFactory.connect(addr).close();
+            System.out.println(addr);
+            try (JMXConnector connector = JMXConnectorFactory.connect(addr)) {
+                ObjectName name = new ObjectName(RProbeJMXImpl.NAME);
+                RProbe proxy = JMX.newMBeanProxy(connector.getMBeanServerConnection(), name, RProbe.class);
+                proxy.getUptime();
+                Map<String, String> emptyMap = Collections.emptyMap();
+                String probeName = proxy.prepare("jrds.agent.jmx.SystemInfo", emptyMap, Collections.emptyList());
+                proxy.query(probeName);
+            }
         }
     }
 
@@ -103,8 +119,9 @@ public class Start implements Serializable {
                 break;
             case jmxmp:
             case jmx:
-                new JrdsMBeanInfo(proto, "localhost", port);
+                JrdsMBeanInfo checker = new JrdsMBeanInfo(proto, "localhost", port);
                 RProbeJMXImpl.register(actor);
+                checker.check();
                 break;
             }
             //Check if actor can read uptime

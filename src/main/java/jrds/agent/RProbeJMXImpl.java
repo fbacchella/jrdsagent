@@ -3,17 +3,18 @@ package jrds.agent;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanRegistrationException;
+import javax.management.JMX;
+import javax.management.MBeanException;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import javax.management.StandardMBean;
-
 
 public class RProbeJMXImpl extends StandardMBean implements RProbe {
 
@@ -27,8 +28,15 @@ public class RProbeJMXImpl extends StandardMBean implements RProbe {
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
             ObjectName name = new ObjectName(NAME);
-            mbs.registerMBean(instance, name); 
-        } catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException e) {
+            mbs.registerMBean(instance, name);
+            // An empty call, to ensure initialization
+            RProbe proxy = JMX.newMBeanProxy(mbs, name, RProbe.class);
+            proxy.getUptime();
+            
+            Map<String, String> emptyMap = Collections.emptyMap();
+            String probeName = proxy.prepare("jrds.agent.jmx.SystemInfo", emptyMap, Collections.emptyList());
+            proxy.query(probeName);
+        } catch (MalformedObjectNameException | InstanceAlreadyExistsException | NotCompliantMBeanException | MBeanException | RemoteException e) {
             throw new InvocationTargetException(e, "Error registring JMX");
         }
     }

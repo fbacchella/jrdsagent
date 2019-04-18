@@ -60,7 +60,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             String url = server.getUrl();
             System.setProperty(JOLOKIA_AGENT_URL, url);
             // Check that jolokia is started, before Security manager is started
-            URL jolokiaurl = new URL(url);
+            URL jolokiaurl = new URL(url + "read/" +RProbeJMXImpl.NAME + "/Uptime");
             if (jolokiaurl.getContent() == null) {
                 throw new CollectException("Non working jolokia server");
             }
