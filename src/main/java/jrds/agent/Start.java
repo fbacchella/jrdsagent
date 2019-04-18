@@ -50,7 +50,7 @@ public class Start implements Serializable {
             cs = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
             cs.start();
         }
-        
+
         private void check() throws IOException, MalformedObjectNameException, InvocationTargetException {
             // load code before the security manager is started
             JMXServiceURL addr = cs.getAddress();

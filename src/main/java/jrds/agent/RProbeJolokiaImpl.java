@@ -1,6 +1,7 @@
 package jrds.agent;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -60,10 +61,11 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             System.setProperty(JOLOKIA_AGENT_URL, url);
             // Check that jolokia is started, before Security manager is started
             URL jolokiaurl = new URL(url + "read/" +RProbeJMXImpl.NAME + "/Uptime");
-            if (jolokiaurl.getContent() == null) {
-                throw new CollectException("Non working jolokia server");
+            try(InputStream cnx = jolokiaurl.openConnection().getInputStream()) {
+                byte[] buffer = new byte[4096];
+                while(cnx.read(buffer) >= 0) {
+                }
             }
-            
             RProbeJMXImpl.registerinstance(new RProbeJolokiaImpl(actor));
         } catch (RuntimeException | IOException ex) {
             throw new InvocationTargetException(ex, "Error registring Jolokia agent");
