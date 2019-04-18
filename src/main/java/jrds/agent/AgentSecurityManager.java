@@ -188,7 +188,7 @@ public class AgentSecurityManager extends SecurityManager {
             if(debugPerm) {
                 permUsed.add(perm.toString() + " -");
             } else {
-                throw e;
+                throw new CollectException("Missing permission: " + perm.toString(), e);
             }
         }
     }

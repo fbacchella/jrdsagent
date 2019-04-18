@@ -1,5 +1,6 @@
 package jrds.probe;
 
+import java.io.EOFException;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import javax.naming.NameNotFoundException;
 
 import jrds.ProbeConnected;
 import jrds.Util;
+import jrds.agent.CollectException;
 import jrds.agent.RProbe;
 import jrds.factories.ProbeMeta;
 
@@ -79,10 +81,17 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
                 Throwable root = e;
                 while (root.getCause() != null) {
                     root = root.getCause();
+                    if (root instanceof CollectException) {
+                        break;
+                    }
                 }
                 if (root instanceof NameNotFoundException) {
                     log(Level.DEBUG, "remote name '%s' not defined, needs to prepare", ((NameNotFoundException)root).getRemainingName().get(0));
                     remoteName = null;
+                } else if (root instanceof EOFException) {
+                    log(Level.ERROR, "Remote connection closed");
+                } else if (root instanceof CollectException) {
+                    log(Level.ERROR, "Collect failed on server: %s", root.getMessage());
                 } else {
                     log(Level.ERROR, root, "Remote exception on server: %s", root.getMessage());
                     break;
