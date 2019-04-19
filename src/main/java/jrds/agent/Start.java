@@ -85,6 +85,12 @@ public class Start implements Serializable {
 
         start(port, proto);
 
+        if (Boolean.parseBoolean(System.getProperty("jrds.close", "true"))) {
+            System.out.close();
+            System.in.close();
+            System.err.close();
+        }
+
         //Initialization done, set the security manager
         String withSecurity = System.getProperty("jrds.security", "true");
         if (System.getSecurityManager() == null && Boolean.parseBoolean(withSecurity)) {
@@ -94,7 +100,6 @@ public class Start implements Serializable {
             }
             System.setSecurityManager( new AgentSecurityManager(debugPerm, proto) );
         }
-
         //Make it wait on himself to wait forever
         try {
             Thread.currentThread().join();
