@@ -6,20 +6,14 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import org.apache.log4j.Level;
+import org.slf4j.event.Level;
 
-import jrds.JuliToLog4jHandler;
 import jrds.PropertiesManager;
 import jrds.agent.RProbe;
 import jrds.starter.Resolver;
 import jrds.starter.Starter;
 
 public class RMIConnection extends AgentConnection {
-
-    static
-    {
-        JuliToLog4jHandler.catchLogger("sun.rmi", Level.ERROR);
-    }
 
     private Registry registry = null;
     private RProbe rp = null;

@@ -3,7 +3,7 @@ package jrds.probe;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Level;
+import org.slf4j.event.Level;
 
 public class PdhProbe extends RMI {
 

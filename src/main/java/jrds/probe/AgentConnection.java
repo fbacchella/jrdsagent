@@ -3,7 +3,7 @@ package jrds.probe;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 
-import org.apache.log4j.Level;
+import org.slf4j.event.Level;
 
 import jrds.PropertiesManager;
 import jrds.agent.RProbe;

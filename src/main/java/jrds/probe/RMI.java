@@ -11,13 +11,13 @@ import java.util.Map;
 
 import javax.naming.NameNotFoundException;
 
+import org.slf4j.event.Level;
+
 import jrds.ProbeConnected;
 import jrds.Util;
 import jrds.agent.CollectException;
 import jrds.agent.RProbe;
 import jrds.factories.ProbeMeta;
-
-import org.apache.log4j.Level;
 
 @ProbeMeta(topStarter=JmxSocketFactory.class)
 public class RMI extends ProbeConnected<String, Number, AgentConnection> {
