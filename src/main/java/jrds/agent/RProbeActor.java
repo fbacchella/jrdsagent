@@ -84,7 +84,7 @@ public class RProbeActor {
     }
 
     private Boolean configure(LProbe p, List<?> args ) throws InvocationTargetException {
-        Class<?>[] argsType = new Class[args.size()];
+        Class<?>[] argsType = new Class<?>[args.size()];
         Object[] argsVal = new Object[args.size()];
         int index = 0;
         for(Object thisarg: args) {

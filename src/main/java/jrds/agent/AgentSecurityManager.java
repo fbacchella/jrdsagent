@@ -321,9 +321,9 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJolokiaImpl#prepare[jrds:type=agent]", "invoke" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJolokiaImpl#query[jrds:type=agent]", "invoke" },
         });
-        Class<?>[][] typeVector = new Class[][]{
-            new Class[] { String.class },
-            new Class[] { String.class, String.class },
+        Class<?>[][] typeVector = new Class<?>[][]{
+            new Class<?>[] { String.class },
+            new Class<?>[] { String.class, String.class },
         };
         for (Entry<String, String[][]> e: permsDescription.entrySet()) {
             String name = e.getKey();

@@ -38,7 +38,6 @@ public class TcpStat extends LProbe {
                     retValues.put(keys[i], value);
                 }
             }
-            r.close();
         } catch (FileNotFoundException e) {
             throw new CollectException("File not found  " + file + " for " + getName());
         } catch (IOException e) {
