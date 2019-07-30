@@ -51,25 +51,30 @@ public abstract class AbstractProcessParser extends LProbe {
         Map<String, Number> retValues = new HashMap<>();
         int count = 0;
         long mostRecentTick = 0;
-        for (int pid: getPids()) {
-            String cmdLine = getCmdLine(pid);
-            if (cmdLine != null && (cmdFilter == null || cmdFilter.matcher(cmdLine).matches())) {
-                Map<String, Number> bufferMap = parseProc(pid);
-                long startTimeTick = getProcUptime(bufferMap);
-                if (startTimeTick < 0) {
-                    continue;
-                }
-                mostRecentTick = Math.max(startTimeTick, mostRecentTick);
-                count++;
-                for (Map.Entry<String, Number> e: bufferMap.entrySet()) {
-                    Number previous = retValues.get(e.getKey());
-                    if(previous == null)
-                        retValues.put(e.getKey(), e.getValue());
-                    else {
-                        retValues.put(e.getKey(), previous.doubleValue() + e.getValue().doubleValue());
+        try {
+            for (int pid: getPids()) {
+                String cmdLine = getCmdLine(pid);
+                if (cmdLine != null && (cmdFilter == null || cmdFilter.matcher(cmdLine).matches())) {
+                    Map<String, Number> bufferMap = parseProc(pid);
+                    long startTimeTick = getProcUptime(bufferMap);
+                    if (startTimeTick < 0) {
+                        continue;
+                    }
+                    mostRecentTick = Math.max(startTimeTick, mostRecentTick);
+                    count++;
+                    for (Map.Entry<String, Number> e: bufferMap.entrySet()) {
+                        Number previous = retValues.get(e.getKey());
+                        if(previous == null)
+                            retValues.put(e.getKey(), e.getValue());
+                        else {
+                            retValues.put(e.getKey(), previous.doubleValue() + e.getValue().doubleValue());
+                        }
                     }
                 }
             }
+        } catch (NoSuchElementException e) {
+            // Iterator.next and Iterator.hasNext are not always consistent, as process can vanish between executions.
+            // So NoSuchElementException can happens, just stop iteration when it happens.
         }
         long uptime = computeUpTime(mostRecentTick);
         retValues.put("uptime", uptime);
