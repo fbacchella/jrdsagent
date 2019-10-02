@@ -12,7 +12,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <maven.plugin.javadoc.version>3.1.1</maven.plugin.javadoc.version>
         <!-- current year. -->
         <year>2019</year>
         <jrds.testloglevel>ERROR</jrds.testloglevel>
@@ -74,12 +73,28 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>jrdsagent</finalName>
         <!-- some plugings needs to be managed at pluginManagement level -->
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
@@ -95,18 +110,27 @@
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>3.1.1</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.1.1</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <detectJavaApiLink>false</detectJavaApiLink>
+                        <!-- detectJavaApiLink should be set to true, and this removed
+                             but workaround from https://bugs.openjdk.java.net/browse/JDK-8212233
+                             fails, so javadoc link is handled manually -->
+                        <link>https://docs.oracle.com/javase/${maven.compiler.source}/docs/api/</link>
+                        <bootclasspath>${jdk.compile.home}/lib/rt.jar</bootclasspath>
+                        <quiet />
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.1.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint</arg>
@@ -130,7 +154,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven.plugin.javadoc.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -140,10 +163,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <keywords>true</keywords>
-                    <source>${maven.compiler.source}</source>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -154,7 +173,7 @@
                         <id>attach-source</id>
                         <!-- Attach the source code compressed to a jar file. -->
                         <goals>
-                            <goal>jar-no-fork</goal>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -216,18 +235,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven.plugin.javadoc.version}</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>javadoc-no-fork</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <configuration>
-                    <keywords>true</keywords>
-                    <source>${maven.compiler.source}</source>
-                </configuration>
             </plugin>
         </plugins>
     </reporting>
@@ -243,7 +250,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.3</version>
+                        <version>0.8.4</version>
                         <configuration>
                             <output>file</output>
                             <append>true</append>
