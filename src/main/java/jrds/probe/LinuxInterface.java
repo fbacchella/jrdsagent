@@ -6,7 +6,7 @@ import java.util.List;
 import jrds.Util;
 import jrds.factories.ProbeBean;
 
-@ProbeBean({"ifName", "defaultroute"})
+@ProbeBean({"ifName", "defaultroute", "index"})
 public class LinuxInterface extends RMI implements IndexedProbe {
 
     private String ifName = null;
