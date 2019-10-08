@@ -88,6 +88,9 @@ public class RProbeActor {
         Object[] argsVal = new Object[args.size()];
         int index = 0;
         for(Object thisarg: args) {
+            if (thisarg == null) {
+                throw new InvocationTargetException(new NullPointerException("argument " + index + " null"), "Error configuring probe " + p);
+            }
             argsType[index] = thisarg.getClass();
             argsVal[index] = thisarg;
             index++;
