@@ -31,6 +31,7 @@
             </excludes>
             <includes>
                 <include>jrds/agent/RProbe.class</include>
+                <include>jrds/agent/CollectException.class</include>
                 <include>jrds/probe/**</include>
                 <include>desc/**</include>
             </includes>

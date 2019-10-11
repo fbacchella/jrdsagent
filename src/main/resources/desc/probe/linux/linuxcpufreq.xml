@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc" >
+<probedesc>
+    <name>CpuFrequencyLinux</name>
+    <probeName>cpufreq</probeName>
+    <probeClass>jrds.probe.CpuFrequency</probeClass>
+    <specific name="remote">jrds.agent.linux.CpuFrequency</specific>
+    <specific name="remoteName">cpufrequencyinfo</specific>
+    <specific name="remoteSpecifics">statFile</specific>
+    <specific name="statFile">/proc/cpuinfo</specific>
+    <graphs>
+        <name>CpuFrequency</name>
+    </graphs>
+</probedesc>

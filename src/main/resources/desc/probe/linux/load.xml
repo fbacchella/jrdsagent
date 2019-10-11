@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc" >
+<probedesc>
+    <name>LinuxLoad</name>
+    <probeName>linuxload</probeName>
+    <probeClass>jrds.probe.MultiNoKeys</probeClass>
+    <specific name="statFile">/proc/loadavg</specific>
+    <specific name="keyIndex">-1</specific>
+    <specific name="separator">\s+|/</specific>
+    <ds>
+        <dsName>la1</dsName>
+        <dsType>gauge</dsType>
+        <collect>.0</collect>
+    </ds>
+    <ds>
+        <dsName>la5</dsName>
+        <dsType>gauge</dsType>
+        <collect>.1</collect>
+    </ds>
+    <ds>
+        <dsName>la15</dsName>
+        <dsType>gauge</dsType>
+        <collect>.2</collect>
+    </ds>
+    <ds>
+        <dsName>running</dsName>
+        <dsType>gauge</dsType>
+        <collect>.3</collect>
+    </ds>
+    <ds>
+        <dsName>threads</dsName>
+        <dsType>gauge</dsType>
+        <collect>.4</collect>
+    </ds>
+    <graphs>
+        <name>UnixLoad</name>
+    </graphs>
+</probedesc>

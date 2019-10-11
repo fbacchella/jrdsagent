@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+    <name>IfTrafficpktps</name>
+    <graphName>iftrafficpktps-${index}</graphName>
+    <graphTitle>Packets exchanged on interface ${index} on ${host}</graphTitle>
+    <verticalLabel>bits/s</verticalLabel>
+    <lowerLimit>NaN</lowerLimit>
+    <add>
+        <name>txpackets</name>
+        <graphType>line</graphType>
+        <legend>bits sends/s</legend>
+    </add>
+    <add>
+        <name>rxpackets</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <color>green</color>
+        <legend>bits received/s</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>NETWORK</pathelement>
+        <pathelement>INTERFACES</pathelement>
+        <pathelement>INDEX</pathelement>
+        <pathstring>Packets exchanged</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>NETWORK</pathelement>
+        <pathelement>INTERFACES</pathelement>
+        <pathstring>Packets exchanged</pathstring>
+        <pathelement>HOST</pathelement>
+        <pathelement>INDEX</pathelement>
+    </viewtree>
+</graphdesc>

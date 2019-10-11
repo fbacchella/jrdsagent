@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc" >
+<probedesc>
+    <name>MpStat</name>
+    <probeName>mpstat</probeName>
+    <probeClass>jrds.probe.MpStat</probeClass>
+    <specific name="remote">jrds.agent.linux.MpStat</specific>
+    <specific name="columns">user,nice,system,idle,iowait,irq,softirq,steal,guest,guestnice</specific>
+    <specific name="remoteSpecifics">columns,statFile</specific>
+    <specific name="statFile">/proc/stat</specific>
+    <graphs>
+        <name>MpStatHeat</name>
+        <name>MpStatIndividual</name>
+    </graphs>
+</probedesc>
