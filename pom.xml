@@ -4,7 +4,7 @@
     <groupId>fr.jrds</groupId>
     <artifactId>jrdsagent</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-RC2</version>
     <name>jrdsagent</name>
     <url>http://jrds.fr</url>
     <properties>
