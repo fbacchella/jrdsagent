@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>jrdsagent</name>
-    <url>http://maven.apache.org</url>
+    <url>http://jrds.fr</url>
     <properties>
         <!-- The project should have a source encoding set. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,7 +17,8 @@
         <jrds.testloglevel>ERROR</jrds.testloglevel>
         <jrdsVersion>1.0-SNAPSHOT</jrdsVersion>
         <jolokia.version>1.6.2</jolokia.version>
-        <jdk.compile.home>${java.home}</jdk.compile.home>
+        <jdk.compile.home>${jdk.8.home}</jdk.compile.home>
+        <bootclasspath>${jdk.compile.home}/jre/lib/rt.jar</bootclasspath>
     </properties>
 
     <repositories>
@@ -82,7 +83,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.8.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -109,14 +110,10 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.1.1</version>
                     <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <detectJavaApiLink>false</detectJavaApiLink>
-                        <!-- detectJavaApiLink should be set to true, and this removed
-                             but workaround from https://bugs.openjdk.java.net/browse/JDK-8212233
-                             fails, so javadoc link is handled manually -->
-                        <link>https://docs.oracle.com/javase/${maven.compiler.source}/docs/api/</link>
-                        <bootclasspath>${jdk.compile.home}/lib/rt.jar</bootclasspath>
                         <quiet />
+                        <source>${maven.compiler.source}</source>
+                        <detectJavaApiLink>true</detectJavaApiLink>
+                        <bootclasspath>${bootclasspath}</bootclasspath>
                     </configuration>
                 </plugin>
             </plugins>
@@ -128,9 +125,12 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint</arg>
-                        <arg>-Xbootclasspath/p:${jdk.compile.home}/lib/rt.jar</arg>
+                        <arg>-Xbootclasspath/p:${bootclasspath}</arg>
                     </compilerArgs>
-                    <showWarnings>true</showWarnings>
+                    <showWarnings>false</showWarnings>
+                    <!-- needed for maven-plugin-javadoc to find the source version to use -->
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <plugin>

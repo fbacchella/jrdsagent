@@ -2,37 +2,46 @@ version: 2.1
 jobs:
     checkout:
         docker:
-            - image: circleci/openjdk:8-jdk
-              environment:
-                  discovery.type: single-node
+            - image: circleci/openjdk:13-jdk-buster
         steps:
             - checkout
             - restore_cache:
                 key: jrdsagent-{{ checksum "pom.xml" }}
-            - run: mkdir -p /home/circleci/.sonar/cache /home/circleci/.m2/repository
-            - run: "mvn -B dependency:go-offline"
+            - run:
+                command: |
+                    mkdir -p /home/circleci/.sonar/cache /home/circleci/.m2/repository
+                    mvn -B dependency:go-offline -Psonar,versions -s .circleci/settings.xml
+                environment:
+                    JAVA_HOME: /usr/java/openjdk-13
             - persist_to_workspace:
                 root: /
                 paths:
                     - home/circleci/.m2/repository
                     - home/circleci/.sonar/cache
                     - home/circleci/project
+    jdk8_jre:
+        docker:
+            - image: circleci/openjdk:8-jdk
+        steps:
+            - persist_to_workspace:
+                root: /
+                paths:
                     - usr/lib/jvm/java-8-openjdk-amd64
     build:
         docker:
             - image: circleci/openjdk:13-jdk-buster
-              environment:
-                  discovery.type: single-node
         steps:
             - attach_workspace:
                 at: /tmp/ws
             - run:
                 command: |
+                    sudo mkdir -p /usr/lib/jvm
+                    sudo mv -n /tmp/ws/usr/lib/jvm/java-8-openjdk-amd64 /usr/lib/jvm/
                     mv -n /tmp/ws/home/circleci/.m2 /home/circleci/
                     mv -n /tmp/ws/home/circleci/project/* /home/circleci/project/
                     mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
             - run:
-                command: mvn -B clean compile -Djdk.compile.home=/tmp/ws/usr/lib/jvm/java-8-openjdk-amd64/jre
+                command: mvn -B clean compile -s .circleci/settings.xml
                 environment:
                     JAVA_HOME: /usr/java/openjdk-13
             - persist_to_workspace:
@@ -43,13 +52,13 @@ jobs:
     publish:
         docker:
             - image: circleci/openjdk:13-jdk-buster
-              environment:
-                  discovery.type: single-node
         steps:
             - attach_workspace:
                 at: /tmp/ws
             - run:
                 command: |
+                    sudo mkdir -p /usr/lib/jvm
+                    sudo mv -n /tmp/ws/usr/lib/jvm/java-8-openjdk-amd64 /usr/lib/jvm/
                     mv -n /tmp/ws/home/circleci/.m2 /home/circleci/
                     mv -n /tmp/ws/home/circleci/.sonar /home/circleci/
                     mv -n /tmp/ws/home/circleci/project/* /home/circleci/project/
@@ -63,7 +72,7 @@ jobs:
                         PUBLISH="package"
                     fi
                     echo "publishing jobs: $PUBLISH"
-                    mvn -B $PUBLISH -Dmaven.test.skip=true -Dmaven.main.skip=true -s .circleci/settings.xml -Dsonar.login=$SONARCLOUD_LOGIN -Djdk.compile.home=/tmp/ws/usr/lib/jvm/java-8-openjdk-amd64/jre
+                    mvn -B $PUBLISH -Dmaven.test.skip=true -Pskip -s .circleci/settings.xml -Dsonar.login=$SONARCLOUD_LOGIN
                 environment:
                     JAVA_HOME: /usr/java/openjdk-13
             - store_test_results:
@@ -76,8 +85,6 @@ jobs:
     savecache:
         docker:
             - image: circleci/openjdk:13-jdk-buster
-              environment:
-                  discovery.type: single-node
         steps:
             - attach_workspace:
                 at: /tmp/ws
@@ -97,9 +104,11 @@ workflows:
   build_and_test:
     jobs:
       - checkout
+      - jdk8_jre
       - build:
           requires:
               - checkout
+              -  jdk8_jre
       - publish:
           requires:
               - build
