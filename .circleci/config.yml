@@ -65,18 +65,9 @@ jobs:
                     mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
             - run:
                 command: |
-                    # If no symbolic name, it's a PR, will not publish results
-                    if [ -n "$(git symbolic-ref HEAD 2>/dev/null )" ] ; then
-                        PUBLISH="deploy -Psonar"
-                    else
-                        PUBLISH="package"
-                    fi
-                    echo "publishing jobs: $PUBLISH"
-                    mvn -B $PUBLISH -Dmaven.test.skip=true -Pskip -s .circleci/settings.xml -Dsonar.login=$SONARCLOUD_LOGIN
+                    mvn -B deploy site -Dmaven.test.skip=true -Pskip -s .circleci/settings.xml
                 environment:
                     JAVA_HOME: /usr/java/openjdk-13
-            - store_test_results:
-                path: target/surefire-reports
             - persist_to_workspace:
                 root: /
                 paths:
