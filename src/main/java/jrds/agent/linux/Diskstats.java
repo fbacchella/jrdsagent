@@ -15,7 +15,6 @@ public class Diskstats extends LProbeProc {
     private static final String[] PREFIXES = {"/dev/mapper/", "/dev/disk/", "/dev/"};
 
     private String disk;
-    private static final int offset = 2;
 
     public Boolean configure(String disk) {
         return doConfigure(disk, true);
@@ -73,24 +72,44 @@ public class Diskstats extends LProbeProc {
                 found = true;
                 String[] values = line.trim().split("\\s+");
                 //Full line, with all the values
-                if(values.length > offset + 7 ) {
-                    retValues.put("rrqm", Start.parseStringNumber(values[offset + 2], Double.NaN));
-                    retValues.put("wrqm", Start.parseStringNumber(values[offset + 6], Double.NaN));
-                    retValues.put("r", Start.parseStringNumber(values[offset + 1], Double.NaN));
-                    retValues.put("w", Start.parseStringNumber(values[offset + 5], Double.NaN));
-                    retValues.put("rsec", Start.parseStringNumber(values[offset + 3], Double.NaN));
-                    retValues.put("wsec", Start.parseStringNumber(values[offset + 7], Double.NaN));
-                    retValues.put("rwait", Start.parseStringNumber(values[offset + 4], Double.NaN));
-                    retValues.put("wwait", Start.parseStringNumber(values[offset + 8], Double.NaN));
-                    retValues.put("qu-sz", Start.parseStringNumber(values[offset + 9], Double.NaN));
-                    retValues.put("waittm", Start.parseStringNumber(values[offset + 10], Double.NaN));
-                    retValues.put("wwaittm", Start.parseStringNumber(values[offset + 11], Double.NaN));
+                if(values.length >= 13 ) {
+                    retValues.put("r", Start.parseStringNumber(values[3], Double.NaN));
+                    retValues.put("rrqm", Start.parseStringNumber(values[4], Double.NaN));
+                    retValues.put("rsec", Start.parseStringNumber(values[5], Double.NaN));
+                    retValues.put("rwait", Start.parseStringNumber(values[6], Double.NaN));
+                    retValues.put("w", Start.parseStringNumber(values[7], Double.NaN));
+                    retValues.put("wrqm", Start.parseStringNumber(values[8], Double.NaN));
+                    retValues.put("wsec", Start.parseStringNumber(values[9], Double.NaN));
+                    retValues.put("wwait", Start.parseStringNumber(values[10], Double.NaN));
+                    retValues.put("qu-sz", Start.parseStringNumber(values[11], Double.NaN));
+                    retValues.put("waittm", Start.parseStringNumber(values[12], Double.NaN));
+                    retValues.put("wwaittm", Start.parseStringNumber(values[13], Double.NaN));
+                    // Added in kernel 4.18
+                    if(values.length >= 17 ) {
+                        retValues.put("d", Start.parseStringNumber(values[14], Double.NaN));
+                        retValues.put("drqm", Start.parseStringNumber(values[15], Double.NaN));
+                        retValues.put("dsec", Start.parseStringNumber(values[16], Double.NaN));
+                        retValues.put("dwait", Start.parseStringNumber(values[17], Double.NaN));
+                    } else {
+                        retValues.put("d", 0);
+                        retValues.put("drqm", 0);
+                        retValues.put("dsec", 0);
+                        retValues.put("dwait", 0);
+                    }
+                    // Added in kernel 5.5
+                    if(values.length >= 19 ) {
+                        retValues.put("f", Start.parseStringNumber(values[18], Double.NaN));
+                        retValues.put("fwait", Start.parseStringNumber(values[19], Double.NaN));
+                    } else {
+                        retValues.put("f", 0);
+                        retValues.put("fwait", 0);
+                    }
                 }
                 else {
-                    retValues.put("r", Start.parseStringNumber(values[offset + 1], Double.NaN));
-                    retValues.put("rsec", Start.parseStringNumber(values[offset + 2], Double.NaN));
-                    retValues.put("w", Start.parseStringNumber(values[offset + 3], Double.NaN));
-                    retValues.put("wsec", Start.parseStringNumber(values[offset + 4], Double.NaN));
+                    retValues.put("r", Start.parseStringNumber(values[3], Double.NaN));
+                    retValues.put("rsec", Start.parseStringNumber(values[4], Double.NaN));
+                    retValues.put("w", Start.parseStringNumber(values[5], Double.NaN));
+                    retValues.put("wsec", Start.parseStringNumber(values[6], Double.NaN));
                 }
             }
         }

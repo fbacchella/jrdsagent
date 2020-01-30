@@ -51,6 +51,36 @@
         <dsName>wwaittm</dsName>
         <dsType>COUNTER</dsType>
     </ds>
+     <ds>
+        <dsName>d</dsName>
+        <dsType>COUNTER</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+     <ds>
+        <dsName>drqm</dsName>
+        <dsType>COUNTER</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+     <ds>
+        <dsName>dsec</dsName>
+        <dsType>COUNTER</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+     <ds>
+        <dsName>dwait</dsName>
+        <dsType>COUNTER</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+     <ds>
+        <dsName>f</dsName>
+        <dsType>COUNTER</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+     <ds>
+        <dsName>fwait</dsName>
+        <dsType>COUNTER</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
     <graphs>
         <name>LinuxDiskstatOps</name>
         <name>LinuxDiskstatWait</name>
