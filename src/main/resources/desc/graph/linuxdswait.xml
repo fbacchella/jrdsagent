@@ -9,6 +9,7 @@
     <base>m</base>
   </unit>
   <verticalLabel>s</verticalLabel>
+
   <add>
     <name>r</name>
   </add>
@@ -16,14 +17,42 @@
     <name>w</name>
   </add>
   <add>
-    <name>wwaittm</name>
+    <name>d</name>
   </add>
   <add>
-    <rpn>wwaittm, r, w, +, 1000, *, /</rpn>
+    <name>f</name>
+  </add>
+  <add>
+    <name>wwaittm</name>
+  </add>
+
+  <add>
+    <rpn>wwaittm, r, w, +, d, +, f, +, 1000, *, /</rpn>
+    <graphType>line</graphType>
+    <color>red</color>
+    <legend>Average IO total time</legend>
+  </add>
+
+  <add>
+    <name>wwait</name>
+  </add>
+  <add>
+    <rpn>wwait, w, 1000, *, /</rpn>
     <graphType>line</graphType>
     <color>blue</color>
-    <legend>Average wait time</legend>
+    <legend>Average write wait time</legend>
   </add>
+
+  <add>
+    <name>rwait</name>
+  </add>
+  <add>
+    <rpn>rwait, r, 1000, *, /</rpn>
+    <graphType>line</graphType>
+    <color>green</color>
+    <legend>Average read wait time</legend>
+  </add>
+
   <hosttree>
     <pathelement>HOST</pathelement>
     <pathelement>DISK</pathelement>

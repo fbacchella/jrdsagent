@@ -6,7 +6,10 @@
   <graphTitle>Average queue size on disk {2} on {1}</graphTitle>
   <verticalLabel>waiting io</verticalLabel>
   <add>
-    <name>qu-sz</name>
+    <name>wwaittm</name>
+  </add>
+  <add>
+    <rpn>wwaittm, 1000, /</rpn>
     <graphType>line</graphType>
      <color>blue</color>
     <legend>Average queue size</legend>
