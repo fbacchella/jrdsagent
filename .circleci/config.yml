@@ -69,12 +69,13 @@ jobs:
                     if [ -n "$(git symbolic-ref HEAD 2>/dev/null )" ] ; then
                         PUBLISH="deploy -Psonar"
                     else
-                        PUBLISH="package"
+                        PUBLISH="install"
                     fi
                     echo "publishing jobs: $PUBLISH"
-                    mvn -B $PUBLISH -Dmaven.test.skip=true -Pskip -s .circleci/settings.xml -Dsonar.login=$SONARCLOUD_LOGIN
+                    mvn -B $PUBLISH -Pskip -s .circleci/settings.xml -Dsonar.login=$SONARCLOUD_LOGIN
                 environment:
                     JAVA_HOME: /usr/java/openjdk-13
+                    MAVEN_OPTS: "-Dorg.slf4j.simpleLogger.log.org.apache.maven.plugins.shade=ERROR -Xmx1024m"
             - store_test_results:
                 path: target/surefire-reports
             - persist_to_workspace:
