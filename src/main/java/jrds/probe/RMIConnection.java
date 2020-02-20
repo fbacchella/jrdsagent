@@ -32,15 +32,16 @@ public class RMIConnection extends AgentConnection {
         if(resolver.isStarted()) {
             try {
                 log(Level.TRACE, "locate registry for %s:%d", hostName, port);
-                log(Level.TRACE, "will use %s for the socket factoy", getLevel().find(JmxSocketFactory.class));
-                registry = LocateRegistry.getRegistry(hostName, port, getLevel().find(JmxSocketFactory.class));
+                JmxSocketFactory factory = getLevel().find(JmxSocketFactory.class);
+                log(Level.TRACE, "will use %s for the socket factoy", factory);
+                registry = LocateRegistry.getRegistry(hostName, port, factory);
                 log(Level.TRACE, "lookup  probe %s", RProbe.NAME);
 
                 rp = (RProbe) registry.lookup(RProbe.NAME);
                 log(Level.TRACE, "done: %s", rp.getClass());
                 started = true;
             } catch (NoSuchObjectException e) {
-                log(Level.ERROR, e, "Remote exception on server %s: %s", getHostName(), e.getMessage());
+                log(Level.ERROR, e, "Remote exception on server %s: %s", getHostName(), e);
             } catch (RemoteException e) {
                 log(Level.ERROR, e, "Remote exception on server %s: %s", hostName, e.getCause());
             } catch (NotBoundException e) {
