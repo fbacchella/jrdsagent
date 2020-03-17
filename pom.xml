@@ -20,7 +20,6 @@
         <jdk.compile.home>${jdk.8.home}</jdk.compile.home>
         <bootclasspath>${jdk.compile.home}/jre/lib/rt.jar</bootclasspath>
         <surefire.version>3.0.0-M3</surefire.version>
-        <sonar.version>3.7.0.1746</sonar.version>
     </properties>
 
     <repositories>
@@ -331,7 +330,7 @@
             <extension>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>sonar-maven-plugin</artifactId>
-              <version>${sonar.version}</version>
+              <version>3.7.0.1746</version>
             </extension>
             <extension>
                 <groupId>org.apache.maven.skins</groupId>
@@ -470,51 +469,29 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
             </plugin>
         </plugins>
     </reporting>
     <profiles>
         <profile>
             <id>sonar</id>
-            <properties>
-                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-                <sonar.organization>${env.SONARCLOUD_ORG}</sonar.organization>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.4</version>
-                        <configuration>
-                            <output>file</output>
-                            <append>true</append>
-                        </configuration>
                         <executions>
                             <execution>
-                                <id>jacoco-initialize</id>
+                                <id>prepare-agent</id>
                                 <goals>
                                     <goal>prepare-agent</goal>
                                 </goals>
                             </execution>
                             <execution>
-                                <id>jacoco-site</id>
-                                <phase>verify</phase>
+                                <id>report</id>
                                 <goals>
                                     <goal>report</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonarsource.scanner.maven</groupId>
-                        <artifactId>sonar-maven-plugin</artifactId>
-                        <version>${sonar.version}</version>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sonar</goal>
                                 </goals>
                             </execution>
                         </executions>
