@@ -93,7 +93,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
                 } else if (root instanceof CollectException) {
                     log(Level.ERROR, "Collect failed on server: %s", root.getMessage());
                 } else {
-                    log(Level.ERROR, root, "Remote exception on server: %s", root.getMessage());
+                    log(Level.ERROR, root, "Remote exception on server: %s", root);
                     break;
                 }
             } catch (InvocationTargetException e) {

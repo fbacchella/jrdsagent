@@ -12,6 +12,7 @@ import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
 import javax.naming.NameNotFoundException;
 
+import org.apache.http.conn.HttpHostConnectException;
 import org.jolokia.client.J4pClient;
 import org.jolokia.client.exception.J4pException;
 import org.jolokia.client.exception.J4pRemoteException;
@@ -87,7 +88,10 @@ public class JolokiaConnection extends AgentConnection {
                         throw new RemoteException(message);
                     }
                 } catch (J4pException e) {
-                    if (e.getCause() != null) {
+                    if (e.getCause() != null && e.getCause() instanceof HttpHostConnectException) {
+                        HttpHostConnectException cause = (HttpHostConnectException) e.getCause();
+                        throw new InvocationTargetException(cause.getCause());
+                    } else if (e.getCause() != null) {
                         throw new InvocationTargetException(e.getCause());
                     } else {
                         throw new InvocationTargetException(e);
@@ -108,7 +112,7 @@ public class JolokiaConnection extends AgentConnection {
             j4pClient = new J4pClient(url.toString(), httpstarter.getHttpClient());
             return super.startConnection();
         } catch (MalformedURLException e) {
-            log(Level.ERROR, e, "can't build jolokia URL: %s", e.getMessage());
+            log(Level.ERROR, e, "can't build jolokia URL: %s", e);
             return false;
         }
     }

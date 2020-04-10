@@ -2,54 +2,53 @@ version: 2.1
 jobs:
     checkout:
         docker:
-            - image: circleci/openjdk:13-jdk-buster
+            - image: circleci/openjdk:14-jdk-buster
         steps:
             - checkout
             - restore_cache:
                 key: jrdsagent-{{ checksum "pom.xml" }}
+            - run: mkdir -p /home/circleci/.sonar/cache /home/circleci/.m2/repository
             - run:
-                command: |
-                    mkdir -p /home/circleci/.sonar/cache /home/circleci/.m2/repository
-                    mvn -B dependency:go-offline -Psonar,versions -s .circleci/settings.xml
+                command: "mvn -B dependency:go-offline -s .circleci/settings.xml"
                 environment:
-                    JAVA_HOME: /usr/java/openjdk-13
+                    JAVA_HOME: /usr/java/openjdk-14
+                    MAVEN_OPTS: "-Xmx1024m"
             - persist_to_workspace:
                 root: /
                 paths:
                     - home/circleci/.m2/repository
                     - home/circleci/.sonar/cache
                     - home/circleci/project
-    jdk8_jre:
+    jdk8:
         docker:
-            - image: circleci/openjdk:8-jdk
+            - image: circleci/openjdk:8-buster
         steps:
             - persist_to_workspace:
-                root: /
+                root: /usr/local
                 paths:
-                    - usr/lib/jvm/java-8-openjdk-amd64
+                    - openjdk-8
     build:
         docker:
-            - image: circleci/openjdk:13-jdk-buster
+            - image: circleci/openjdk:14-jdk-buster
         steps:
             - attach_workspace:
                 at: /tmp/ws
             - run:
                 command: |
-                    sudo mkdir -p /usr/lib/jvm
-                    sudo mv -n /tmp/ws/usr/lib/jvm/java-8-openjdk-amd64 /usr/lib/jvm/
                     mv -n /tmp/ws/home/circleci/.m2 /home/circleci/
                     mv -n /tmp/ws/home/circleci/project/* /home/circleci/project/
                     mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
             - run:
-                command: mvn -B clean compile -s .circleci/settings.xml
+                command: mvn -B clean package -DskipTests -s .circleci/settings.xml
                 environment:
-                    JAVA_HOME: /usr/java/openjdk-13
+                    JAVA_HOME: /usr/java/openjdk-14
+                    MAVEN_OPTS: "-Xmx2048m"
             - persist_to_workspace:
                 root: /
                 paths:
                     - home/circleci/.m2/repository
-                    - home/circleci/project/target
-    publish:
+                    - home/circleci/project
+    testsj13:
         docker:
             - image: circleci/openjdk:13-jdk-buster
         steps:
@@ -57,17 +56,82 @@ jobs:
                 at: /tmp/ws
             - run:
                 command: |
-                    sudo mkdir -p /usr/lib/jvm
-                    sudo mv -n /tmp/ws/usr/lib/jvm/java-8-openjdk-amd64 /usr/lib/jvm/
+                    mv -n /tmp/ws/home/circleci/.m2 /home/circleci/
+                    mv -n /tmp/ws/home/circleci/project/* /home/circleci/project/
+                    mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
+            - run:
+                command: |
+                    mvn -B test -Pskip -DargLine="-Xmx2048m" -s .circleci/settings.xml
+                environment:
+                    JAVA_HOME: /usr/java/openjdk-13
+                    MAVEN_OPTS: "-Xmx1024m"
+            - store_test_results:
+                path: target/surefire-reports
+            - persist_to_workspace:
+                root: /
+                paths:
+                    - home/circleci/.m2/repository
+                    - home/circleci/.sonar/cache
+    testsj11:
+        docker:
+            - image: circleci/openjdk:11-buster
+        steps:
+            - attach_workspace:
+                at: /tmp/ws
+            - run:
+                command: |
                     mv -n /tmp/ws/home/circleci/.m2 /home/circleci/
                     mv -n /tmp/ws/home/circleci/.sonar /home/circleci/
                     mv -n /tmp/ws/home/circleci/project/* /home/circleci/project/
                     mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
             - run:
                 command: |
-                    mvn -B deploy site -Dmaven.test.skip=true -Pskip -s .circleci/settings.xml
+                    mvn -B test -Pskip -DargLine="-Xmx2048m" -s .circleci/settings.xml
                 environment:
-                    JAVA_HOME: /usr/java/openjdk-13
+                    JAVA_HOME: /usr/local/openjdk-11
+                    MAVEN_OPTS: "-Xmx512m"
+            - store_test_results:
+                path: target/surefire-reports
+            #don't persist_to_workspace, can't be done in parallel with testsj13
+    testsj8:
+        docker:
+            - image: circleci/openjdk:8-buster
+        steps:
+            - attach_workspace:
+                at: /tmp/ws
+            - run:
+                command: |
+                    mv -n /tmp/ws/home/circleci/.m2 /home/circleci/
+                    mv -n /tmp/ws/home/circleci/.sonar /home/circleci/
+                    mv -n /tmp/ws/home/circleci/project/* /home/circleci/project/
+                    mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
+            - run:
+                command: |
+                    mvn -B test -Pskip -DargLine="-Xmx2048m" -s .circleci/settings.xml
+                environment:
+                    JAVA_HOME: /usr/local/openjdk-8
+                    MAVEN_OPTS: "-Xmx512m"
+            - store_test_results:
+                path: target/surefire-reports
+            #don't persist_to_workspace, can't be done in parallel with testsj13
+    publish:
+        docker:
+            - image: circleci/openjdk:14-jdk-buster
+        steps:
+            - attach_workspace:
+                at: /tmp/ws
+            - run:
+                command: |
+                    mv -n /tmp/ws/home/circleci/.m2 /home/circleci/
+                    mv -n /tmp/ws/home/circleci/.sonar /home/circleci/
+                    mv -n /tmp/ws/home/circleci/project/* /home/circleci/project/
+                    mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
+            - run:
+                command: |
+                    mvn -B deploy -Pskip -Dmaven.test.skip=true -s .circleci/settings.xml
+                environment:
+                    JAVA_HOME: /usr/java/openjdk-14
+                    MAVEN_OPTS: "-Dorg.slf4j.simpleLogger.log.org.apache.maven.plugins.shade=ERROR -Xmx2048m"
             - persist_to_workspace:
                 root: /
                 paths:
@@ -75,7 +139,7 @@ jobs:
                     - home/circleci/.sonar/cache
     savecache:
         docker:
-            - image: circleci/openjdk:13-jdk-buster
+            - image: circleci/openjdk:14-jdk-buster
         steps:
             - attach_workspace:
                 at: /tmp/ws
@@ -95,14 +159,25 @@ workflows:
   build_and_test:
     jobs:
       - checkout
-      - jdk8_jre
+      - jdk8
       - build:
           requires:
               - checkout
-              -  jdk8_jre
-      - publish:
+              - jdk8
+      - testsj8:
           requires:
               - build
+      - testsj11:
+          requires:
+              - build
+      - testsj13:
+          requires:
+              - build
+      - publish:
+          requires:
+              - testsj8
+              - testsj11
+              - testsj13
       - savecache:
           requires:
               - publish
