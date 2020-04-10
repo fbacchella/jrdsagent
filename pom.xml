@@ -19,7 +19,7 @@
         <jolokia.version>1.6.2</jolokia.version>
         <jdk.compile.home>${jdk.8.home}</jdk.compile.home>
         <bootclasspath>${jdk.compile.home}/jre/lib/rt.jar</bootclasspath>
-        <surefire.version>3.0.0-M3</surefire.version>
+        <surefire.version>3.0.0-M4</surefire.version>
     </properties>
 
     <repositories>

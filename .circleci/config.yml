@@ -39,7 +39,7 @@ jobs:
                     mv -n /tmp/ws/home/circleci/project/* /home/circleci/project/
                     mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
             - run:
-                command: mvn -B clean compile -s .circleci/settings.xml
+                command: mvn -B clean package -DskipTests -s .circleci/settings.xml
                 environment:
                     JAVA_HOME: /usr/java/openjdk-14
                     MAVEN_OPTS: "-Xmx2048m"
