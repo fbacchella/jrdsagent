@@ -30,7 +30,7 @@
     <rpn>wwaittm, r, w, +, d, +, f, +, 1000, *, /</rpn>
     <graphType>line</graphType>
     <color>red</color>
-    <legend>Average IO total time</legend>
+    <legend>Average total Itime</legend>
   </add>
 
   <add>
