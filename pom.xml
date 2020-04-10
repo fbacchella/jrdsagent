@@ -524,6 +524,14 @@
         <name>JRDS</name>
         <url>http://jrds.fr/</url>
     </organization>
+    <description>Collect agent for JRDS.</description>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <scm>
         <url>https://github.com/fbacchella/jrdsagent</url>
         <connection>scm:https://github.com/fbacchella/jrdsagent.git</connection>
