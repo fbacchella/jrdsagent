@@ -75,6 +75,19 @@ public class AgentConnection extends Connection<RProbe> {
             Connection<?> getProxy() {
                 return new JolokiaConnection();
             }
+        },
+        embedded {
+            @Override
+            RProbe getRemoteProbe(Connection<?> proxy) {
+                return ((LocalAgentConnection) proxy).getConnection();
+            }
+            @Override
+            void configure(AgentConnection cnx, PropertiesManager pm) {
+            }
+            @Override
+            Connection<?> getProxy() {
+                return new LocalAgentConnection();
+            }
         };
         abstract RProbe getRemoteProbe(Connection<?>proxy);
         abstract void configure(AgentConnection cnx, PropertiesManager pm);
