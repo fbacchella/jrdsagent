@@ -5,6 +5,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.RMIClientSocketFactory;
 
 import org.slf4j.event.Level;
 
@@ -32,7 +33,7 @@ public class RMIConnection extends AgentConnection {
         if(resolver.isStarted()) {
             try {
                 log(Level.TRACE, "locate registry for %s:%d", hostName, port);
-                JmxSocketFactory factory = getLevel().find(JmxSocketFactory.class);
+                RMIClientSocketFactory factory = getLevel().find(JmxSocketFactory.class).getFactory();
                 log(Level.TRACE, "will use %s for the socket factoy", factory);
                 registry = LocateRegistry.getRegistry(hostName, port, factory);
                 log(Level.TRACE, "lookup  probe %s", RProbe.NAME);
