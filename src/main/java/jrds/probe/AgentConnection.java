@@ -2,6 +2,7 @@ package jrds.probe;
 
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
+import java.util.Locale;
 
 import org.slf4j.event.Level;
 
@@ -87,11 +88,9 @@ public class AgentConnection extends Connection<RProbe> {
     private long uptime = -1;
 
     public AgentConnection() {
-        super();
     }
 
     public AgentConnection(Integer port) {
-        super();
         this.port = port;
     }
 
@@ -124,7 +123,7 @@ public class AgentConnection extends Connection<RProbe> {
                 uptime = getConnection().getUptime();
             } catch (RemoteException | InvocationTargetException e) {
                 log(Level.ERROR, e, "uptime failed: %s", e.getCause());
-                uptime = 0;
+                uptime = -1;
             }
             log(Level.DEBUG, "uptime is %dms", uptime);
         }
@@ -156,7 +155,7 @@ public class AgentConnection extends Connection<RProbe> {
      * @param protocol the protocol to set
      */
     public void setProtocol(String protocol) {
-        this.protocol = PROTOCOL.valueOf(protocol.trim().toLowerCase());
+        this.protocol = PROTOCOL.valueOf(protocol.trim().toLowerCase(Locale.ENGLISH));
     }
 
     /* (non-Javadoc)
@@ -195,13 +194,9 @@ public class AgentConnection extends Connection<RProbe> {
     public boolean isStarted() {
         // Only the base class uses the proxy
         // The comptability sub class RMIConnection should not do that
-        if(getClass() == AgentConnection.class) {
-            if (proxy == null) {
-                return false;
-            }
-            return proxy.isStarted();
-        }
-        else {
+        if (getClass() == AgentConnection.class) {
+            return (proxy != null ? proxy.isStarted() : false) && super.isStarted();
+        } else {
             return super.isStarted();
         }
     }
