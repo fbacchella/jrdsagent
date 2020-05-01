@@ -4,7 +4,7 @@
     <groupId>fr.jrds</groupId>
     <artifactId>jrdsagent</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>2020.2-SNAPSHOT</version>
     <name>jrdsagent</name>
     <url>http://jrds.fr</url>
     <properties>
@@ -15,7 +15,7 @@
         <!-- current year. -->
         <year>2020</year>
         <jrds.testloglevel>ERROR</jrds.testloglevel>
-        <jrdsVersion>1.0-SNAPSHOT</jrdsVersion>
+        <jrdsVersion>2020.2-SNAPSHOT</jrdsVersion>
         <jolokia.version>1.6.2</jolokia.version>
         <jdk.compile.home>${jdk.8.home}</jdk.compile.home>
         <bootclasspath>${jdk.compile.home}/jre/lib/rt.jar</bootclasspath>
