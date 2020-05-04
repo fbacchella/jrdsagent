@@ -19,7 +19,7 @@ import jrds.agent.CollectException;
 import jrds.agent.RProbe;
 import jrds.factories.ProbeMeta;
 
-@ProbeMeta(topStarter=JmxSocketFactory.class)
+@ProbeMeta(timerStarter=JmxSocketFactory.class)
 public class RMI extends ProbeConnected<String, Number, AgentConnection> {
     private List<Object> args = new ArrayList<>(0);
     private String remoteName = null;
