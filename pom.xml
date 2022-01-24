@@ -6,20 +6,21 @@
     <packaging>jar</packaging>
     <version>2020.2-SNAPSHOT</version>
     <name>jrdsagent</name>
-    <url>http://jrds.fr</url>
+    <url>https://jrds.fr</url>
     <properties>
         <!-- The project should have a source encoding set. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <!-- current year. -->
-        <year>2020</year>
+        <year>2022</year>
         <jrds.testloglevel>ERROR</jrds.testloglevel>
-        <jrdsVersion>2020.2-SNAPSHOT</jrdsVersion>
-        <jolokia.version>1.6.2</jolokia.version>
-        <jdk.compile.home>${jdk.8.home}</jdk.compile.home>
-        <bootclasspath>${jdk.compile.home}/jre/lib/rt.jar</bootclasspath>
-        <surefire.version>3.0.0-M4</surefire.version>
+        <jrds.version>2020.1</jrds.version>
+        <jolokia.version>1.7.1</jolokia.version>
+        <surefire.version>3.0.0-M5</surefire.version>
+        <!-- Indirection needed to keep optionnal jacoco settings and external argument lines-->
+        <arg.line></arg.line>
+        <argLine>${arg.line}</argLine>
     </properties>
 
     <repositories>
@@ -39,14 +40,14 @@
         <dependency>
             <groupId>fr.jrds</groupId>
             <artifactId>jrds-core</artifactId>
-            <version>${jrdsVersion}</version>
+            <version>${jrds.version}</version>
             <scope>provided</scope>
             <classifier>webapp</classifier>
         </dependency>
         <dependency>
             <groupId>fr.jrds</groupId>
             <artifactId>jrds-core</artifactId>
-            <version>${jrdsVersion}</version>
+            <version>${jrds.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -75,6 +76,26 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- Tests dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>fr.jrds</groupId>
+            <artifactId>jrds-core</artifactId>
+            <version>${jrds.version}</version>
+            <scope>test</scope>
+            <classifier>tests</classifier>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>jrdsagent</finalName>
@@ -84,7 +105,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <quiet />
                         <source>${maven.compiler.source}</source>
@@ -100,22 +121,22 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -125,22 +146,22 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M3</version>
+                    <version>${surefire.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.5</version>
+                    <version>0.8.7</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -154,13 +175,18 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>3.0.0-M4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.9.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -294,11 +320,6 @@
             </extension>
             <extension>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-            </extension>
-            <extension>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>3.0.0</version>
             </extension>
@@ -364,10 +385,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <compilerArgs>
-                        <arg>-Xlint</arg>
                         <arg>-Xbootclasspath/p:${bootclasspath}</arg>
                     </compilerArgs>
-                    <showWarnings>false</showWarnings>
+                    <showWarnings>true</showWarnings>
                     <!-- needed for maven-plugin-javadoc to find the source version to use -->
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
@@ -401,7 +421,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-source</id>
@@ -415,7 +434,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -469,7 +487,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.1</version>
             </plugin>
         </plugins>
     </reporting>
@@ -478,6 +495,10 @@
             <id>sonar</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                    </plugin>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
@@ -506,7 +527,6 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>versions-maven-plugin</artifactId>
-                        <version>2.7</version>
                         <reportSets>
                             <reportSet>
                                 <reports>
@@ -520,16 +540,76 @@
                 </plugins>
             </reporting>
         </profile>
+        <profile>
+            <!-- With this profile, it's possible to used the latest jvm but
+                still get jar compatible with pre-9 JVM. It's activated when jdk.compile.home
+                is defined. Example: JAVA_HOME=$JAVA14_HOME mvn compile -Djdk.compile.home=$JAVA8_HOME
+                ! -->
+            <id>crosscompile</id>
+            <activation>
+                <property>
+                    <name>jdk.compile.home</name>
+                </property>
+            </activation>
+            <properties>
+                <bootclasspath>${jdk.compile.home}/jre/lib/rt.jar:${jdk.compile.home}/jre/lib/jce.jar</bootclasspath>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <compilerArgs>
+                                <arg>-Xbootclasspath:${bootclasspath}</arg>
+                                <arg>-Xlint:deprecation</arg>
+                            </compilerArgs>
+                            <!-- needed for maven-plugin-javadoc to find the
+                                source version to use -->
+                            <source>${maven.compiler.source}</source>
+                            <target>${maven.compiler.target}</target>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- The default compile settings, when jdk.compile.home is not defined -->
+            <id>nocrosscompile</id>
+            <activation>
+                <property>
+                    <name>!jdk.compile.home</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <compilerArgs>
+                                <arg>-Xlint:deprecation</arg>
+                            </compilerArgs>
+                            <!-- needed for maven-plugin-javadoc to find the
+                                source version to use -->
+                            <source>${maven.compiler.source}</source>
+                            <target>${maven.compiler.target}</target>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
+
     <organization>
         <name>JRDS</name>
-        <url>http://jrds.fr/</url>
+        <url>https://jrds.fr/</url>
     </organization>
     <description>Collect agent for JRDS.</description>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
