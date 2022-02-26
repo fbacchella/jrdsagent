@@ -192,9 +192,11 @@ workflows:
           requires:
               - build
       - testsj17:
+          context: "Security variables"
           requires:
               - build
       - publish:
+          context: "Security variables"
           requires:
               - testsj8
               - testsj11

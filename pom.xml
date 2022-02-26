@@ -624,21 +624,18 @@
             <email>fbacchella@spamcop.net</email>
         </developer>
     </developers>
+
     <distributionManagement>
-        <repository>
-            <id>bintray-release</id>
-            <url>https://api.bintray.com/maven/fbacchella/maven/jrdsagent</url>
-        </repository>
         <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
-    <ciManagement>
-        <system>Travis CI</system>
-        <url>https://travis-ci.org/fbacchella/jrdsagent</url>
-    </ciManagement>
+
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/fbacchella/jrdsagent/issues</url>
