@@ -17,7 +17,7 @@ import jrds.agent.CollectException;
 
 public class ProcSmaps extends AbstractProcessParser {
 
-    private static final String HEADERPATTERN = "[0-9a-f]+-[0-9a-f]+ (?<perm>....) [0-9a-f]+ (?<majorminor>\\d+:\\d+) \\d+ *(?<filename>.+)?";
+    private static final String HEADERPATTERN = "[0-9a-f]+-[0-9a-f]+ (?<perm>....) [0-9a-f]+ (?<majorminor>[0-9a-f]+:[0-9a-f]+) \\d+ *(?<filename>.+)?";
     private static final String SIZEPATTERN = "(?<key>.*): +(?<value>\\d+) kB";
     private static final Pattern LINEPATTERN = Pattern.compile(String.format("^(?:%s)|(?:%s)$", HEADERPATTERN, SIZEPATTERN));
     private static final Set<String> IGNORE = new HashSet<>();
