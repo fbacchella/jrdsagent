@@ -1,7 +1,5 @@
 package com4j.typelibs.wmi  ;
 
-import com4j.*;
-
 /**
  * <p>
  * Defines the security authentication level

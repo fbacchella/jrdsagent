@@ -1,7 +1,5 @@
 package com4j.typelibs.wmi  ;
 
-import com4j.*;
-
 /**
  * <p>
  * Defines depth of enumeration or query
