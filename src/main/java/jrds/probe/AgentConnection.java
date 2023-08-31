@@ -188,8 +188,8 @@ public class AgentConnection extends Connection<RProbe> {
         }
     }
 
-    @Override
     //Nothing to do, the proxy starter is registered, so it start by himself
+    @Override
     public boolean startConnection() {
         uptime = -1;
         return true;
