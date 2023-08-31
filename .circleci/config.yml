@@ -38,7 +38,7 @@ jobs:
                   root: /
                   paths:
                       - home/circleci/.m2/repository
-                      - home/circleci/project
+                      - home/circleci/project/target
     testsj20:
         docker:
             - image: cimg/openjdk:20.0
@@ -70,7 +70,7 @@ jobs:
                     - home/circleci/.sonar/cache
     testsj17:
         docker:
-            - image: circleci/openjdk:17-buster
+            - image: cimg/openjdk:17.0
         steps:
             - attach_workspace:
                   at: /tmp/ws
@@ -91,7 +91,7 @@ jobs:
             #don't persist_to_workspace, can't be done in parallel with testsj20
     testsj11:
         docker:
-            - image: circleci/openjdk:11-buster
+            - image: cimg/openjdk:11.0
         steps:
             - attach_workspace:
                 at: /tmp/ws
@@ -181,7 +181,7 @@ workflows:
                       - testsj11
                       - testsj17
                       - testsj20
+                  context: "Security variables"
             - savecache:
                   requires:
                       - publish
-                  context: "Security variables"
