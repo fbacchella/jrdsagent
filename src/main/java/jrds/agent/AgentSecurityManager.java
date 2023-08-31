@@ -147,7 +147,7 @@ public class AgentSecurityManager extends SecurityManager {
             } else {
                 File fullpath = new File(name);
                 privileged.privileged = true;
-                boolean allowed = false;
+                boolean allowed;
                 try {
                     allowed = fullpath.isDirectory() && ! fullpath.isHidden();
                 } finally {
