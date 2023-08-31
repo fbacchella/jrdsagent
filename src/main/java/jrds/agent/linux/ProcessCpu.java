@@ -59,16 +59,6 @@ public class ProcessCpu extends AbstractStatProcessParser {
     }
 
     @Override
-    protected long getProcUptime(Map<String, Number> values) {
-        Number startTimeTickObject = values.remove("stat:start_time");
-        if (startTimeTickObject == null) {
-            //invalid start_time, or empty map, skip this process
-            return -1;
-        }
-        return startTimeTickObject.longValue();
-    }
-
-    @Override
     public String getName() {
         return "picpu-" + getNameSuffix();
     }

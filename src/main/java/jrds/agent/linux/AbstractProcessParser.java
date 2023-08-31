@@ -121,10 +121,6 @@ public abstract class AbstractProcessParser extends LProbe {
                         throw new NoSuchElementException();
                     }
 
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException("remove");
-                    }
                 };
             };
         }
