@@ -1,9 +1,10 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ public abstract class AbstractStatProcessParser extends AbstractProcessParser {
     protected abstract String[] getStatkeys();
 
     protected Map<String, Number> parseStatFile(int pid, String file, String[] keys) {
-        File stat = new File("/proc/" + pid + "/" + file);
+        Path stat = Paths.get("/proc").resolve(Integer.toString(pid)).resolve(file);
         try (BufferedReader r = newAsciiReader(stat)){
             String statLine = r.readLine();
             String[] statArray = statLine.split(" +");
@@ -50,7 +51,7 @@ public abstract class AbstractStatProcessParser extends AbstractProcessParser {
     }
 
     protected Map<String, Number> parseKeyFile(int pid, String file) {
-        File stat = new File("/proc/" + pid + "/" + file);
+        Path stat = Paths.get("/proc").resolve(Integer.toString(pid)).resolve(file);
         Map<String, Number> retValues = new HashMap<>();
         try (BufferedReader r = newAsciiReader(stat)){
             String line;

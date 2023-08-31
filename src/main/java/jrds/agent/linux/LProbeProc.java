@@ -1,9 +1,11 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FilePermission;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.AccessControlException;
 import java.util.Map;
 
@@ -12,13 +14,17 @@ import jrds.agent.LProbe;
 
 public abstract class LProbeProc extends LProbe {
 
-    private File statFile = null;
+    protected static final Path PROC_PATH = Paths.get("/proc");
+    protected static final Path SYS_PATH = Paths.get("/sys");
+    protected static final Path DEV_PATH = Paths.get("/dev");
+
+    private Path statFile = null;
     private String name = null;
 
     @Override
     public void setProperty(String specific, String value) {
         if("statFile".equals(specific)) {
-            statFile = new File(value);
+            statFile = Paths.get(value).normalize().toAbsolutePath();
         } else if ("remoteName".equals(specific)){
             name = value;
         } else {
@@ -28,20 +34,16 @@ public abstract class LProbeProc extends LProbe {
 
     @Override
     public Boolean configure() {
-        if (statFile == null || ! statFile.canRead()) {
+        if (statFile == null || !Files.isReadable(statFile)) {
             throw new CollectException("File '" + statFile + "' not readable");
         }
-        try {
-            if (!statFile.getCanonicalPath().startsWith("/proc") && !statFile.getCanonicalPath().startsWith("/sys") ) {
-                FilePermission p = new FilePermission(statFile.getPath(), "read");
-                throw new AccessControlException("access denied " + p);
-            }
-        } catch (IOException e) {
-            throw new CollectException("Failed to configure using " + statFile + ": " + e.getMessage(), e);
+        if (!statFile.startsWith(PROC_PATH) && !statFile.startsWith(SYS_PATH) ) {
+            FilePermission p = new FilePermission(statFile.toString(), "read");
+            throw new AccessControlException("access denied " + p);
         }
 
         if (name == null || name.isEmpty()) {
-            name = statFile.getAbsoluteFile().getName();
+            name = statFile.toString();
         }
         return super.configure();
     }
@@ -53,7 +55,7 @@ public abstract class LProbeProc extends LProbe {
     /**
      * @return the statFile
      */
-    protected File getStatFile() {
+    protected Path getStatFile() {
         return statFile;
     }
 

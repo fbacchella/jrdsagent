@@ -23,7 +23,7 @@ public class TcpStat extends LProbe {
     }
 
     public void queryFile(String file, String prefix, Map<String, Number> retValues) {
-        try (BufferedReader r = newAsciiReader(file)){
+        try (BufferedReader r = newAsciiReader(file)) {
             String line;
 
             while((line = r.readLine()) != null) {

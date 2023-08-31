@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class ProcSmaps extends AbstractProcessParser {
 
     @Override
     protected Map<String, Number> parseProc(int pid) {
-        File smaps = new File("/proc/" + pid + "/smaps");
+        Path smaps = PROC_PATH.resolve(Integer.toString(pid)).resolve("smaps");
         try (BufferedReader r = newAsciiReader(smaps)){
             Map<String, Map<String, Long>> areadetails = new HashMap<>();
             String line;

@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,6 +20,8 @@ import jrds.agent.CollectException;
 import jrds.agent.LProbe;
 
 public abstract class AbstractProcessParser extends LProbe {
+
+    protected static final Path PROC_PATH = Paths.get("/proc");
 
     private static final int ARROBE = Character.codePointAt("@", 0);
 

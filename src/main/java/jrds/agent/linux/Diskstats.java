@@ -1,18 +1,19 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.AccessControlException;
 import java.util.HashMap;
 import java.util.Map;
 
-import jrds.agent.CollectException;
 import jrds.agent.Start;
 
 public class Diskstats extends LProbeProc {
 
-    private static final String[] PREFIXES = {"/dev/mapper/", "/dev/disk/", "/dev/"};
+    private static final Path[] PREFIXES = { Path.of("/dev/mapper/"), Path.of("/dev/disk/"), Path.of("/dev/")};
 
     private String disk;
 
@@ -25,42 +26,38 @@ public class Diskstats extends LProbeProc {
     }
 
     private boolean doConfigure(String disk, boolean checkPath) {
-        try {
-            File diskFile = null;
-            if (checkPath) {
-                // Search in standards prefix if the real IO device can be detected.
-                // It allows to use device mapper names instead of variable dm-xx
-                // or to look into /dev/disk/by-*
-                for (String tryprefix: PREFIXES) {
-                    try {
-                        diskFile = new File(tryprefix + disk);
-                        if (diskFile.exists()) {
-                            break;
-                        } else {
-                            diskFile = null;
-                        }
-                    } catch (AccessControlException e) {
-                        // Tried to resolve an invalid path, skip it
+        Path diskPath = Paths.get(disk);
+        Path diskFile = null;
+        if (checkPath) {
+            // Search in standards prefix if the real IO device can be detected.
+            // It allows to use device mapper names instead of variable dm-xx
+            // or to look into /dev/disk/by-*
+            for (Path tryprefix: PREFIXES) {
+                try {
+                    diskFile = tryprefix.resolve(diskPath);
+                    if (Files.isReadable(diskFile)) {
+                        break;
+                    } else {
                         diskFile = null;
                     }
+                } catch (AccessControlException e) {
+                    // Tried to resolve an invalid path, skip it
+                    diskFile = null;
                 }
-                if (diskFile != null) {
-                    // We found the real path, that will be used in /proc/diskstats
-                    String realdisk = diskFile.getCanonicalPath();
-                    realdisk = realdisk.replace("/dev/", "");
-                    this.disk = realdisk;
-                } else {
-                    // Nothing found, hope user know what he is doing
-                    this.disk = disk;
-                }
+            }
+            if (diskFile != null) {
+                // We found the real path, that will be used in /proc/diskstats
+                String realdisk = DEV_PATH.relativize(diskFile).toString();
+                this.disk = realdisk;
             } else {
-                // Nothing checked, hope user know what he is doing
+                // Nothing found, hope user know what he is doing
                 this.disk = disk;
             }
-            return super.configure();
-        } catch (IOException e) {
-            throw new CollectException("can't resolve path to  '" + disk + "':" + e.getMessage(), e);
+        } else {
+            // Nothing checked, hope user know what he is doing
+            this.disk = disk;
         }
+        return super.configure();
     }
 
     public Map<String, Number> parse(BufferedReader r) throws IOException {
