@@ -23,8 +23,7 @@ public class Wmiprobe extends RMI {
     }
 
     protected void buildArgs(List<Object> args) {
-        List<String> fields = new ArrayList<>();
-        fields.addAll(getPd().getCollectMapping().keySet());
+        List<String> fields = new ArrayList<>(getPd().getCollectMapping().keySet());
         args.add(fields);
     }
 
