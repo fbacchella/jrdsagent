@@ -19,19 +19,12 @@ public class CpuFrequency extends RMI {
 
     @Override
     public Boolean configure() {
-        try {
-            @SuppressWarnings("unchecked")
-            ProbeDesc<String> localpd = (ProbeDesc<String>) getPd().clone();
-            List<DataSourceBuilder> dsList = new ArrayList<>(count);
-            for (int i = 0 ; i < count ; i++) {
-                dsList.add(ProbeDesc.getDataSourceBuilder(String.valueOf(i), DsType.GAUGE));
-            }
-            localpd.replaceDs(dsList);
-            setPd(localpd);
-            return super.configure();
-        } catch (CloneNotSupportedException e) {
-            throw new IllegalArgumentException(e);
+        List<DataSourceBuilder> dsList = new ArrayList<>(count);
+        for (int i = 0 ; i < count ; i++) {
+            dsList.add(ProbeDesc.getDataSourceBuilder(String.valueOf(i), DsType.GAUGE));
         }
+        setPd(new ProbeDesc<String>(getPd(), dsList));
+        return super.configure();
     }
 
     @Override
