@@ -70,7 +70,7 @@ public class IfStat extends LProbeProc {
         r.readLine();
 
         while((line = r.readLine()) != null) {
-            if(line.indexOf(" " + ifName + ":") >= 0) {
+            if(line.contains(" " + ifName + ":")) {
                 String[] ifvalues = line.trim().split(":");
                 String[] values = ifvalues[1].trim().split("\\s+");
                 retValues.put("rxbits", 8 * Double.parseDouble(values[0]));

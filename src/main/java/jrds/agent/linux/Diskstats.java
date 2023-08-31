@@ -68,7 +68,7 @@ public class Diskstats extends LProbeProc {
         String line;
         boolean found = false;
         while(! found && ((line = r.readLine()) != null)) {
-            if(line.indexOf(" " + disk + " ") >= 0) {
+            if(line.contains(" " + disk + " ")) {
                 found = true;
                 String[] values = line.trim().split("\\s+");
                 //Full line, with all the values
