@@ -36,7 +36,7 @@ public class IfStat extends LProbeProc {
                 // Removing first line as it's the header
                 lines.remove(0);
                 for (String line : lines) {
-                    if (!line.equals("")) {
+                    if (!line.isEmpty()) {
                         String[] lineSplit = line.trim().split("\\s+");
                         if (lineSplit.length < 2) {
                             continue;

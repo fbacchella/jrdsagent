@@ -7,12 +7,12 @@ public class PdhHelper {
     // \\computer\object(parent/instance#index)\counter
     public static String constructPdhPath(String computer, String object, String parent, String instance,
                                           Integer index, String counter) {
-        if (counter == null || counter.equals("")) {
+        if (counter == null || counter.isEmpty()) {
             throw new IllegalArgumentException("counter parameter can not be null or empty");
         }
-        String computerPart = computer.equals("") ? "" : "\\\\" + computer;
-        String instancePart = instance.equals("") ? ""
-                                                    : "(" + (parent.equals("") ? "" : parent + "/") + instance
+        String computerPart = computer.isEmpty() ? "" : "\\\\" + computer;
+        String instancePart = instance.isEmpty() ? ""
+                                                    : "(" + (parent.isEmpty() ? "" : parent + "/") + instance
                                                     + (index == null ? "" : "#" + index) + ")";
         return computerPart + "\\" + object + instancePart + "\\" + counter;
     }

@@ -80,7 +80,7 @@ public class Start implements Serializable {
 
         PROTOCOL proto = PROTOCOL.valueOf(DEFAULTPROTOCOL);
         String protoProp = System.getProperty("jrds.proto", proto.toString()).trim().toLowerCase();
-        if( ! "".equals(protoProp) )
+        if(!protoProp.isEmpty())
             proto = PROTOCOL.valueOf(protoProp);
 
         start(port, proto);
