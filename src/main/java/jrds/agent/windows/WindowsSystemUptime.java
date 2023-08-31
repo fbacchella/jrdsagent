@@ -16,7 +16,7 @@ public class WindowsSystemUptime extends SystemUptime {
     public long getSystemUptime() {
         WmiRequester.refresh();
         String formatedString = (String) WmiRequester.getFromClass(UPTIMERELPATH, UPTIMEFIELD)[0];
-        long formated = Start.parseStringNumber(formatedString, 0l);
+        long formated = Start.parseStringNumber(formatedString, 0L);
         return formated * 1000;
     }
 

@@ -26,7 +26,7 @@ public class Meminfo26 extends LProbeProc {
             Matcher m = linePattern.matcher(line);
             if(m.matches()) {
                 String key = m.group(1);
-                long value = Start.parseStringNumber(m.group(2), 0l);
+                long value = Start.parseStringNumber(m.group(2), 0L);
                 value *= 1024;
                 retValues.put(key, value);
             }

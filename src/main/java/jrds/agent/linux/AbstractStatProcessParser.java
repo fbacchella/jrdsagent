@@ -27,7 +27,7 @@ public abstract class AbstractStatProcessParser extends AbstractProcessParser {
                 String value = statArray[i];
                 String key = keys[i];
                 if(key != null) {
-                    Number dvalue = Start.parseStringNumber(value, 0l);
+                    Number dvalue = Start.parseStringNumber(value, 0L);
                     retValues.put(file + ":" + key, dvalue);
                 }
             }
@@ -58,7 +58,7 @@ public abstract class AbstractStatProcessParser extends AbstractProcessParser {
                 String[] values = line.trim().split(":");
                 if (values.length == 2) {
                     String key = values[0].trim();
-                    Number value = Start.parseStringNumber(values[1].trim(), 0l);
+                    Number value = Start.parseStringNumber(values[1].trim(), 0L);
                     retValues.put(file + ":" + key, value);
                 }
             }
