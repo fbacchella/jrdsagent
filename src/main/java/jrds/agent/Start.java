@@ -94,10 +94,7 @@ public class Start implements Serializable {
         //Initialization done, set the security manager
         String withSecurity = System.getProperty("jrds.security", "true");
         if (System.getSecurityManager() == null && Boolean.parseBoolean(withSecurity)) {
-            boolean debugPerm = false;
-            if(System.getProperty("jrds.debugperm") != null) {
-                debugPerm = true;
-            }
+            boolean debugPerm = System.getProperty("jrds.debugperm") != null;
             System.setSecurityManager(new AgentSecurityManager(debugPerm, proto));
         }
         //Make it wait on himself to wait forever
