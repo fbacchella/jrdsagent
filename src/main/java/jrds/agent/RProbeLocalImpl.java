@@ -24,7 +24,7 @@ public class RProbeLocalImpl implements RProbe {
 
     @Override
     public String prepare(String name, Map<String, String> specifics,
-            List<?> args) throws RemoteException, InvocationTargetException {
+            List<?> args) throws RemoteException {
         try {
             return actor.prepare(name, specifics, args);
         } catch (Exception e) {
