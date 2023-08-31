@@ -38,6 +38,26 @@
         <defaultValue>0</defaultValue>
     </ds>
     <ds>
+        <dsName>Active_anon</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>Inactive_anon</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>Active_file</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>Inactive_file</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
         <dsName>SwapCached</dsName>
         <dsType>gauge</dsType>
         <defaultValue>0</defaultValue>
@@ -53,6 +73,16 @@
         <defaultValue>0</defaultValue>
     </ds>
     <ds>
+        <dsName>Zswap</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>Zswapped</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
         <dsName>Dirty</dsName>
         <dsType>gauge</dsType>
         <defaultValue>0</defaultValue>
@@ -63,12 +93,22 @@
         <defaultValue>0</defaultValue>
     </ds>
     <ds>
+        <dsName>WritebackTmp</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
         <dsName>AnonPages</dsName>
         <dsType>gauge</dsType>
         <defaultValue>0</defaultValue>
     </ds>
     <ds>
         <dsName>Mapped</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>MemAvailable</dsName>
         <dsType>gauge</dsType>
         <defaultValue>0</defaultValue>
     </ds>
@@ -133,6 +173,16 @@
         <defaultValue>0</defaultValue>
     </ds>
     <ds>
+        <dsName>Percpu</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>HardwareCorrupted</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
         <dsName>HugePages_Total</dsName>
         <dsType>gauge</dsType>
         <defaultValue>0</defaultValue>
@@ -153,7 +203,42 @@
         <defaultValue>0</defaultValue>
     </ds>
     <ds>
+        <dsName>Hugetlb</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+   <ds>
         <dsName>AnonHugePages</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>ShmemHugePages</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>ShmemPmdMapped</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>FileHugePages</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>FilePmdPages</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>CmaTotal</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>CmaFree</dsName>
         <dsType>gauge</dsType>
         <defaultValue>0</defaultValue>
     </ds>
@@ -169,6 +254,11 @@
     </ds>
     <ds>
         <dsName>Shmem</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>KReclaimable</dsName>
         <dsType>gauge</dsType>
         <defaultValue>0</defaultValue>
     </ds>
