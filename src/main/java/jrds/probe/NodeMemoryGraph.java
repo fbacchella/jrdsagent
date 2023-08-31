@@ -57,7 +57,7 @@ public class NodeMemoryGraph extends Graph {
     }
 
     public void setCount(Integer count) {
-        this.count = count.intValue();
+        this.count = count;
     }
 
 }

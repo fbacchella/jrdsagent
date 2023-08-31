@@ -11,8 +11,8 @@ public class TcpQueue extends LProbeProc {
     static final int offset = 2;
 
     public Boolean configure(Integer port, Boolean local) {
-        this.port = port.intValue();
-        this.local = local.booleanValue();
+        this.port = port;
+        this.local = local;
         return true;
     }
 
