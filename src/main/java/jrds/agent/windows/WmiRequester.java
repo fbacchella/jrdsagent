@@ -22,7 +22,7 @@ public abstract class WmiRequester {
         private long lastUpdate = 0;
         @Override
         public void run() {
-            if(cache.size() == 0) {
+            if(cache.isEmpty()) {
             }
             Date now = new Date();
             // Only one refresh / second
