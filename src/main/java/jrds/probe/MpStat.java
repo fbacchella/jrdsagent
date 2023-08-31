@@ -21,22 +21,14 @@ public class MpStat extends RMI {
 
     @Override
     public Boolean configure() {
-        try {
-            @SuppressWarnings("unchecked")
-            ProbeDesc<String> localpd = (ProbeDesc<String>) getPd().clone();
-
-            List<DataSourceBuilder> dsList = new ArrayList<>(count * columns.length);
-            for (int i = 0 ; i < count ; i++) {
-                for (String s: columns) {
-                    dsList.add(ProbeDesc.getDataSourceBuilder(s + i, DsType.COUNTER));
-                }
+        List<DataSourceBuilder> dsList = new ArrayList<>(count * columns.length);
+        for (int i = 0 ; i < count ; i++) {
+            for (String s: columns) {
+                dsList.add(ProbeDesc.getDataSourceBuilder(s + i, DsType.COUNTER));
             }
-            localpd.replaceDs(dsList);
-            setPd(localpd);
-            return super.configure();
-        } catch (CloneNotSupportedException e) {
-            throw new IllegalArgumentException(e);
         }
+        setPd(new ProbeDesc<>(getPd(), dsList));
+        return super.configure();
     }
 
     @Override
@@ -62,7 +54,8 @@ public class MpStat extends RMI {
                                       .setGraphType(GraphType.NONE)
                                     );
                     rpn.append(",");
-                    rpn.append(key + i);
+                    rpn.append(key);
+                    rpn.append(i);
                     rpn.append(",ADDNAN");
                 }
                 builder.addDsDesc(GraphDesc.getDsDescBuilder()
