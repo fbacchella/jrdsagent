@@ -24,12 +24,7 @@ public class AgentSecurityManager extends SecurityManager {
     private static final class PrivilegHolder  {
         private boolean privileged = false;
     }
-    private static final ThreadLocal<PrivilegHolder> Privilege = new ThreadLocal<>() {
-        @Override
-        protected PrivilegHolder initialValue() {
-            return new PrivilegHolder();
-        }
-    };
+    private static final ThreadLocal<PrivilegHolder> Privilege = ThreadLocal.withInitial(() -> new PrivilegHolder());
 
     private final Set<String> permUsed;
     private final Set<String> permCreated;
@@ -47,23 +42,20 @@ public class AgentSecurityManager extends SecurityManager {
         if(debugPerm) {
             permUsed = Collections.newSetFromMap(new ConcurrentHashMap<>());
             permCreated = Collections.newSetFromMap(new ConcurrentHashMap<>());
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                @Override
-                public void run() {
-                    for(String i: new HashSet<>(permCreated)) {
-                        if(permUsed.contains(i + " =")) {
-                            permCreated.remove(i);
-                        }
-                    }
-                    for(String i: permCreated){
-                        permUsed.add(i +" +");
-                    }
-
-                    for(String p: new TreeSet<>(permUsed)) {
-                        System.out.println(p);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                for(String i: new HashSet<>(permCreated)) {
+                    if(permUsed.contains(i + " =")) {
+                        permCreated.remove(i);
                     }
                 }
-            });
+                for(String i: permCreated){
+                    permUsed.add(i +" +");
+                }
+
+                for(String p: new TreeSet<>(permUsed)) {
+                    System.out.println(p);
+                }
+            }));
         } else {
             permUsed = null;
             permCreated = null;
