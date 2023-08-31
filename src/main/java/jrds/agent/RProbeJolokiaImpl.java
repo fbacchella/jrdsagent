@@ -47,7 +47,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
     private static JolokiaServer server;
     public static final String JOLOKIA_AGENT_URL = "jolokia.agent";
 
-    public static final void register(RProbeActor actor, int port) throws InvocationTargetException {
+    public static void register(RProbeActor actor, int port) throws InvocationTargetException {
         try {
             Map<String,String> config = new HashMap<>();
             config.put("port", String.valueOf(port));
@@ -72,7 +72,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
         }
     }
 
-    public static final void stop() {
+    public static void stop() {
         server.stop();
         System.clearProperty(JOLOKIA_AGENT_URL);
     }

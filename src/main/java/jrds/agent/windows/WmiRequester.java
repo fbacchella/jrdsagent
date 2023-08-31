@@ -47,16 +47,16 @@ public abstract class WmiRequester {
         }
     }        
 
-    static final synchronized ISWbemRefreshableItem getItem(String name) {
+    static synchronized ISWbemRefreshableItem getItem(String name) {
         return getItemIndexed(name, "", "@");
     }
 
-    static final synchronized ISWbemRefreshableItem getItemIndexed(String name, String key, String index) {
+    static synchronized ISWbemRefreshableItem getItemIndexed(String name, String key, String index) {
         String query = buildQuery(name, key, index);
         return getItemByQuery(query);
     }
 
-    static final synchronized ISWbemRefreshableItem getItemByQuery(String query) {
+    static synchronized ISWbemRefreshableItem getItemByQuery(String query) {
         try {
             ISWbemRefreshableItem item;
             if(! cache.containsKey(query)) {
