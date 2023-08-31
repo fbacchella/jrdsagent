@@ -62,7 +62,7 @@ public class JolokiaConnection extends AgentConnection {
                 try {
                     J4pReadRequest req = new J4pReadRequest("jrds:type=agent", "Uptime");
                     J4pReadResponse resp = doRequest(req, "uptime");
-                    return (Long) resp.getValue();
+                    return resp.getValue();
                 } catch (MalformedObjectNameException e) {
                     throw new InvocationTargetException(e);
                 }
