@@ -48,7 +48,7 @@ public class ProcSmaps extends AbstractProcessParser {
                         areaname = "mappedfiles";
                     }
                     if (! areadetails.containsKey(areaname)) {
-                        areadetails.put(areaname, new HashMap<String, Long>(14));
+                        areadetails.put(areaname, new HashMap<>(14));
                     }
                     currentareaddetails = areadetails.get(areaname);
                 } else if (currentareaddetails == null) {

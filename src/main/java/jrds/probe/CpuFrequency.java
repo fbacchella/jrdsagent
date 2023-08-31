@@ -23,7 +23,7 @@ public class CpuFrequency extends RMI {
         for (int i = 0 ; i < count ; i++) {
             dsList.add(ProbeDesc.getDataSourceBuilder(String.valueOf(i), DsType.GAUGE));
         }
-        setPd(new ProbeDesc<String>(getPd(), dsList));
+        setPd(new ProbeDesc<>(getPd(), dsList));
         return super.configure();
     }
 

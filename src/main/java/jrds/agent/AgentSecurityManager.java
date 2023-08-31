@@ -24,8 +24,7 @@ public class AgentSecurityManager extends SecurityManager {
     private static final class PrivilegHolder  {
         private boolean privileged = false;
     }
-    private static final ThreadLocal<PrivilegHolder> Privilege =
-                    new ThreadLocal<PrivilegHolder>() {
+    private static final ThreadLocal<PrivilegHolder> Privilege = new ThreadLocal<>() {
         @Override
         protected PrivilegHolder initialValue() {
             return new PrivilegHolder();
@@ -40,18 +39,18 @@ public class AgentSecurityManager extends SecurityManager {
 
     private final boolean debugPerm;
     private final Permissions allowed = new Permissions();
-    private final Set<String> filesallowed = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+    private final Set<String> filesallowed = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public AgentSecurityManager(boolean debugPerm, PROTOCOL proto) {
         this.debugPerm = debugPerm;
 
         if(debugPerm) {
-            permUsed = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
-            permCreated = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+            permUsed = Collections.newSetFromMap(new ConcurrentHashMap<>());
+            permCreated = Collections.newSetFromMap(new ConcurrentHashMap<>());
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
-                    for(String i: new HashSet<String>(permCreated)) {
+                    for(String i: new HashSet<>(permCreated)) {
                         if(permUsed.contains(i + " =")) {
                             permCreated.remove(i);
                         }
@@ -60,7 +59,7 @@ public class AgentSecurityManager extends SecurityManager {
                         permUsed.add(i +" +");
                     }
 
-                    for(String p: new TreeSet<String>(permUsed)) {
+                    for(String p: new TreeSet<>(permUsed)) {
                         System.out.println(p);
                     }
                 }

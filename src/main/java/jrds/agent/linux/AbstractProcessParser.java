@@ -101,7 +101,7 @@ public abstract class AbstractProcessParser extends LProbe {
             //If launched on a non linux os, avoid a NPE
             if ( ! procFile.isDirectory())
                 return Collections.emptySet();
-            return new Iterable<Integer>() {
+            return new Iterable<>() {
                 @Override
                 public Iterator<Integer> iterator() {
                     final File[] pids = procFile.listFiles(new FilenameFilter() {
@@ -110,7 +110,7 @@ public abstract class AbstractProcessParser extends LProbe {
                             return PIDDIRPATTERN.matcher(name).matches();
                         }
                     });
-                    return new Iterator<Integer>() {
+                    return new Iterator<>() {
                         int cursor = 0;
 
                         @Override
