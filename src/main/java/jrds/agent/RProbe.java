@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface RProbe extends Remote {
-    static final String NAME = "dispatcher";
+    String NAME = "dispatcher";
 
-    public Map<String, Number> query(String name) throws RemoteException, InvocationTargetException;
-    public String prepare(String name, Map<String, String> specifics, List<?> args) throws RemoteException, InvocationTargetException;
-    public long getUptime() throws RemoteException, InvocationTargetException;
+    Map<String, Number> query(String name) throws RemoteException, InvocationTargetException;
+    String prepare(String name, Map<String, String> specifics, List<?> args) throws RemoteException, InvocationTargetException;
+    long getUptime() throws RemoteException, InvocationTargetException;
 }
