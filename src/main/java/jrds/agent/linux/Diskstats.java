@@ -44,7 +44,7 @@ public class Diskstats extends LProbeProc {
                         diskFile = null;
                     }
                 }
-                if (diskFile != null && checkPath) {
+                if (diskFile != null) {
                     // We found the real path, that will be used in /proc/diskstats
                     String realdisk = diskFile.getCanonicalPath();
                     realdisk = realdisk.replace("/dev/", "");

@@ -28,7 +28,7 @@ public class LinuxDiskStats extends RMIIndexed {
     @Override
     protected void setArgs(List<Object> l) {
         if (! checkPath) {
-            l.add(checkPath);
+            l.add(false);
         }
         super.setArgs(l);
     }

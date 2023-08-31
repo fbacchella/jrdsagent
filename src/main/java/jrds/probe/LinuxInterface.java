@@ -22,7 +22,7 @@ public class LinuxInterface extends RMI implements IndexedProbe {
         // the arg autoroute is used only if true
         // this allows to use old jrdsagent
         if (defaultroute) {
-            args.add(defaultroute);
+            args.add(true);
         }
         setArgs(args);
         return true;
