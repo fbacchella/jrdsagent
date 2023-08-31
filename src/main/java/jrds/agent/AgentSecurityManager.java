@@ -24,7 +24,7 @@ public class AgentSecurityManager extends SecurityManager {
     private static final class PrivilegHolder  {
         private boolean privileged = false;
     }
-    private static final ThreadLocal<PrivilegHolder> Privilege = ThreadLocal.withInitial(() -> new PrivilegHolder());
+    private static final ThreadLocal<PrivilegHolder> Privilege = ThreadLocal.withInitial(PrivilegHolder::new);
 
     private final Set<String> permUsed;
     private final Set<String> permCreated;
