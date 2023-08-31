@@ -41,7 +41,7 @@ jobs:
                       - home/circleci/project
     testsj20:
         docker:
-            - image: circleci/openjdk:20-jdk-buster
+            - image: cimg/openjdk:20.0
         steps:
             - attach_workspace:
                 at: /tmp/ws
