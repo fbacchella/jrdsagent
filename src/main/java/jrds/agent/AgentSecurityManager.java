@@ -111,7 +111,7 @@ public class AgentSecurityManager extends SecurityManager {
         if(perm instanceof java.security.SecurityPermission
                         && perm.getName().startsWith("getProperty.security.provider") ) {
             if(debugPerm) {
-                permUsed.add(perm.toString() + " =");
+                permUsed.add(perm + " =");
             }
             return;
         }
@@ -120,14 +120,14 @@ public class AgentSecurityManager extends SecurityManager {
             String name = perm.getName();
             if(filesallowed.contains(name)) {
                 if(debugPerm) {
-                    permUsed.add(perm.toString() + " =");
+                    permUsed.add(perm + " =");
                 }
                 return;
             }
             // Already allowed, don't check any more
             if(allowed.implies(perm)) {
                 if(debugPerm) {
-                    permUsed.add(perm.toString() + " =");
+                    permUsed.add(perm + " =");
                 }
                 filesallowed.add(name);
                 return;
@@ -164,7 +164,7 @@ public class AgentSecurityManager extends SecurityManager {
                 }
                 if(allowed) {
                     if(debugPerm) {
-                        permUsed.add(perm.toString() + " =");
+                        permUsed.add(perm + " =");
                     }
                     filesallowed.add(name);
                     return;
