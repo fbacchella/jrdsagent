@@ -215,6 +215,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.jdk.internal.reflect" },
             new String[] { "java.lang.reflect.ReflectPermission", "suppressAccessChecks" },
             new String[] { "java.net.NetPermission", "specifyStreamHandler" }, // Appears with jar in extensions directory
+            new String[] { "java.net.NetPermission", "setSocketImpl" }, // Since Java 14
             new String[] { "java.util.logging.LoggingPermission", "control", "" },
             new String[] { "java.util.PropertyPermission", "java.nio.file.spi.DefaultFileSystemProvider", "read" }, 
             new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read" }, 
