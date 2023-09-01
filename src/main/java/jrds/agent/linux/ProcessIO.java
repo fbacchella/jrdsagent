@@ -1,5 +1,6 @@
 package jrds.agent.linux;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,21 +55,16 @@ public class ProcessIO extends AbstractStatProcessParser {
     };
 
     @Override
-    protected Map<String, Number> parseProc(int pid) {
+    protected Map<String, Number> parseProc(Path pidDir) {
         Map<String, Number> bufferMap = new HashMap<>();
-        bufferMap.putAll(parseStatFile(pid, "stat", statKey));
-        bufferMap.putAll(parseKeyFile(pid, "io"));
+        bufferMap.putAll(parseStatFile(pidDir, "stat", statKey));
+        bufferMap.putAll(parseKeyFile(pidDir, "io"));
         return bufferMap;
     }
 
     @Override
     public String getName() {
         return "piio-" + getNameSuffix();
-    }
-
-    @Override
-    public String[] getStatkeys() {
-        return statKey;
     }
 
 }

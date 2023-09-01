@@ -1,14 +1,11 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -21,14 +18,11 @@ public class ProcSmaps extends AbstractProcessParser {
     private static final String HEADERPATTERN = "[0-9a-f]+-[0-9a-f]+ (?<perm>....) [0-9a-f]+ (?<majorminor>[0-9a-f]+:[0-9a-f]+) \\d+ *(?<filename>.+)?";
     private static final String SIZEPATTERN = "(?<key>.*): +(?<value>\\d+) kB";
     private static final Pattern LINEPATTERN = Pattern.compile(String.format("^(?:%s)|(?:%s)$", HEADERPATTERN, SIZEPATTERN));
-    private static final Set<String> IGNORE = new HashSet<>();
-    static {
-        IGNORE.addAll(Arrays.asList("KernelPageSize", "MMUPageSize"));
-    }
+    private static final Set<String> IGNORE = Set.of("KernelPageSize", "MMUPageSize");
 
     @Override
-    protected Map<String, Number> parseProc(int pid) {
-        Path smaps = PROC_PATH.resolve(Integer.toString(pid)).resolve("smaps");
+    protected Map<String, Number> parseProc(Path pidDir) {
+        Path smaps = pidDir.resolve("smaps");
         try (BufferedReader r = newAsciiReader(smaps)){
             Map<String, Map<String, Long>> areadetails = new HashMap<>();
             String line;
@@ -52,16 +46,9 @@ public class ProcSmaps extends AbstractProcessParser {
                         areadetails.put(areaname, new HashMap<>(14));
                     }
                     currentareaddetails = areadetails.get(areaname);
-                } else if (currentareaddetails == null) {
-                    continue;
-                } else if (key != null && ! IGNORE.contains(key)) {
+                 } else if (currentareaddetails != null && key != null && ! IGNORE.contains(key)) {
                     long value = Long.parseLong(match.group("value")) * 1024;
-                    if (currentareaddetails.containsKey(key)) {
-                        long oldvalue = currentareaddetails.get(key);
-                        currentareaddetails.put(key, oldvalue + value);
-                    } else {
-                        currentareaddetails.put(key, value);
-                    }
+                    currentareaddetails.compute(key, (k, v) -> v == null ? value : v + value);
                 }
             }
             Map<String, Number> collected = new HashMap<>();
@@ -89,7 +76,7 @@ public class ProcSmaps extends AbstractProcessParser {
     }
 
     /**
-     * Don't care about uptime, it collect only gauge
+     * Don't care about uptime, it collects only gauge
      * @see jrds.agent.linux.AbstractProcessParser#computeUpTime(long)
      */
     @Override

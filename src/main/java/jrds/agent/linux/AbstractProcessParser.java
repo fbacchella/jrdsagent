@@ -1,20 +1,21 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import jrds.agent.CollectException;
 import jrds.agent.LProbe;
@@ -25,9 +26,17 @@ public abstract class AbstractProcessParser extends LProbe {
 
     private static final int ARROBE = Character.codePointAt("@", 0);
 
-    private static final int USER_HZ = 100; 
+    private static final int USER_HZ = 100;
 
+    protected static final Pattern SPACE_SEPARATOR = Pattern.compile("\\s+");
     private static final Pattern PIDDIRPATTERN = Pattern.compile("^(\\d+)$");
+    private static final Predicate<String> PID_PREDICATE = PIDDIRPATTERN.asPredicate();
+
+    private static class QueryValues {
+        int count = 0;
+        long mostRecentTick = 0;
+        Map<String, Number> retValues = new HashMap<>();
+    }
 
     private Pattern cmdFilter = null;
 
@@ -51,88 +60,55 @@ public abstract class AbstractProcessParser extends LProbe {
     }
 
     public Map<String, Number> query() {
-        Map<String, Number> retValues = new HashMap<>();
-        int count = 0;
-        long mostRecentTick = 0;
-        try {
-            for (int pid: getPids()) {
-                String cmdLine = getCmdLine(pid);
-                if (cmdLine != null && (cmdFilter == null || cmdFilter.matcher(cmdLine).matches())) {
-                    Map<String, Number> bufferMap = parseProc(pid);
-                    long startTimeTick = getProcUptime(bufferMap);
-                    if (startTimeTick < 0) {
-                        continue;
-                    }
-                    mostRecentTick = Math.max(startTimeTick, mostRecentTick);
-                    count++;
-                    for (Map.Entry<String, Number> e: bufferMap.entrySet()) {
-                        Number previous = retValues.get(e.getKey());
-                        if(previous == null)
-                            retValues.put(e.getKey(), e.getValue());
-                        else {
-                            retValues.put(e.getKey(), previous.doubleValue() + e.getValue().doubleValue());
-                        }
-                    }
-                }
-            }
-        } catch (NoSuchElementException e) {
-            // Iterator.next and Iterator.hasNext are not always consistent, as process can vanish between executions.
-            // So NoSuchElementException can happens, just stop iteration when it happens.
-        }
-        long uptime = computeUpTime(mostRecentTick);
-        retValues.put("uptime", uptime);
-        retValues.put("count", count);
-        return retValues;
+        QueryValues values = new QueryValues();
+        Matcher m = cmdFilter != null ? cmdFilter.matcher("") : null;
+        processPids(p -> processQueryData(p, m, values));
+        values.retValues.put("uptime", computeUpTime(values.mostRecentTick));
+        values.retValues.put("count", values.count);
+        return values.retValues;
     }
 
-    private Iterable<Integer> getPids() {
+    void processQueryData(Path pidDir, Matcher m, QueryValues values) {
+        String cmdLine = getCmdLine(pidDir);
+        if (cmdLine != null && (m == null || m.reset(cmdLine).matches())) {
+            Map<String, Number> bufferMap = parseProc(pidDir);
+            long startTimeTick = getProcUptime(bufferMap);
+            if (startTimeTick >= 0) {
+                values.mostRecentTick = Math.max(startTimeTick, values.mostRecentTick);
+                values.count++;
+                for (Map.Entry<String, Number> e: bufferMap.entrySet()) {
+                    values.retValues.compute(e.getKey(), (k, v) -> v == null ? e.getValue().doubleValue() : v.doubleValue() + e.getValue().doubleValue());
+                }
+            }
+        }
+    }
+
+    private void processPids(Consumer<Path> process) {
         if (cmdFilter == null) {
             String jvmName = ManagementFactory.getRuntimeMXBean().getName();
             int separator = jvmName.indexOf(ARROBE);
-            if (separator < 0) {
-                return Collections.emptySet();
-            } else {
-                try {
-                    int pid = Integer.parseInt(jvmName.substring(0, separator));
-                    return Collections.singleton(pid);
-                } catch (NumberFormatException e) {
-                    return Collections.emptySet();
-                }
+            if (separator >= 0) {
+                process.accept(PROC_PATH.resolve(jvmName.substring(0, separator)));
             }
-        } else {
-            final File procFile = new File("/proc");
-            //If launched on a non linux os, avoid a NPE
-            if ( ! procFile.isDirectory())
-                return Collections.emptySet();
-            return () -> {
-                final File[] pids = procFile.listFiles((dir, name) -> PIDDIRPATTERN.matcher(name).matches());
-                return new Iterator<>() {
-                    int cursor = 0;
-
-                    @Override
-                    public boolean hasNext() {
-                        return cursor < pids.length;
-                    }
-
-                    @Override
-                    public Integer next() {
-                        do {
-                            File current = pids[cursor++];
-                            if (current.exists()) {
-                                return Integer.decode(current.getName());
-                            }
-                        } while (cursor < pids.length);
-                        throw new NoSuchElementException();
-                    }
-
-                };
-            };
+        } else  if (Files.isDirectory(PROC_PATH)) {
+            try (Stream<Path> procFiles = Files.list(PROC_PATH)) {
+                procFiles.filter(this::isProcDir)
+                         .forEach(process);
+            } catch (IOException e) {
+                //
+            }
         }
     }
 
-    protected String getCmdLine(int pid) {
-        File cmdFile = new File("/proc/" + pid + "/cmdline");
-        try (FileInputStream is = new FileInputStream(cmdFile)){
+    private boolean isProcDir(Path p) {
+        return Files.isDirectory(p) &&
+            Files.isSymbolicLink(p.resolve("exe")) &&
+            PID_PREDICATE.test(p.getFileName().toString());
+    }
+
+    protected String getCmdLine(Path pidDir) {
+        Path cmdFile = pidDir.resolve("cmdline");
+         try (InputStream is = Files.newInputStream(cmdFile)){
             byte[] content = new byte[4096];
             int read;
             StringBuilder buffer = new StringBuilder();
@@ -148,14 +124,14 @@ public abstract class AbstractProcessParser extends LProbe {
             // Some command don't have a cmdline
             return buffer.substring(0, Math.max(buffer.length() - 1, 0));
         } catch (FileNotFoundException e){
-            //An file not found is not a problem just return null
+            // A file not found is not a problem just return null
             return null;
         } catch (IOException e) {
-            throw new CollectException("Unable to read " + cmdFile.getPath() + " for " + getName(), e);
+            throw new CollectException("Unable to read " + cmdFile + " for " + getName(), e);
         }
     }
 
-    protected abstract Map<String, Number> parseProc(int pid);
+    protected abstract Map<String, Number> parseProc(Path pidDir);
 
     protected abstract long getProcUptime(Map<String, Number> bufferMap);
 
@@ -167,10 +143,10 @@ public abstract class AbstractProcessParser extends LProbe {
     protected long computeUpTime(long startTime) {
         if(startTime == 0)
             return 0;
-        try (BufferedReader r = newAsciiReader("/proc/uptime")){
+        try (BufferedReader r = newAsciiReader(PROC_PATH.resolve("uptime"))){
             String uptimeLine = r.readLine();
-            // We talks minutes here, so a precision down to second is good enough
-            long uptimeSystem = (long) Double.parseDouble(uptimeLine.split(" ")[0]);
+            // We talk minutes here, so a precision down to second is good enough
+            long uptimeSystem = (long) Double.parseDouble(SPACE_SEPARATOR.split(uptimeLine)[0]);
             return uptimeSystem - startTime / USER_HZ;
         } catch (IOException e) {
             throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);

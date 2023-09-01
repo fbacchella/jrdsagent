@@ -1,5 +1,6 @@
 package jrds.agent.linux;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,18 +55,13 @@ public class ProcessCpu extends AbstractStatProcessParser {
     };
 
     @Override
-    protected Map<String, Number> parseProc(int pid) {
-        return new HashMap<>(parseStatFile(pid, "stat", statKey));
+    protected Map<String, Number> parseProc(Path piddir) {
+        return new HashMap<>(parseStatFile(piddir, "stat", statKey));
     }
 
     @Override
     public String getName() {
         return "picpu-" + getNameSuffix();
-    }
-
-    @Override
-    public String[] getStatkeys() {
-        return statKey;
     }
 
 }
