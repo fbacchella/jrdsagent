@@ -8,10 +8,13 @@ import java.nio.file.Paths;
 import java.security.AccessControlException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import jrds.agent.Start;
 
 public class Diskstats extends LProbeProc {
+
+    private static final Pattern SPACE_SPLIT = Pattern.compile("\\s+");
 
     private static final Path[] PREFIXES = { Path.of("/dev/mapper/"), Path.of("/dev/disk/"), Path.of("/dev/")};
 
@@ -67,7 +70,7 @@ public class Diskstats extends LProbeProc {
         while(! found && ((line = r.readLine()) != null)) {
             if(line.contains(" " + disk + " ")) {
                 found = true;
-                String[] values = line.trim().split("\\s+");
+                String[] values = SPACE_SPLIT.split(line);
                 //Full line, with all the values
                 if(values.length >= 13 ) {
                     retValues.put("r", Start.parseStringNumber(values[3], Double.NaN));
