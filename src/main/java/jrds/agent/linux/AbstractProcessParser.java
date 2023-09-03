@@ -102,8 +102,8 @@ public abstract class AbstractProcessParser extends LProbe {
 
     private boolean isProcDir(Path p) {
         return Files.isDirectory(p) &&
-            Files.isSymbolicLink(p.resolve("exe")) &&
-            PID_PREDICATE.test(p.getFileName().toString());
+            PID_PREDICATE.test(p.getFileName().toString()) &&
+            Files.isSymbolicLink(p.resolve("exe"));
     }
 
     protected String getCmdLine(Path pidDir) {

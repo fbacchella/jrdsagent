@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jrds.agent.Start.PROTOCOL;
@@ -29,8 +30,8 @@ public class AgentSecurityManager extends SecurityManager {
     private final Set<String> permUsed;
     private final Set<String> permCreated;
 
-    private final Pattern procinfoPattern =  Pattern.compile("/proc/[0-9]+/(cmdline|io|stat|statm|smaps)");
-    private final Pattern diskPattern =  Pattern.compile("/dev/((sd|hd|xvd|vd)[a-z]+[0-9]*|cciss/c[0-9]+d[0-9](p[0-9]+)?|nvme[0-9]+n[0-9]+(p[0-9]+)?|disk/by-[a-z]+/.*|mapper/.*|dm-[0-9]+)");
+    private final ThreadLocal<Matcher> procinfoMatcher;
+    private final ThreadLocal<Matcher> diskMatcher;
 
     private final boolean debugPerm;
     private final Permissions allowed = new Permissions();
@@ -38,6 +39,12 @@ public class AgentSecurityManager extends SecurityManager {
 
     public AgentSecurityManager(boolean debugPerm, PROTOCOL proto) {
         this.debugPerm = debugPerm;
+
+        Pattern procinfoPattern =  Pattern.compile("/proc/\\d+(/(cmdline|io|stat|statm|smaps|exe))?");
+        procinfoMatcher = ThreadLocal.withInitial(() -> procinfoPattern.matcher(""));
+
+        Pattern diskPattern =  Pattern.compile("/dev/((sd|hd|xvd|vd)[a-z]+\\d*|cciss/c\\dd\\d(p\\d+)?|nvme\\d+n\\d+(p\\d+)?|disk/by-[a-z]+/.*|mapper/.*|dm-\\d+|[0-9a-z]{33})");
+        diskMatcher = ThreadLocal.withInitial(() -> diskPattern.matcher(""));
 
         if(debugPerm) {
             permUsed = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -115,7 +122,7 @@ public class AgentSecurityManager extends SecurityManager {
                 }
                 return;
             }
-            // Already allowed, don't check any more
+            // Already allowed, don't check anymore
             if(allowed.implies(perm)) {
                 if(debugPerm) {
                     permUsed.add(perm + " =");
@@ -123,21 +130,28 @@ public class AgentSecurityManager extends SecurityManager {
                 filesallowed.add(name);
                 return;
             }
+
             // Perhaps it's in the allowed /proc/<pid>/... files
-            if(procinfoPattern.matcher(name).matches() && "read".equals(perm.getActions())) {
+            procinfoMatcher.get().reset(name);
+            if (procinfoMatcher.get().matches() && "read".equals(perm.getActions())) {
                 if(debugPerm) {
-                    permUsed.add("(\"java.io.FilePermission\" \"" + procinfoPattern.pattern() + "\" \"read\") =");
+                    permUsed.add("(\"java.io.FilePermission\" \"" + procinfoMatcher.get().pattern().pattern() + "\" \"read\") =");
                 }
                 return;
             }
+            procinfoMatcher.get().reset("");
+
             // Or it's block device
-            if(diskPattern.matcher(name).matches() && "read".equals(perm.getActions())) {
+            diskMatcher.get().reset(name);
+            if (diskMatcher.get().matches() && "read".equals(perm.getActions())) {
                 if(debugPerm) {
-                    permUsed.add("(\"java.io.FilePermission\" \"" + diskPattern.pattern() + "\" \"read\") =");
+                    permUsed.add("(\"java.io.FilePermission\" \"" + diskMatcher.get().pattern().pattern() + "\" \"read\") =");
                 }
                 filesallowed.add(name);
                 return;
             }
+            diskMatcher.get().reset("");
+
             // Only non hidden folder are allowed, for file system usage
             // If it call itself, privileges will be set to true, 
             // so it can check isDirectory and isHidden
