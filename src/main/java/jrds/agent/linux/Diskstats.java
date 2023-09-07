@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.AccessControlException;
+import java.lang.SecurityException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -43,7 +43,7 @@ public class Diskstats extends LProbeProc {
                     } else {
                         diskFile = null;
                     }
-                } catch (AccessControlException e) {
+                } catch (SecurityException e) {
                     // Tried to resolve an invalid path, skip it
                     diskFile = null;
                 }
