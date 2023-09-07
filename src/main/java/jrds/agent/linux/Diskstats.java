@@ -67,12 +67,12 @@ public class Diskstats extends LProbeProc {
         Map<String, Number> retValues = new HashMap<>();
         String line;
         boolean found = false;
-        while(! found && ((line = r.readLine()) != null)) {
-            if(line.contains(" " + disk + " ")) {
+        while (! found && ((line = r.readLine()) != null)) {
+            if (line.contains(" " + disk + " ")) {
                 found = true;
-                String[] values = SPACE_SPLIT.split(line);
+                String[] values = SPACE_SPLIT.split(line.trim());
                 //Full line, with all the values
-                if(values.length >= 13 ) {
+                if (values.length > 13 ) {
                     retValues.put("r", Start.parseStringNumber(values[3], Double.NaN));
                     retValues.put("rrqm", Start.parseStringNumber(values[4], Double.NaN));
                     retValues.put("rsec", Start.parseStringNumber(values[5], Double.NaN));
@@ -85,7 +85,7 @@ public class Diskstats extends LProbeProc {
                     retValues.put("waittm", Start.parseStringNumber(values[12], Double.NaN));
                     retValues.put("wwaittm", Start.parseStringNumber(values[13], Double.NaN));
                     // Added in kernel 4.18
-                    if(values.length >= 17 ) {
+                    if (values.length > 17 ) {
                         retValues.put("d", Start.parseStringNumber(values[14], Double.NaN));
                         retValues.put("drqm", Start.parseStringNumber(values[15], Double.NaN));
                         retValues.put("dsec", Start.parseStringNumber(values[16], Double.NaN));
@@ -97,7 +97,7 @@ public class Diskstats extends LProbeProc {
                         retValues.put("dwait", 0);
                     }
                     // Added in kernel 5.5
-                    if(values.length >= 19 ) {
+                    if (values.length > 19 ) {
                         retValues.put("f", Start.parseStringNumber(values[18], Double.NaN));
                         retValues.put("fwait", Start.parseStringNumber(values[19], Double.NaN));
                     } else {
