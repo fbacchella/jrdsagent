@@ -4,7 +4,7 @@
     <groupId>fr.jrds</groupId>
     <artifactId>jrdsagent</artifactId>
     <packaging>jar</packaging>
-    <version>2023.1-SNAPSHOT</version>
+    <version>2023.1</version>
     <name>jrdsagent</name>
     <url>https://jrds.fr</url>
     <properties>
@@ -13,7 +13,7 @@
         <!-- current year. -->
         <year>2023</year>
         <jrds.testloglevel>ERROR</jrds.testloglevel>
-        <jrds.version>2023.1-SNAPSHOT</jrds.version>
+        <jrds.version>2023.1</jrds.version>
         <jolokia.version>1.7.2</jolokia.version>
         <surefire.version>3.1.2</surefire.version>
         <!-- Indirection needed to keep optionnal jacoco settings and external argument lines-->
