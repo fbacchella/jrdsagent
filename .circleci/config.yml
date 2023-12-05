@@ -52,18 +52,15 @@ jobs:
                     mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
             - run:
                 command: |
-                    if [ -n "$SECRING_GPG_ASC_BASE64" ] ; then
-                        echo "$SECRING_GPG_ASC_BASE64" | base64 --decode | gpg --batch --no-tty --import --yes
-                        GPGSIGN="-P gpgsign -Dgpg.keyname=$GPGKEYNAME"
-                    fi
-                    # If no symbolic name, it's a PR, will not publish results
+                    # If no symbolic name, it's a PR, will run sonar
                     if [ -n "$(git symbolic-ref HEAD 2>/dev/null )" ] ; then
-                        PUBLISH="deploy"
+                        SONAR="jacoco:report sonar:sonar -Psonar"
+                        echo "Doing sonar"
                     else
-                        PUBLISH="install"
+                        SONAR=""
                     fi
-                    echo "publishing jobs: $PUBLISH"
-                    mvn -B $PUBLISH -Pskip $GPGSIGN -DskipTests -s .circleci/settings.xml
+                    mkdir -p /tmp/$CIRCLE_JOB
+                    mvn -B verify $SONAR -Pskip -Darg.line="-Xmx2048m -Djava.io.tmpdir=/tmp/$CIRCLE_JOB" -s .circleci/settings.xml
                 environment:
                     MAVEN_OPTS: "-Xmx1024m"
             - store_test_results:
@@ -93,7 +90,7 @@ jobs:
                       MAVEN_OPTS: "-Xmx512m"
             - store_test_results:
                   path: target/surefire-reports
-            #don't persist_to_workspace, can't be done in parallel with testsj20
+            #don't persist_to_workspace, can't be done in parallel with testsj21
     testsj11:
         docker:
             - image: cimg/openjdk:11.0
@@ -114,7 +111,7 @@ jobs:
                     MAVEN_OPTS: "-Xmx512m"
             - store_test_results:
                 path: target/surefire-reports
-            #don't persist_to_workspace, can't be done in parallel with testsj20
+            #don't persist_to_workspace, can't be done in parallel with testsj21
     publish:
         docker:
             - image: cimg/openjdk:21.0
@@ -129,6 +126,10 @@ jobs:
                     mv -n /tmp/ws/home/circleci/project/.??* /home/circleci/project/
             - run:
                 command: |
+                    if [ -n "$SECRING_GPG_ASC_BASE64" ] ; then
+                        echo "$SECRING_GPG_ASC_BASE64" | base64 --decode | gpg --batch --no-tty --import --yes
+                        GPGSIGN="-P gpgsign -Dgpg.keyname=$GPGKEYNAME"
+                    fi
                     # If no symbolic name, it's a PR, will not publish results
                     if [ -n "$(git symbolic-ref HEAD 2>/dev/null )" ] ; then
                         PUBLISH="deploy"
@@ -136,7 +137,7 @@ jobs:
                         PUBLISH="install"
                     fi
                     echo "publishing jobs: $PUBLISH"
-                    mvn -B $PUBLISH -Pskip -Dmaven.test.skip=true -s .circleci/settings.xml
+                    mvn -B $PUBLISH -Pskip $GPGSIGN -DskipTests -s .circleci/settings.xml
                 environment:
                     MAVEN_OPTS: "-Xmx2048m"
             - store_artifacts:
