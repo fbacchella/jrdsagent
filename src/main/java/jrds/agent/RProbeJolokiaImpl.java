@@ -7,41 +7,14 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.naming.NameNotFoundException;
 
 import org.jolokia.jvmagent.JolokiaServer;
 import org.jolokia.jvmagent.JvmAgentConfig;
-import org.jolokia.server.core.service.api.LogHandler;
+import org.jolokia.server.core.service.impl.JulLogHandler;
 
 public class RProbeJolokiaImpl extends RProbeJMXImpl {
-
-    public static final class JrdsLogHandler implements LogHandler {
-
-        private static final Logger julilogger = Logger.getLogger(RProbeJolokiaImpl.class.getCanonicalName());
-        @Override
-        public void debug(String message) {
-            julilogger.fine(message);
-        }
-
-        @Override
-        public void info(String message) {
-            julilogger.info(message);
-        }
-
-        @Override
-        public void error(String message, Throwable t) {
-            julilogger.log(Level.WARNING, message, t);
-        }
-
-        @Override
-        public boolean isDebug() {
-            return true;
-        }
-
-    }
 
     public static final class RemoteNamingException extends RemoteException {
         public RemoteNamingException(String string, NameNotFoundException e) {
@@ -59,7 +32,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             config.put("port", String.valueOf(port));
             config.put("discoveryEnabled", "false");
             config.put("host", "*");
-            config.put("logHandlerClass", JrdsLogHandler.class.getName());
+            config.put("logHandlerClass", JulLogHandler.class.getName());
             JvmAgentConfig pConfig = new JvmAgentConfig(config);
             server = new JolokiaServer(pConfig);
             server.start(false);
