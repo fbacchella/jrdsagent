@@ -14,7 +14,7 @@
         <year>2023</year>
         <jrds.testloglevel>ERROR</jrds.testloglevel>
         <jrds.version>2023.1</jrds.version>
-        <jolokia.version>1.7.2</jolokia.version>
+        <jolokia.version>2.0.0</jolokia.version>
         <surefire.version>3.1.2</surefire.version>
         <!-- Indirection needed to keep optionnal jacoco settings and external argument lines-->
         <arg.line></arg.line>
@@ -60,7 +60,7 @@
         </dependency>
         <dependency>
             <groupId>org.jolokia</groupId>
-            <artifactId>jolokia-jvm</artifactId>
+            <artifactId>jolokia-agent-jvm</artifactId>
             <version>${jolokia.version}</version>
         </dependency>
         <dependency>

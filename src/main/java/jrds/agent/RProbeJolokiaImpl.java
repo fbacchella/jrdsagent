@@ -14,7 +14,7 @@ import javax.naming.NameNotFoundException;
 
 import org.jolokia.jvmagent.JolokiaServer;
 import org.jolokia.jvmagent.JvmAgentConfig;
-import org.jolokia.util.LogHandler;
+import org.jolokia.server.core.service.api.LogHandler;
 
 public class RProbeJolokiaImpl extends RProbeJMXImpl {
 
@@ -36,6 +36,11 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             julilogger.log(Level.WARNING, message, t);
         }
 
+        @Override
+        public boolean isDebug() {
+            return true;
+        }
+
     }
 
     public static final class RemoteNamingException extends RemoteException {
@@ -48,6 +53,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
     public static final String JOLOKIA_AGENT_URL = "jolokia.agent";
 
     public static void register(RProbeActor actor, int port) throws InvocationTargetException {
+        RProbeJMXImpl.registerinstance(new RProbeJolokiaImpl(actor));
         try {
             Map<String,String> config = new HashMap<>();
             config.put("port", String.valueOf(port));
@@ -55,8 +61,8 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             config.put("host", "*");
             config.put("logHandlerClass", JrdsLogHandler.class.getName());
             JvmAgentConfig pConfig = new JvmAgentConfig(config);
-            server = new JolokiaServer(pConfig, false);
-            server.start();
+            server = new JolokiaServer(pConfig);
+            server.start(false);
             String url = server.getUrl();
             System.setProperty(JOLOKIA_AGENT_URL, url);
             // Check that jolokia is started, before Security manager is started
@@ -66,7 +72,6 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
                 while(cnx.read(buffer) >= 0) {
                 }
             }
-            RProbeJMXImpl.registerinstance(new RProbeJolokiaImpl(actor));
         } catch (RuntimeException | IOException ex) {
             throw new InvocationTargetException(ex, "Error registring Jolokia agent");
         }
