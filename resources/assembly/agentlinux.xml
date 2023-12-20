@@ -1,7 +1,7 @@
 <assembly
-    xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3"
+    xmlns="https://maven.apache.org/xsd/assembly-2.1.1.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 http://maven.apache.org/xsd/assembly-1.1.3.xsd">
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 https://maven.apache.org/xsd/assembly-2.1.1.xsd">
     <id>agentlinux</id>
     <formats>
         <format>jar</format>
@@ -14,16 +14,36 @@
             <unpack>true</unpack>
             <scope>runtime</scope>
             <unpackOptions>
-            <excludes>
-                <exclude>jrds/agent/windows/**</exclude>
-                <exclude>com4j/**</exclude>
-                <exclude>com/arkanosis/**</exclude>
-                <exclude>jrds/probe/**</exclude>
-                <exclude>desc/**</exclude>
-                <exclude>org/jolokia/client/**</exclude>
-                <exclude>jnijpdh.dll</exclude>
-            </excludes>
+                <excludes>
+                    <exclude>com4j/**</exclude>
+                    <exclude>META-INF/maven/com.googlecode.json-simple/**</exclude>
+                    <exclude>desc/**</exclude>
+                    <exclude>jrds/agent/windows/**</exclude>
+                    <exclude>jrds/probe/**</exclude>
+                    <exclude>org/jolokia/**/osgi/**</exclude>
+                    <exclude>org/jolokia/server/core/service/impl/Osgi*.class</exclude>
+                    <exclude>org/jolokia/server/detector/**</exclude>
+                    <exclude>META-INF/jolokia/detectors-default</exclude>
+                    <!--exclude></exclude>
+                    <exclude>com/arkanosis/**</exclude>
+                    <exclude>jrds/probe/**</exclude>
+                    <exclude>org/jolokia/client/**</exclude>
+                    <exclude>org/apache/**</exclude>
+                    <exclude>org/json/**</exclude>
+                    <exclude>jnijpdh.dll</exclude-->
+                </excludes>
             </unpackOptions>
+            <excludes>
+                <exclude>org.jvnet.com4j:com4j</exclude>
+                <exclude>com.arkanosis:jpdh</exclude>
+                <exclude>org.jolokia:jolokia-client-java</exclude>
+                <exclude>org.jolokia:jolokia-server-detector</exclude>
+                <exclude>com.googlecode.json-simple:json-simple</exclude>
+                <exclude>org.apache.httpcomponents:httpcore</exclude>
+                <exclude>commons-codec:commons-codec</exclude>
+                <exclude>org.apache.httpcomponents:httpclient</exclude>
+                <exclude>commons-logging:commons-logging</exclude>
+            </excludes>
         </dependencySet>
     </dependencySets>
     <fileSets>
