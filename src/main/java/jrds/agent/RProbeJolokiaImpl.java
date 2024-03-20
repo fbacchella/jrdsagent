@@ -13,6 +13,7 @@ import javax.naming.NameNotFoundException;
 import org.jolokia.jvmagent.JolokiaServer;
 import org.jolokia.jvmagent.JvmAgentConfig;
 import org.jolokia.server.core.config.ConfigKey;
+import org.jolokia.server.core.config.Configuration;
 import org.jolokia.server.core.service.impl.JulLogHandler;
 
 public class RProbeJolokiaImpl extends RProbeJMXImpl {
@@ -40,12 +41,14 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             server.start(false);
             String url = server.getUrl();
             System.setProperty(JOLOKIA_AGENT_URL, url);
+            Configuration configuration = pConfig.getJolokiaConfig();
             System.setProperty(JOLOKIA_AGENT_ID, configuration.getConfig(ConfigKey.AGENT_ID));
             // Check that jolokia is started, before Security manager is started
-            URL jolokiaurl = new URL(url + "read/" +RProbeJMXImpl.NAME + "/Uptime");
-            try(InputStream cnx = jolokiaurl.openConnection().getInputStream()) {
+            URL jolokiaurl = new URL(url + "read/" + RProbeJMXImpl.NAME + "/Uptime");
+            try (InputStream cnx = jolokiaurl.openConnection().getInputStream()) {
                 byte[] buffer = new byte[4096];
                 while(cnx.read(buffer) >= 0) {
+                    // Read all input content
                 }
             }
         } catch (RuntimeException | IOException ex) {
