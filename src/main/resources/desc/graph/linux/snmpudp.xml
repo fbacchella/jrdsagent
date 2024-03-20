@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
+<graphdesc>
+    <name>LinuxSnmpUdp</name>
+    <graphName>udp</graphName>
+    <graphTitle>UDP trafic on ${host}</graphTitle>
+    <verticalLabel>packets/s</verticalLabel>
+    <add>
+        <legend>Send datagrams</legend>
+    </add>
+    <add>
+        <name>Udp.OutDatagrams</name>
+        <graphType>line</graphType>
+        <color>blue</color>
+        <legend>Packets sent</legend>
+    </add>
+    <add>
+        <name>Udp.SndbufErrors</name>
+        <graphType>line</graphType>
+        <color>red</color>
+        <legend>Sent buffer overflow</legend>
+    </add>
+    <add>
+        <legend>Received datagrams</legend>
+    </add>
+    <add>
+        <name>Udp.InDatagrams</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <color>green</color>
+        <legend>Received packets</legend>
+    </add>
+    <add>
+        <name>Udp.RcvbufErrors</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <color>red</color>
+        <legend>Received buffer overflow</legend>
+    </add>
+    <add>
+        <name>Udp.NoPorts</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <color>teal</color>
+        <legend>Packets to unknown port received</legend>
+    </add>
+    <add>
+        <name>Udp.InCsumErrors</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <legend>Received checksum errors</legend>
+    </add>
+    <add>
+        <name>Udp.IgnoredMulti</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <color>olive</color>
+        <legend>Received ignored multicast</legend>
+    </add>
+    <add>
+        <name>Udp.MemErrors</name>
+        <reversed>true</reversed>
+        <graphType>line</graphType>
+        <color>black</color>
+        <legend>Memory allocation errors</legend>
+    </add>
+    <hosttree>
+        <pathelement>HOST</pathelement>
+        <pathelement>NETWORK</pathelement>
+        <pathstring>Detailed UDP activity</pathstring>
+    </hosttree>
+    <viewtree>
+        <pathelement>NETWORK</pathelement>
+        <pathstring>Detailed UDP activity</pathstring>
+        <pathelement>HOST</pathelement>
+    </viewtree>
+</graphdesc>
