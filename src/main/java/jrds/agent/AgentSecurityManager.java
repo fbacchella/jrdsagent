@@ -97,6 +97,16 @@ public class AgentSecurityManager extends SecurityManager {
                 permCreated.add(i.toString());
             }
         }
+        if (proto == PROTOCOL.jolokia) {
+            String jolokiaPermName = String.format("org.jolokia.service.history.History#updateAndAdd[jolokia:agent=%s,type=History]",
+                    System.getProperty(RProbeJolokiaImpl.JOLOKIA_AGENT_ID)
+                    );
+            Permission jolokiaNewPerm = new javax.management.MBeanPermission(jolokiaPermName, "invoke");
+            allowed.add(jolokiaNewPerm);
+            if(debugPerm) {
+                permCreated.add(jolokiaNewPerm.toString());
+            }
+        }
 
         allowed.setReadOnly();
 
@@ -152,8 +162,8 @@ public class AgentSecurityManager extends SecurityManager {
             }
             diskMatcher.get().reset("");
 
-            // Only non hidden folder are allowed, for file system usage
-            // If it call itself, privileges will be set to true, 
+            // Only non-hidden folder are allowed, for file system usage
+            // If it calls itself, privileges will be set to true,
             // so it can check isDirectory and isHidden
             PrivilegHolder privileged = Privilege.get();
             if(privileged.privileged) {
@@ -176,7 +186,7 @@ public class AgentSecurityManager extends SecurityManager {
                 }
             }
         }
-        if(allowed.implies(perm)) {
+        if (allowed.implies(perm)) {
             if(debugPerm) {
                 permUsed.add(perm.toString() + " =");
             }
@@ -227,7 +237,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.high", "read" },  // Needed on windows
             new String[] { "java.util.PropertyPermission", "jdk.net.ephemeralPortRange.low", "read" },   // Needed on windows
             new String[] { "java.util.PropertyPermission", "sun.jnu.encoding", "read" }, 
-            new String[] { "java.util.PropertyPermission", "sun.nio.fs.chdirAllowed", "read" }, 
+            new String[] { "java.util.PropertyPermission", "sun.nio.fs.chdirAllowed", "read" },
         });
         permsDescription.put("forprobes", new String[][] {
             new String[] { "java.io.FilePermission", "/proc", "read" },
@@ -326,6 +336,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJolokiaImpl#Uptime[jrds:type=agent]", "getAttribute" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJolokiaImpl#prepare[jrds:type=agent]", "invoke" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJolokiaImpl#query[jrds:type=agent]", "invoke" },
+            new String[] { "javax.management.MBeanServerPermission", "createMBeanServer"},
         });
         Class<?>[][] typeVector = new Class<?>[][]{
             new Class<?>[] { String.class },

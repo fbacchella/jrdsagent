@@ -12,6 +12,7 @@ import javax.naming.NameNotFoundException;
 
 import org.jolokia.jvmagent.JolokiaServer;
 import org.jolokia.jvmagent.JvmAgentConfig;
+import org.jolokia.server.core.config.ConfigKey;
 import org.jolokia.server.core.service.impl.JulLogHandler;
 
 public class RProbeJolokiaImpl extends RProbeJMXImpl {
@@ -23,7 +24,8 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
     }
 
     private static JolokiaServer server;
-    public static final String JOLOKIA_AGENT_URL = "jolokia.agent";
+    public static final String JOLOKIA_AGENT_URL = "jolokia.agentUrl";
+    public static final String JOLOKIA_AGENT_ID = "jolokia.agentId";
 
     public static void register(RProbeActor actor, int port) throws InvocationTargetException {
         RProbeJMXImpl.registerinstance(new RProbeJolokiaImpl(actor));
@@ -38,6 +40,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             server.start(false);
             String url = server.getUrl();
             System.setProperty(JOLOKIA_AGENT_URL, url);
+            System.setProperty(JOLOKIA_AGENT_ID, configuration.getConfig(ConfigKey.AGENT_ID));
             // Check that jolokia is started, before Security manager is started
             URL jolokiaurl = new URL(url + "read/" +RProbeJMXImpl.NAME + "/Uptime");
             try(InputStream cnx = jolokiaurl.openConnection().getInputStream()) {
@@ -46,7 +49,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
                 }
             }
         } catch (RuntimeException | IOException ex) {
-            throw new InvocationTargetException(ex, "Error registring Jolokia agent");
+            throw new InvocationTargetException(ex, "Error registering Jolokia agent");
         }
     }
 
@@ -64,9 +67,9 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
         try {
             return actor.query(name);
         } catch (NameNotFoundException e) {
-            throw new RemoteNamingException("Error while quering " + name, e);
+            throw new RemoteNamingException("Error while querying " + name, e);
         } catch (Exception e) {
-            throw new RemoteException("Error while quering " + name, e);
+            throw new RemoteException("Error while querying " + name, e);
         }
     }
 

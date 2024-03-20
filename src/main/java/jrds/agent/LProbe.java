@@ -28,7 +28,7 @@ public abstract class LProbe {
     /**
      * Some property that might be configured for this prope
      * Each implementation should overide it and catch intersting property
-     * but dont forger to call super(...) if not intersted in it
+     * but don't forget to call super(...) if not intersted in it
      * @param specific
      * @param value
      */
