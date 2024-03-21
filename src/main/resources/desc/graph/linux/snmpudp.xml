@@ -2,8 +2,8 @@
 <!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "urn:jrds:graphdesc">
 <graphdesc>
     <name>LinuxSnmpUdp</name>
-    <graphName>udp</graphName>
-    <graphTitle>UDP trafic on ${host}</graphTitle>
+    <graphName>udpdetailled</graphName>
+    <graphTitle>UDP detailed trafic on ${host}</graphTitle>
     <verticalLabel>packets/s</verticalLabel>
     <add>
         <legend>Send datagrams</legend>
@@ -67,11 +67,11 @@
     <hosttree>
         <pathelement>HOST</pathelement>
         <pathelement>NETWORK</pathelement>
-        <pathstring>Detailed UDP activity</pathstring>
+        <pathstring>UDP Detailed activity</pathstring>
     </hosttree>
     <viewtree>
         <pathelement>NETWORK</pathelement>
-        <pathstring>Detailed UDP activity</pathstring>
+        <pathstring>UDP Detailed activity</pathstring>
         <pathelement>HOST</pathelement>
     </viewtree>
 </graphdesc>
