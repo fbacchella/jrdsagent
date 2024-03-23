@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
+<probedesc>
+    <name>UdpStat</name>
+    <probeName>udpstat</probeName>
+    <probeClass>jrds.probe.RMI</probeClass>
+    <specific name="remote">jrds.agent.linux.LinuxNetStat</specific>
+    <specific name="remoteSpecifics">protocol</specific>
+    <specific name="protocol">Udp</specific>
+    <ds>
+        <dsName>InDatagrams</dsName>
+        <dsType>counter</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>NoPorts</dsName>
+        <dsType>counter</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>InErrors</dsName>
+        <dsType>counter</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>OutDatagrams</dsName>
+        <dsType>counter</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>RcvbufErrors</dsName>
+        <dsType>counter</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>SndbufErrors</dsName>
+        <dsType>counter</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>InCsumErrors</dsName>
+        <dsType>counter</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>IgnoredMulti</dsName>
+        <dsType>counter</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>MemErrors</dsName>
+        <dsType>counter</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>inuse</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <ds>
+        <dsName>mem</dsName>
+        <dsType>gauge</dsType>
+        <defaultValue>0</defaultValue>
+    </ds>
+    <graphs>
+        <name>LinuxSnmpUdp</name>
+    </graphs>
+</probedesc>

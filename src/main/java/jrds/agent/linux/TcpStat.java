@@ -10,6 +10,10 @@ import jrds.agent.CollectException;
 import jrds.agent.LProbe;
 import jrds.agent.Start;
 
+/**
+ * Deprecated class for TcpStat, using the more generic {@link LinuxNetStat}
+ */
+@Deprecated
 public class TcpStat extends LProbe {
 
     private static final String STATFILE = "/proc/net/netstat";
@@ -26,7 +30,7 @@ public class TcpStat extends LProbe {
         try (BufferedReader r = newAsciiReader(file)) {
             String line;
 
-            while((line = r.readLine()) != null) {
+            while ((line = r.readLine()) != null) {
                 String[] keys  = line.trim().split("\\s+");
                 line = r.readLine();
                 String[] values = line.trim().split("\\s+");

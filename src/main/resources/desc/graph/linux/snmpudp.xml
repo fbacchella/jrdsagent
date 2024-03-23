@@ -9,13 +9,13 @@
         <legend>Send datagrams</legend>
     </add>
     <add>
-        <name>Udp.OutDatagrams</name>
+        <name>OutDatagrams</name>
         <graphType>line</graphType>
         <color>blue</color>
         <legend>Packets sent</legend>
     </add>
     <add>
-        <name>Udp.SndbufErrors</name>
+        <name>SndbufErrors</name>
         <graphType>line</graphType>
         <color>red</color>
         <legend>Sent buffer overflow</legend>
@@ -24,41 +24,41 @@
         <legend>Received datagrams</legend>
     </add>
     <add>
-        <name>Udp.InDatagrams</name>
+        <name>InDatagrams</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
         <color>green</color>
         <legend>Received packets</legend>
     </add>
     <add>
-        <name>Udp.RcvbufErrors</name>
+        <name>RcvbufErrors</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
         <color>red</color>
         <legend>Received buffer overflow</legend>
     </add>
     <add>
-        <name>Udp.NoPorts</name>
+        <name>NoPorts</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
         <color>teal</color>
         <legend>Packets to unknown port received</legend>
     </add>
     <add>
-        <name>Udp.InCsumErrors</name>
+        <name>InCsumErrors</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
         <legend>Received checksum errors</legend>
     </add>
     <add>
-        <name>Udp.IgnoredMulti</name>
+        <name>IgnoredMulti</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
         <color>olive</color>
         <legend>Received ignored multicast</legend>
     </add>
     <add>
-        <name>Udp.MemErrors</name>
+        <name>MemErrors</name>
         <reversed>true</reversed>
         <graphType>line</graphType>
         <color>black</color>
