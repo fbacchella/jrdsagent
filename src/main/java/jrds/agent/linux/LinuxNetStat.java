@@ -54,8 +54,12 @@ public class LinuxNetStat extends LProbe {
                 if (protocolKey.equalsIgnoreCase(content[0])) {
                     for (int i = 1 ; i < content.length; i+=2) {
                         String key = content[i];
-                        Number value = Integer.valueOf(content[i + 1]);
-                        retValues.put(key, value);
+                        try {
+                            Number value = Long.valueOf(content[i + 1]);
+                            retValues.put(key, value);
+                        } catch (NumberFormatException e) {
+                            // Skipping invalid values
+                        }
                     }
                 }
             }
@@ -75,10 +79,10 @@ public class LinuxNetStat extends LProbe {
                 } else if (headers != null) {
                     for (int i = 1; i < headers.length; i++) {
                         try {
-                            Number val = Integer.parseInt(content[i]);
+                            Number val = Long.valueOf(content[i]);
                             retValues.put(headers[i], val);
                         } catch (NumberFormatException e) {
-                            throw new RuntimeException(e);
+                            // Skipping invalid values
                         }
                     }
                     headers = null;
