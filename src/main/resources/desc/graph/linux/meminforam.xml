@@ -105,14 +105,12 @@
         <legend>Cached file in the pagecache</legend>
     </add>
     <add>
-        <name>GraphBuffers</name>
         <dsName>Buffers</dsName>
         <graphType>stack</graphType>
         <color>orange</color>
         <legend>Memory in buffer cache</legend>
     </add>
     <add>
-        <name>GraphMemFree</name>
         <dsName>MemFree</dsName>
         <graphType>stack</graphType>
         <color>black</color>

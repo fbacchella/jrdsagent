@@ -28,7 +28,6 @@
         <legend>Anonymous pages in RAM</legend>
     </add>
     <add>
-        <name>SwapCachedGraph</name>
         <dsName>SwapCached</dsName>
         <graphType>stack</graphType>
         <color>blue</color>
