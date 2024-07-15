@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
+<probedesc>
+    <name>PSI</name>
+    <probeName>psi-${attr.source}</probeName>
+    <probeClass>jrds.probe.RMI</probeClass>
+    <customattr name="source"/>
+    <specific name="remote">jrds.agent.linux.Psi</specific>
+    <specific name="remoteSpecifics">statFile,source</specific>
+    <specific name="source">${attr.source}</specific>
+    <specific name="statFile">/proc/pressure/${attr.source}</specific>
+    <ds>
+        <dsName>some</dsName>
+        <dsType>counter</dsType>
+    </ds>
+    <ds>
+        <dsName>full</dsName>
+        <dsType>counter</dsType>
+    </ds>
+    <graphs>
+        <name>psi</name>
+    </graphs>
+</probedesc>
