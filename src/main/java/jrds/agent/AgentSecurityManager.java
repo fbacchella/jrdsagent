@@ -287,6 +287,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#prepare[jrds:type=agent]", "invoke" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#query[jrds:type=agent]", "invoke" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#Uptime[jrds:type=agent]", "getAttribute" },
+            new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#batch[jrds:type=agent]", "invoke" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#-[jrds:type=agent]", "getClassLoaderFor" },
             new String[] { "javax.management.MBeanPermission", "sun.management.RuntimeImpl#Uptime[java.lang:type=Runtime]", "getAttribute" },
         });
@@ -308,6 +309,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#-[jrds:type=agent]", "getClassLoaderFor" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#prepare[jrds:type=agent]", "invoke" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#query[jrds:type=agent]", "invoke" },
+            new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#batch[jrds:type=agent]", "invoke" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJMXImpl#Uptime[jrds:type=agent]", "getAttribute" },
             new String[] { "javax.management.MBeanPermission", "sun.management.RuntimeImpl#Uptime[java.lang:type=Runtime]", "getAttribute" },
         });
@@ -336,6 +338,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJolokiaImpl#Uptime[jrds:type=agent]", "getAttribute" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJolokiaImpl#prepare[jrds:type=agent]", "invoke" },
             new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJolokiaImpl#query[jrds:type=agent]", "invoke" },
+            new String[] { "javax.management.MBeanPermission", "jrds.agent.RProbeJolokiaImpl#batch[jrds:type=agent]", "invoke" },
             new String[] { "javax.management.MBeanServerPermission", "createMBeanServer"},
         });
         Class<?>[][] typeVector = new Class<?>[][]{
