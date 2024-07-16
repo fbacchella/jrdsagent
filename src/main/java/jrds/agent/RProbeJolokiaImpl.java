@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.NameNotFoundException;
@@ -73,6 +74,15 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             throw new RemoteNamingException("Error while querying " + name, e);
         } catch (Exception e) {
             throw new RemoteException("Error while querying " + name, e);
+        }
+    }
+
+    @Override
+    public Map<String, Map<String, Number>> batch(List<String> names) throws RemoteException {
+        try {
+            return actor.batch(names);
+        } catch (Exception e) {
+            throw new RemoteException("Error while doing batch for " + actor, e);
         }
     }
 

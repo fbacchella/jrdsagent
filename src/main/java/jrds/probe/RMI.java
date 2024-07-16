@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.naming.NameNotFoundException;
 
@@ -74,10 +75,16 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
                     log(Level.DEBUG, "name not found, needs to be reconfigure, iteration %d", step);
                     step++;
                     remoteName = rp.prepare(getPd().getSpecific("remote"), remoteSpecifics, args);
+                    cnx.toBatch(remoteName);
                 }
-                retValues = rp.query(remoteName);
+                Optional<Map<String, Number>> optionalValues = cnx.getValuesFromBatch(remoteName);
+                if (optionalValues.isEmpty()) {
+                    optionalValues = Optional.of(rp.query(remoteName));
+                }
+                retValues = optionalValues.get();
                 break;
             } catch (RemoteException e) {
+                cnx.unbatch(remoteName);
                 Throwable root = e;
                 while (root.getCause() != null) {
                     root = root.getCause();
@@ -97,6 +104,7 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
                     break;
                 }
             } catch (InvocationTargetException e) {
+                cnx.unbatch(remoteName);
                 Throwable root = e;
                 while (root.getCause() != null) {
                     root = root.getCause();

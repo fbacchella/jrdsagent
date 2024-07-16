@@ -127,4 +127,18 @@ public class RProbeActor {
         return uptime.getSystemUptime();
     }
 
+    Map<String, Map<String, Number>> batch(List<String> names) {
+        Map<String, Map<String, Number>> values = new HashMap<>();
+
+        for (String name: names) {
+            try {
+                Map<String, Number> probeValues = query(name);
+                values.put(name, probeValues);
+            } catch (NameNotFoundException ex) {
+                // Ignore, will handle latter
+            }
+        }
+        return values;
+    }
+
 }

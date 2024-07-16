@@ -2,7 +2,13 @@ package jrds.probe;
 
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.event.Level;
 
@@ -13,10 +19,11 @@ import jrds.factories.ConnectionName;
 import jrds.factories.ProbeBean;
 import jrds.starter.Connection;
 
-@ProbeBean({"port", "protocol"})
+@ProbeBean({"port", "protocol", "batchCollect"})
 @ConnectionName(AgentConnection.CONNECTIONNAME)
 public class AgentConnection extends Connection<RProbe> {
     static final String CONNECTIONNAME = "jrds.agent.AgentConnection";
+
     public enum PROTOCOL {
         rmi {
             @Override
@@ -89,7 +96,7 @@ public class AgentConnection extends Connection<RProbe> {
                 return new LocalAgentConnection();
             }
         };
-        abstract RProbe getRemoteProbe(Connection<?>proxy);
+        abstract RProbe getRemoteProbe(Connection<?> proxy);
         abstract void configure(AgentConnection cnx, PropertiesManager pm);
         abstract Connection<?> getProxy();
     }
@@ -97,13 +104,25 @@ public class AgentConnection extends Connection<RProbe> {
     private static final int AGENTPORT = 2002;
     protected int port = AGENTPORT;
     private PROTOCOL protocol = PROTOCOL.rmi;
+
+    private boolean batchCollect = false;
     private Connection<?> proxy = null;
     private long uptime = -1;
+    private final Set<String> toBatch;
+    private final Map<String, Map<String, Number>> batchedValues;
 
     public AgentConnection() {
+        if (getClass() == AgentConnection.class) {
+            toBatch = new HashSet<>();
+            batchedValues = new HashMap<>();
+        } else {
+            toBatch = Set.of();
+            batchedValues = Map.of();
+        }
     }
 
     public AgentConnection(Integer port) {
+        this();
         this.port = port;
     }
 
@@ -131,9 +150,10 @@ public class AgentConnection extends Connection<RProbe> {
         if(uptime < 0) {
             try {
                 // Never used the connection directly
-                // Needed to make the instance resolve it, because
+                // Needed to make the instance resolve it
                 // because only AgentConnexion used it, not the sub classes
                 uptime = getConnection().getUptime();
+                batchCollect();
             } catch (RemoteException | InvocationTargetException e) {
                 log(Level.ERROR, e, "uptime failed: %s", e.getCause());
                 uptime = -1;
@@ -171,6 +191,14 @@ public class AgentConnection extends Connection<RProbe> {
         this.protocol = PROTOCOL.valueOf(protocol.trim().toLowerCase(Locale.ENGLISH));
     }
 
+    public Boolean isBatchCollect() {
+        return batchCollect;
+    }
+
+    public void setBatchCollect(Boolean batchCollect) {
+        this.batchCollect = batchCollect;
+    }
+
     /* (non-Javadoc)
      * @see jrds.starter.Starter#configure(jrds.PropertiesManager)
      */
@@ -195,8 +223,22 @@ public class AgentConnection extends Connection<RProbe> {
         return true;
     }
 
+    private void batchCollect() {
+        if (batchCollect) {
+            try {
+                Map<String, Map<String, Number>> foundValues = protocol.getRemoteProbe(proxy).batch(new ArrayList<>(toBatch));
+                batchedValues.putAll(foundValues);
+            } catch (RemoteException | InvocationTargetException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
     @Override
     public void stopConnection() {
+        if (getClass() == AgentConnection.class && batchCollect) {
+            batchedValues.clear();
+        }
         uptime = -1;
     }
 
@@ -211,6 +253,26 @@ public class AgentConnection extends Connection<RProbe> {
             return (proxy != null && proxy.isStarted()) && super.isStarted();
         } else {
             return super.isStarted();
+        }
+    }
+
+    public void toBatch(String remoteName) {
+        if (batchCollect && getClass() == AgentConnection.class) {
+            toBatch.add(remoteName);
+        }
+    }
+
+    public void unbatch(String remoteName) {
+        if (batchCollect && getClass() == AgentConnection.class) {
+            toBatch.remove(remoteName);
+        }
+    }
+
+    public Optional<Map<String, Number>> getValuesFromBatch(String name) {
+        if (batchCollect && batchedValues.containsKey(name)) {
+            return Optional.of(batchedValues.get(name));
+        } else {
+            return Optional.empty();
         }
     }
 

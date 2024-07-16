@@ -68,6 +68,19 @@ public class JolokiaConnection extends AgentConnection {
                 }
             }
 
+            @Override
+            public Map<String, Map<String, Number>> batch(List<String> queryNames)
+                    throws RemoteException, InvocationTargetException {
+                try {
+                    J4pExecRequest req = new J4pExecRequest("jrds:type=agent", "batch", queryNames);
+                    req.setPreferredHttpMethod("POST");
+                    J4pExecResponse resp = doRequest(req, "batch");
+                    return resp.getValue();
+                } catch (MalformedObjectNameException e) {
+                    throw new InvocationTargetException(e);
+                }
+            }
+
             private <RESP extends J4pResponse<REQ>, REQ extends J4pRequest> RESP doRequest(REQ req, String name) throws RemoteException, InvocationTargetException {
                 try {
                     return j4pClient.execute(req);

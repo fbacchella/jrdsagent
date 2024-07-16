@@ -40,4 +40,13 @@ public class RProbeLocalImpl implements RProbe {
         }
     }
 
+    @Override
+    public Map<String, Map<String, Number>> batch(List<String> names) throws RemoteException {
+        try {
+            return actor.batch(names);
+        } catch (Exception e) {
+            throw new RemoteException("Error while doing batch for " + actor, e);
+        }
+    }
+
 }

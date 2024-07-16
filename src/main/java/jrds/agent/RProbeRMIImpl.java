@@ -16,7 +16,7 @@ import java.util.Map;
  *
  */
 public class RProbeRMIImpl extends UnicastRemoteObject implements RProbe, Serializable {
-    static final long serialVersionUID = -7914792289084645089L;
+    private static final long serialVersionUID = -7914792289084645089L;
 
     private final transient RProbeActor actor;
 
@@ -80,4 +80,12 @@ public class RProbeRMIImpl extends UnicastRemoteObject implements RProbe, Serial
         }
     }
 
+    @Override
+    public Map<String, Map<String, Number>> batch(List<String> names) throws RemoteException {
+        try {
+            return actor.batch(names);
+        } catch (Exception e) {
+            throw new RemoteException("Error while doing batch for " + actor, e);
+        }
+    }
 }
