@@ -35,6 +35,7 @@ public class RProbeJolokiaImpl extends RProbeJMXImpl {
             Map<String,String> config = new HashMap<>();
             config.put("port", String.valueOf(port));
             config.put("discoveryEnabled", "false");
+            config.put("executor", "cached");
             config.put("host", "*");
             config.put("logHandlerClass", JulLogHandler.class.getName());
             JvmAgentConfig pConfig = new JvmAgentConfig(config);
