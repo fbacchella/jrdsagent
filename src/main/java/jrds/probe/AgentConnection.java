@@ -229,7 +229,8 @@ public class AgentConnection extends Connection<RProbe> {
                 Map<String, Map<String, Number>> foundValues = protocol.getRemoteProbe(proxy).batch(new ArrayList<>(toBatch));
                 batchedValues.putAll(foundValues);
             } catch (RemoteException | InvocationTargetException ex) {
-                throw new RuntimeException(ex);
+                Throwable cause = Optional.ofNullable(ex.getCause()).orElse(ex);
+                log(Level.ERROR, cause, "Failed batch: %s", cause.getMessage());
             }
         }
     }
