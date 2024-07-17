@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
@@ -128,17 +130,19 @@ public class RProbeActor {
     }
 
     Map<String, Map<String, Number>> batch(List<String> names) {
-        Map<String, Map<String, Number>> values = new HashMap<>();
+        return names.parallelStream()
+                    .map(this::batchQuery)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
 
-        for (String name: names) {
-            try {
-                Map<String, Number> probeValues = query(name);
-                values.put(name, probeValues);
-            } catch (NameNotFoundException ex) {
-                // Ignore, will handle latter
-            }
+    private Map.Entry<String, Map<String, Number>> batchQuery(String name) {
+        try {
+            Map<String, Number> probeValues = query(name);
+            return  Map.entry(name, probeValues);
+        } catch (NameNotFoundException e) {
+            return null;
         }
-        return values;
     }
 
 }
