@@ -324,6 +324,7 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.util.resources" },
             new String[] { "java.lang.RuntimePermission", "accessClassInPackage.sun.util.resources.*" },
             new String[] { "java.lang.RuntimePermission", "loadLibrary.nio" },
+            new String[] { "java.lang.RuntimePermission", "enableContextClassLoaderOverride" },
             new String[] { "java.net.SocketPermission", "*", "accept,resolve" },
             new String[] { "java.util.PropertyPermission", "java.home", "read" },
             new String[] { "java.util.PropertyPermission", "java.util.currency.data", "read" },
