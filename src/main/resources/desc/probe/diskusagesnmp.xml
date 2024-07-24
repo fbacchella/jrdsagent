@@ -5,7 +5,9 @@
     <name>DiskUsageSnmp</name>
     <probeName>fs-${index.cleanpath}</probeName>
     <probeClass>jrds.probe.RMIIndexed</probeClass>
-    <specific name="remote">jrds.agent.DiskUsageSnmp</specific>
+    <specific name="remote">jrds.agent.DiskUsageFileStore</specific>
+    <specific name="remoteSpecifics">asSnmp</specific>
+    <specific name="asSnmp">true</specific>
     <ds>
         <dsName>Total</dsName>
         <dsType>gauge</dsType>
