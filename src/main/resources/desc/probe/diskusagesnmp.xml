@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE probedesc PUBLIC "-//jrds//DTD Probe Description//EN" "urn:jrds:probedesc">
+<!-- this probe mimic the data from the SNMP probe PartitionSpace to be able to keep history -->
+<probedesc>
+    <name>DiskUsageSnmp</name>
+    <probeName>fs-${index.cleanpath}</probeName>
+    <probeClass>jrds.probe.RMIIndexed</probeClass>
+    <specific name="remote">jrds.agent.DiskUsageSnmp</specific>
+    <ds>
+        <dsName>Total</dsName>
+        <dsType>gauge</dsType>
+    </ds>
+    <ds>
+        <dsName>Used</dsName>
+        <dsType>gauge</dsType>
+    </ds>
+    <ds>
+        <dsName>Avail</dsName>
+        <dsType>gauge</dsType>
+    </ds>
+    <graphs>
+        <name>PartitionSpaceSnmp</name>
+    </graphs>
+</probedesc>
