@@ -12,10 +12,12 @@
     <ds>
         <dsName>some</dsName>
         <dsType>counter</dsType>
+        <defautValue>0</defautValue>
     </ds>
     <ds>
         <dsName>full</dsName>
         <dsType>counter</dsType>
+        <defautValue>0</defautValue>
     </ds>
     <graphs>
         <name>psi</name>
