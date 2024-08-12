@@ -22,6 +22,8 @@ import org.jolokia.client.request.J4pReadRequest;
 import org.jolokia.client.request.J4pReadResponse;
 import org.jolokia.client.request.J4pRequest;
 import org.jolokia.client.request.J4pResponse;
+import org.jolokia.client.request.J4pVersionRequest;
+import org.jolokia.client.request.J4pVersionResponse;
 import org.slf4j.event.Level;
 
 import jrds.PropertiesManager;
@@ -29,13 +31,10 @@ import jrds.agent.RProbe;
 
 public class JolokiaConnection extends AgentConnection {
 
-    private J4pClient j4pClient;
-
-    public RProbe getRemoteProbe() {
-        return new RProbe() {
-
-            @Override
-            public Map<String, Number> query(String name) throws RemoteException, InvocationTargetException {
+    private class JolokiaRprobe implements RProbe {
+        @Override
+        public Map<String, Number> query(String name) throws RemoteException, InvocationTargetException {
+            if (isStarted()) {
                 try {
                     J4pExecRequest req = new J4pExecRequest("jrds:type=agent", "query", name);
                     J4pExecResponse resp = doRequest(req, name);
@@ -43,10 +42,14 @@ public class JolokiaConnection extends AgentConnection {
                 } catch (MalformedObjectNameException e) {
                     throw new InvocationTargetException(e);
                 }
+            } else {
+                return Map.of();
             }
+        }
 
-            @Override
-            public String prepare(String name, Map<String, String> specifics, List<?> args) throws RemoteException, InvocationTargetException {
+        @Override
+        public String prepare(String name, Map<String, String> specifics, List<?> args) throws RemoteException, InvocationTargetException {
+            if (isStarted()) {
                 try {
                     J4pExecRequest req = new J4pExecRequest("jrds:type=agent", "prepare", name, specifics, args);
                     req.setPreferredHttpMethod("POST");
@@ -55,10 +58,14 @@ public class JolokiaConnection extends AgentConnection {
                 } catch (MalformedObjectNameException e) {
                     throw new InvocationTargetException(e);
                 }
+            } else {
+                return null;
             }
+        }
 
-            @Override
-            public long getUptime() throws RemoteException, InvocationTargetException {
+        @Override
+        public long getUptime() throws RemoteException, InvocationTargetException {
+            if (isStarted()) {
                 try {
                     J4pReadRequest req = new J4pReadRequest("jrds:type=agent", "Uptime");
                     J4pReadResponse resp = doRequest(req, "uptime");
@@ -66,11 +73,15 @@ public class JolokiaConnection extends AgentConnection {
                 } catch (MalformedObjectNameException e) {
                     throw new InvocationTargetException(e);
                 }
+            } else {
+                return -1;
             }
+        }
 
-            @Override
-            public Map<String, Map<String, Number>> batch(List<String> queryNames)
-                    throws RemoteException, InvocationTargetException {
+        @Override
+        public Map<String, Map<String, Number>> batch(List<String> queryNames)
+                throws RemoteException, InvocationTargetException {
+            if (isStarted()) {
                 try {
                     J4pExecRequest req = new J4pExecRequest("jrds:type=agent", "batch", queryNames);
                     req.setPreferredHttpMethod("POST");
@@ -79,39 +90,51 @@ public class JolokiaConnection extends AgentConnection {
                 } catch (MalformedObjectNameException e) {
                     throw new InvocationTargetException(e);
                 }
+            } else {
+                return Map.of();
             }
+        }
 
-            private <RESP extends J4pResponse<REQ>, REQ extends J4pRequest> RESP doRequest(REQ req, String name) throws RemoteException, InvocationTargetException {
-                try {
-                    return j4pClient.execute(req);
-                } catch (J4pRemoteException e) {
-                    // Jolokia don't return the real exception message
-                    // It needs to be extracted from the returned message
-                    String fullmsg = e.getMessage();
-                    String[] msgSplited = fullmsg.split("(;|\\n\\t)");
-                    String message = msgSplited[msgSplited.length - 1].trim();
-                    if ("jrds.agent.RProbeJolokiaImpl$RemoteNamingException".equals(e.getErrorType())) {
-                        NameNotFoundException nnfe = new NameNotFoundException();
-                        try {
-                            nnfe.setRemainingName(new CompositeName(name));
-                        } catch (InvalidNameException e1) {
-                        }
-                        throw new RemoteException(message, nnfe);
-                    } else {
-                        throw new RemoteException(message);
+        protected  <RESP extends J4pResponse<REQ>, REQ extends J4pRequest> RESP doRequest(REQ req, String name) throws RemoteException, InvocationTargetException {
+            try {
+                return j4pClient.execute(req);
+            } catch (J4pRemoteException e) {
+                // Jolokia don't return the real exception message
+                // It needs to be extracted from the returned message
+                String fullmsg = e.getMessage();
+                String[] msgSplited = fullmsg.split("(;|\\n\\t)");
+                String message = msgSplited[msgSplited.length - 1].trim();
+                if ("jrds.agent.RProbeJolokiaImpl$RemoteNamingException".equals(e.getErrorType())) {
+                    NameNotFoundException nnfe = new NameNotFoundException();
+                    try {
+                        nnfe.setRemainingName(new CompositeName(name));
+                    } catch (InvalidNameException e1) {
+                        // never thrown
                     }
-                } catch (J4pException e) {
-                    if (e.getCause() != null && e.getCause() instanceof HttpHostConnectException) {
-                        HttpHostConnectException cause = (HttpHostConnectException) e.getCause();
-                        throw new InvocationTargetException(cause.getCause());
-                    } else if (e.getCause() != null) {
-                        throw new InvocationTargetException(e.getCause());
-                    } else {
-                        throw new InvocationTargetException(e);
-                    }
+                    throw new RemoteException(message, nnfe);
+                } else {
+                    throw new RemoteException(message);
+                }
+            } catch (J4pException e) {
+                if (e.getCause() != null && e.getCause() instanceof HttpHostConnectException) {
+                    HttpHostConnectException cause = (HttpHostConnectException) e.getCause();
+                    throw new InvocationTargetException(cause.getCause());
+                } else if (e.getCause() != null) {
+                    throw new InvocationTargetException(e.getCause());
+                } else {
+                    throw new InvocationTargetException(e);
                 }
             }
-        };
+        }
+
+    }
+
+    private J4pClient j4pClient;
+
+    private final JolokiaRprobe remoteProbe = new JolokiaRprobe();
+
+    public RProbe getRemoteProbe() {
+        return remoteProbe;
     }
 
     @Override
@@ -123,9 +146,14 @@ public class JolokiaConnection extends AgentConnection {
         try {
             URL url = new URL("http", getHostName(), port, "/jolokia/");
             j4pClient = new J4pClient(url.toString(), httpstarter.getHttpClient());
+            J4pVersionResponse version = remoteProbe.doRequest(new J4pVersionRequest(), null);
+            log(Level.DEBUG, "Connected: %s", version.getAgentVersion());
             return super.startConnection();
         } catch (MalformedURLException e) {
-            log(Level.ERROR, e, "can't build jolokia URL: %s", e);
+            log(Level.ERROR, e, "Can't build jolokia URL: %s", e);
+            return false;
+        } catch (RemoteException | InvocationTargetException e) {
+            log(Level.ERROR, e, "Failed to connect to remote agent: %s", e.getCause());
             return false;
         }
     }
