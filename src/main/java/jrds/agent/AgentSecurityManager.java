@@ -22,6 +22,10 @@ import jrds.agent.Start.PROTOCOL;
 
 public class AgentSecurityManager extends SecurityManager {
 
+    static {
+        // Hides start warning when used
+        System.setProperty("java.security.manager", "allow");
+    }
     private static final class PrivilegHolder  {
         private boolean privileged = false;
     }
@@ -327,6 +331,10 @@ public class AgentSecurityManager extends SecurityManager {
             new String[] { "java.lang.RuntimePermission", "enableContextClassLoaderOverride" },
             new String[] { "java.net.SocketPermission", "*", "accept,resolve" },
             new String[] { "java.util.PropertyPermission", "java.home", "read" },
+            new String[] { "java.util.PropertyPermission", "java.util.concurrent.ForkJoinPool.common.exceptionHandler", "read" },
+            new String[] { "java.util.PropertyPermission", "java.util.concurrent.ForkJoinPool.common.maximumSpare", "read" },
+            new String[] { "java.util.PropertyPermission", "java.util.concurrent.ForkJoinPool.common.parallelism", "read" },
+            new String[] { "java.util.PropertyPermission", "java.util.concurrent.ForkJoinPool.common.threadFactory", "read" },
             new String[] { "java.util.PropertyPermission", "java.util.currency.data", "read" },
             new String[] { "java.util.PropertyPermission", "jdk.logging.allowStackWalkSearch", "read" },
             new String[] { "java.util.PropertyPermission", "jdk.net.revealLocalAddress", "read" },
