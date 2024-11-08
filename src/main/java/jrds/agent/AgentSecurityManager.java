@@ -22,10 +22,6 @@ import jrds.agent.Start.PROTOCOL;
 
 public class AgentSecurityManager extends SecurityManager {
 
-    static {
-        // Hides start warning when used
-        System.setProperty("java.security.manager", "allow");
-    }
     private static final class PrivilegHolder  {
         private boolean privileged = false;
     }
