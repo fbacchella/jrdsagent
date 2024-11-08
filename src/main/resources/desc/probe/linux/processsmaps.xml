@@ -131,7 +131,7 @@
         <collect>mappedfiles:Private_Dirty</collect>
     </ds>
     <ds>
-        <dsName>anon:Private_Dirty"</dsName>
+        <dsName>anon:Private_Dirty</dsName>
         <dsType>gauge</dsType>
         <collect>anonymous:Private_Dirty</collect>
     </ds>

@@ -16,7 +16,7 @@
     </add>
     <add>
         <name>anonymous</name>
-        <rpn>anon:Anonymous, mf:Anonymous, +</rpn>
+        <rpn>anon:Anonymous, mf:Anonymous, ADDNAN</rpn>
     </add>
     <add>
         <name>mf:Swap</name>
@@ -31,7 +31,7 @@
         <legend>Anonymous resident memory usage</legend>
     </add>
     <add>
-        <rpn>anon:Swap, mf:Swap, +</rpn>
+        <rpn>anon:Swap, mf:Swap, ADDNAN</rpn>
         <graphType>stack</graphType>
         <color>red</color>
         <legend>Anonymous swapped memory usage</legend>
@@ -43,7 +43,7 @@
         <name>anon:Pss</name>
     </add>
     <add>
-        <rpn>anon:Pss, mf:Pss, +</rpn>
+        <rpn>anon:Pss, mf:Pss, ADDNAN</rpn>
         <graphType>line</graphType>
         <color>black</color>
         <legend>Resident size</legend>
