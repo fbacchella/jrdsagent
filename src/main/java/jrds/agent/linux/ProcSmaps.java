@@ -37,7 +37,7 @@ public class ProcSmaps extends AbstractProcessParser {
                 if (majorminor != null) {
                     String areaname = majorminor;
                     String filename = match.group("filename");
-                    if ("00:00".equals(majorminor)) {
+                    if ("00:00".equals(majorminor) || filename.startsWith("/memfd")) {
                         areaname = "anonymous";
                     } else if (filename != null) {
                         areaname = "mappedfiles";
