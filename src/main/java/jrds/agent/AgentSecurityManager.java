@@ -32,6 +32,7 @@ public class AgentSecurityManager extends SecurityManager {
 
     private final ThreadLocal<Matcher> procinfoMatcher;
     private final ThreadLocal<Matcher> diskMatcher;
+    private final ThreadLocal<Matcher> pressureMatcher;
 
     private final boolean debugPerm;
     private final Permissions allowed = new Permissions();
@@ -45,6 +46,9 @@ public class AgentSecurityManager extends SecurityManager {
 
         Pattern diskPattern =  Pattern.compile("/dev/((sd|hd|xvd|vd)[a-z]+\\d*|cciss/c\\dd\\d(p\\d+)?|nvme\\d+n\\d+(p\\d+)?|disk/by-[a-z]+/.*|mapper/.*|dm-\\d+|[0-9a-z]{33})");
         diskMatcher = ThreadLocal.withInitial(() -> diskPattern.matcher(""));
+
+        Pattern pressurePattern =  Pattern.compile("/proc/pressure/[a-z]+");
+        pressureMatcher = ThreadLocal.withInitial(() -> pressurePattern.matcher(""));
 
         if(debugPerm) {
             permUsed = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -161,6 +165,17 @@ public class AgentSecurityManager extends SecurityManager {
                 return;
             }
             diskMatcher.get().reset("");
+
+            // Or it's pressure metric
+            pressureMatcher.get().reset(name);
+            if (pressureMatcher.get().matches() && "read".equals(perm.getActions())) {
+                if(debugPerm) {
+                    permUsed.add("(\"java.io.FilePermission\" \"" + pressureMatcher.get().pattern().pattern() + "\" \"read\") =");
+                }
+                filesallowed.add(name);
+                return;
+            }
+            pressureMatcher.get().reset("");
 
             // Only non-hidden folder are allowed, for file system usage
             // If it calls itself, privileges will be set to true,
