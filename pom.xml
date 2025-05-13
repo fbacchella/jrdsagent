@@ -23,14 +23,15 @@
 
     <repositories>
         <repository>
-            <id>sonaytpe</id>
-            <name>Sonatype's snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <layout>default</layout>
+            <name>Central Portal Snapshots</name>
+            <id>central-portal-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
-            <snapshots />
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -212,6 +213,11 @@
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>3.2.7</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.7.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -268,6 +274,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
             </plugin>
         </plugins>
     </build>
