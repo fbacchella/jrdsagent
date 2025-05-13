@@ -14,8 +14,8 @@
         <year>2024</year>
         <jrds.testloglevel>ERROR</jrds.testloglevel>
         <jrds.version>2023.1</jrds.version>
-        <jolokia.version>2.1.1</jolokia.version>
-        <surefire.version>3.5.1</surefire.version>
+        <jolokia.version>2.2.9</jolokia.version>
+        <surefire.version>3.5.3</surefire.version>
         <!-- Indirection needed to keep optionnal jacoco settings and external argument lines-->
         <arg.line></arg.line>
         <argLine>${arg.line}</argLine>
@@ -99,7 +99,7 @@
         <dependency>
             <groupId>ch.qos.reload4j</groupId>
             <artifactId>reload4j</artifactId>
-            <version>1.2.25</version>
+            <version>1.2.26</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -117,7 +117,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.1</version>
+                    <version>3.11.2</version>
                     <configuration>
                         <quiet />
                         <detectJavaApiLink>true</detectJavaApiLink>
@@ -126,7 +126,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.4.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -151,7 +151,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
+                    <version>3.14.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -171,7 +171,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.12</version>
+                    <version>0.8.13</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -186,7 +186,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>3.9.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -196,17 +196,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.3</version>
+                    <version>3.1.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.17.1</version>
+                    <version>2.18.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
-                    <version>5.0.0.4389</version>
+                    <version>5.1.0.4751</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
