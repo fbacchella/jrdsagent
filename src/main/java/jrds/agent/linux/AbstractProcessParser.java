@@ -1,6 +1,5 @@
 package jrds.agent.linux;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -23,12 +23,13 @@ import jrds.agent.LProbe;
 public abstract class AbstractProcessParser extends LProbe {
 
     protected static final Path PROC_PATH = Paths.get("/proc");
+    protected static final Pattern SPACE_SEPARATOR = Pattern.compile("\\s+");
+    protected static final Pattern COLON_SEPARATOR = Pattern.compile(":");
 
-    private static final int ARROBE = Character.codePointAt("@", 0);
+    private static final int AROBE = '@';
 
     private static final int USER_HZ = 100;
 
-    protected static final Pattern SPACE_SEPARATOR = Pattern.compile("\\s+");
     private static final Pattern PIDDIRPATTERN = Pattern.compile("^(\\d+)$");
     private static final Predicate<String> PID_PREDICATE = PIDDIRPATTERN.asPredicate();
 
@@ -39,9 +40,15 @@ public abstract class AbstractProcessParser extends LProbe {
     }
 
     private Pattern cmdFilter = null;
+    private Pattern exeFilter = null;
+    private String index = null;
 
-    public Boolean configure(String cmdFilter) {
-        this.cmdFilter = Pattern.compile(cmdFilter);
+    public Boolean configure(String index) {
+        this.index = index;
+        // Backward compatibility where index is also cmdFilter
+        if (cmdFilter == null && exeFilter == null) {
+            cmdFilter = Pattern.compile(index);
+        }
         return true;
     }
 
@@ -55,22 +62,55 @@ public abstract class AbstractProcessParser extends LProbe {
         return true;
     }
 
+    @Override
+    public void setProperty(String specific, String value) {
+        if ("exeName".equals(specific) && value != null) {
+            exeFilter = Pattern.compile(value);
+        } else if ("pattern".equals(specific) && value != null) {
+            this.cmdFilter = Pattern.compile(value);
+        } else if ("index".equals(specific) && value != null) {
+            this.index = value;
+        } else {
+            super.setProperty(specific, value);
+        }
+    }
+
     public String getNameSuffix() {
-        return cmdFilter != null ? cmdFilter.toString() : "self";
+        return Optional.ofNullable(index)
+                       .or(() -> Optional.ofNullable(cmdFilter).map(c -> cmdFilter.pattern()))
+                       .orElse("self");
     }
 
     public Map<String, Number> query() {
         QueryValues values = new QueryValues();
-        Matcher m = cmdFilter != null ? cmdFilter.matcher("") : null;
-        processPids(p -> processQueryData(p, m, values));
+        Matcher cmdMatcher = cmdFilter != null ? cmdFilter.matcher("") : null;
+        Matcher exeMatcher = exeFilter != null ? exeFilter.matcher("") : null;
+        processPids(p -> processQueryData(p, cmdMatcher, exeMatcher, values));
         values.retValues.put("uptime", computeUpTime(values.mostRecentTick));
         values.retValues.put("count", values.count);
         return values.retValues;
     }
 
-    void processQueryData(Path pidDir, Matcher m, QueryValues values) {
-        String cmdLine = getCmdLine(pidDir);
-        if (cmdLine != null && (m == null || m.reset(cmdLine).matches())) {
+    void processQueryData(Path pidDir, Matcher cmdMatcher, Matcher exeMatcher, QueryValues values) {
+        if (! isProcDir(pidDir)) {
+            return;
+        }
+        if (exeMatcher != null) {
+            try {
+                Path exePath = pidDir.resolve("exe").toAbsolutePath().toRealPath();
+                if (! exeMatcher.reset(exePath.toString()).matches()) {
+                    return;
+                }
+            } catch (IOException e) {
+                // Some exe link are broken and can't be read
+                return;
+            }
+        }
+        CharSequence cmdLine = getCmdLine(pidDir);
+        if (cmdLine != null && cmdLine.length() > 0 && cmdLine.charAt(cmdLine.length() - 1) == ' ') {
+            cmdLine = cmdLine.subSequence(0, cmdLine.length() -1);
+        }
+        if (cmdLine != null && (cmdMatcher == null || cmdMatcher.reset(cmdLine).matches())) {
             Map<String, Number> bufferMap = parseProc(pidDir);
             long startTimeTick = getProcUptime(bufferMap);
             if (startTimeTick >= 0) {
@@ -84,9 +124,9 @@ public abstract class AbstractProcessParser extends LProbe {
     }
 
     private void processPids(Consumer<Path> process) {
-        if (cmdFilter == null) {
+        if (cmdFilter == null && exeFilter == null) {
             String jvmName = ManagementFactory.getRuntimeMXBean().getName();
-            int separator = jvmName.indexOf(ARROBE);
+            int separator = jvmName.indexOf(AROBE);
             if (separator >= 0) {
                 process.accept(PROC_PATH.resolve(jvmName.substring(0, separator)));
             }
@@ -106,9 +146,9 @@ public abstract class AbstractProcessParser extends LProbe {
             Files.isSymbolicLink(p.resolve("exe"));
     }
 
-    protected String getCmdLine(Path pidDir) {
+    protected CharSequence getCmdLine(Path pidDir) {
         Path cmdFile = pidDir.resolve("cmdline");
-         try (InputStream is = Files.newInputStream(cmdFile)){
+        try (InputStream is = Files.newInputStream(cmdFile)){
             byte[] content = new byte[4096];
             int read;
             StringBuilder buffer = new StringBuilder();
@@ -120,7 +160,7 @@ public abstract class AbstractProcessParser extends LProbe {
                 }
                 buffer.append(new String(content, 0, read, StandardCharsets.US_ASCII));
             }
-            // The last character is an extra space
+            // The last character is an extra null byte
             // Some command don't have a cmdline
             return buffer.substring(0, Math.max(buffer.length() - 1, 0));
         } catch (FileNotFoundException e){
@@ -141,10 +181,12 @@ public abstract class AbstractProcessParser extends LProbe {
      * @return uptime, in second
      */
     protected long computeUpTime(long startTime) {
-        if(startTime == 0)
+        if (startTime == 0) {
             return 0;
-        try (BufferedReader r = newAsciiReader(PROC_PATH.resolve("uptime"))){
-            String uptimeLine = r.readLine();
+        }
+
+        try {
+            CharSequence uptimeLine = readLine((PROC_PATH.resolve("uptime")));
             // We talk minutes here, so a precision down to second is good enough
             long uptimeSystem = (long) Double.parseDouble(SPACE_SEPARATOR.split(uptimeLine)[0]);
             return uptimeSystem - startTime / USER_HZ;

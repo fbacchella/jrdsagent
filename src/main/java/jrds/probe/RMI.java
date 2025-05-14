@@ -4,7 +4,6 @@ import java.io.EOFException;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import javax.naming.NameNotFoundException;
 
 import org.slf4j.event.Level;
 
+import jrds.GenericBean;
 import jrds.ProbeConnected;
 import jrds.Util;
 import jrds.agent.CollectException;
@@ -24,7 +24,7 @@ import jrds.factories.ProbeMeta;
 public class RMI extends ProbeConnected<String, Number, AgentConnection> {
     private List<Object> args = new ArrayList<>(0);
     private String remoteName = null;
-    private Map<String, String> remoteSpecifics = Collections.emptyMap();
+    private Map<String, String> remoteSpecifics = new HashMap<>();
 
     public RMI() {
         super(AgentConnection.CONNECTIONNAME);
@@ -50,7 +50,6 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
         // and store them in the remoteProperties set
         String remoteSpecificsNames = getPd().getSpecific("remoteSpecifics");
         if (remoteSpecificsNames != null && ! remoteSpecificsNames.trim().isEmpty()) {
-            remoteSpecifics = new HashMap<>();
             for (String remoteSpecific: remoteSpecificsNames.split(",")) {
                 String trimed = remoteSpecific.trim();
                 if (trimed.isEmpty()) {
@@ -58,6 +57,11 @@ public class RMI extends ProbeConnected<String, Number, AgentConnection> {
                 }
                 remoteSpecifics.put(trimed, Util.parseTemplate(getPd().getSpecific(trimed), this));
             }
+        }
+        for (GenericBean attr: getPd().getBeans()) {
+            Optional.ofNullable(attr.get(this))
+                    .map(Object::toString)
+                    .ifPresent(v -> remoteSpecifics.put(attr.getName(), v));
         }
         log(Level.DEBUG, "remote specifics %s", remoteSpecifics);
         log(Level.DEBUG, "remote args for this probe: %s", args);

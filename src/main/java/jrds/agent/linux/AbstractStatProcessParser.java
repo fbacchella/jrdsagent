@@ -1,25 +1,21 @@
 package jrds.agent.linux;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import jrds.agent.CollectException;
 import jrds.agent.Start;
 
 public abstract class AbstractStatProcessParser extends AbstractProcessParser {
 
-    private static final Pattern COLON_SEPARATOR = Pattern.compile(":");
-
     protected Map<String, Number> parseStatFile(Path piddir, String file, String[] keys) {
         Path stat = piddir.resolve(file);
-        try (BufferedReader r = newAsciiReader(stat)){
-            String statLine = r.readLine();
+        try {
+            CharSequence statLine = readLine(stat);
             String[] statArray = SPACE_SEPARATOR.split(statLine);
             Map<String, Number> retValues = new HashMap<>(statArray.length);
             //Number of column in /proc/<pid>/stat is unpredictable in linux
@@ -53,10 +49,9 @@ public abstract class AbstractStatProcessParser extends AbstractProcessParser {
     protected Map<String, Number> parseKeyFile(Path pidDir, String file) {
         Path stat = pidDir.resolve(file);
         Map<String, Number> retValues = new HashMap<>();
-        try (BufferedReader r = newAsciiReader(stat)){
-            String line;
-            while((line = r.readLine()) != null) {
-                String[] values = COLON_SEPARATOR.split(line.trim());
+        try {
+            for (CharSequence line: readLines(stat)) {
+                String[] values = COLON_SEPARATOR.split(line);
                 if (values.length == 2) {
                     String key = values[0].trim();
                     Number value = Start.parseStringNumber(values[1].trim(), 0L);

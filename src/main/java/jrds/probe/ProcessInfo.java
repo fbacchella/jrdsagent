@@ -8,9 +8,10 @@ import org.slf4j.event.Level;
 
 import jrds.factories.ProbeBean;
 
-@ProbeBean({"index", "pattern", "self"})
+@ProbeBean({"index", "pattern", "exeName"})
 public class ProcessInfo extends RMIIndexed {
-    private String processName;
+    private String pattern;
+    private String exeName;
     private boolean self = false;
 
     @Override
@@ -18,13 +19,13 @@ public class ProcessInfo extends RMIIndexed {
         if (!super.configure()) {
             return false;
         }
-        if (! self && super.getIndex() == null) {
-            log(Level.ERROR, "No proccess indentification given");
+        if (! self && getIndex() == null) {
+            log(Level.ERROR, "No process identification given");
             return false;
         }
         List<Object> args = new ArrayList<>(1);
         if (! self) {
-            args.add(super.getIndex());
+            args.add(getIndex());
         } else {
             args.add(Boolean.TRUE);
         }
@@ -32,14 +33,10 @@ public class ProcessInfo extends RMIIndexed {
         return true;
     }
 
-    public Boolean configure(String indexName, String pattern) {
-        this.processName = indexName;
-        return configure(pattern);
-    }
-
-    @Override
-    public String getIndexName() {
-        return processName;
+    public Boolean configure(String index, String pattern) {
+        setIndex(index);
+        this.pattern = pattern;
+        return configure();
     }
 
     /* (non-Javadoc)
@@ -62,31 +59,15 @@ public class ProcessInfo extends RMIIndexed {
      * @return the pattern
      */
     public String getPattern() {
-        return super.getIndex();
+        return pattern;
     }
 
     /**
      * @param pattern the pattern to set
      */
     public void setPattern(String pattern) {
-        super.setIndex(pattern);
+        this.pattern = pattern;
         self = false;
-    }
-
-    /* (non-Javadoc)
-     * @see jrds.probe.RMIIndexed#getIndex()
-     */
-    @Override
-    public String getIndex() {
-        return processName;
-    }
-
-    /* (non-Javadoc)
-     * @see jrds.probe.RMIIndexed#setIndex(java.lang.String)
-     */
-    @Override
-    public void setIndex(String index) {
-        this.processName = index;
     }
 
     public String isSelf() {
@@ -97,7 +78,16 @@ public class ProcessInfo extends RMIIndexed {
         this.self = Boolean.parseBoolean(self) || self.isEmpty();
         if (this.self) {
             super.setIndex(null);
+            pattern = null;
         }
+    }
+
+    public String getExeName() {
+        return exeName;
+    }
+
+    public void setExeName(String exeName) {
+        this.exeName = exeName;
     }
 
 }

@@ -7,7 +7,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class LProbe {
 
@@ -45,6 +47,23 @@ public abstract class LProbe {
 
     protected BufferedReader newAsciiReader(Path file) throws IOException {
         return Files.newBufferedReader(file, StandardCharsets.US_ASCII);
+    }
+
+    protected Iterable<CharSequence> readLines(Path path) throws IOException {
+        return readLines(path, 0);
+    }
+
+    protected Iterable<CharSequence> readLines(Path path, int skip) throws IOException {
+        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.US_ASCII)){
+            List<CharSequence> content = reader.lines().skip(skip).map(CharSequence.class::cast).collect(Collectors.toList());
+            return content::iterator;
+        }
+     }
+
+    protected CharSequence readLine(Path path) throws IOException {
+        try (BufferedReader reader = newAsciiReader(path)){
+            return reader.readLine();
+        }
     }
 
 }
