@@ -6,6 +6,10 @@
     <probeClass>jrds.probe.ProcessInfo</probeClass>
     <specific name="remote">jrds.agent.linux.ProcSmaps</specific>
     <ds>
+        <dsName>parsingTime</dsName>
+        <dsType>gauge</dsType>
+    </ds>
+    <ds>
         <dsName>mf:AnonHugePages</dsName>
         <dsType>gauge</dsType>
         <collect>mappedfiles:AnonHugePages</collect>

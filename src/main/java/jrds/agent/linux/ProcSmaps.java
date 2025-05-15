@@ -15,20 +15,25 @@ import jrds.agent.CollectException;
 
 public class ProcSmaps extends AbstractProcessParser {
 
-    private static final String HEADERPATTERN = "[0-9a-f]+-[0-9a-f]+ (?<perm>....) [0-9a-f]+ (?<majorminor>[0-9a-f]+:[0-9a-f]+) \\d+ *(?<filename>.+)?";
-    private static final String SIZEPATTERN = "(?<key>.*): +(?<value>\\d+) kB";
-    private static final Pattern LINEPATTERN = Pattern.compile(String.format("^(?:%s)|(?:%s)$", HEADERPATTERN, SIZEPATTERN));
+    private static final Pattern LINEPATTERN;
+    static {
+        String headerPattern = "[0-9a-f]+-[0-9a-f]+ (?<perm>....) [0-9a-f]+ (?<majorminor>[0-9a-f]+:[0-9a-f]+) \\d+ *(?<filename>.+)?";
+        String sizePattern = "(?<key>.*): +(?<value>\\d+) kB";
+        LINEPATTERN = Pattern.compile(String.format("^(?:%s)|(?:%s)$", headerPattern, sizePattern));
+    }
     private static final Set<String> IGNORE = Set.of("KernelPageSize", "MMUPageSize");
 
     @Override
     protected Map<String, Number> parseProc(Path pidDir) {
+        long startParse = System.nanoTime();
+        Matcher match = LINEPATTERN.matcher("");
         Path smaps = pidDir.resolve("smaps");
+        Map<String, Map<String, Long>> areadetails = new HashMap<>();
         try (BufferedReader r = newAsciiReader(smaps)){
-            Map<String, Map<String, Long>> areadetails = new HashMap<>();
             String line;
             Map<String, Long> currentareaddetails = null;
             while ((line = r.readLine()) != null) {
-                Matcher match = LINEPATTERN.matcher(line);
+                match.reset(line);
                 if ( !match.matches()) {
                     continue;
                 }
@@ -51,18 +56,20 @@ public class ProcSmaps extends AbstractProcessParser {
                     currentareaddetails.compute(key, (k, v) -> v == null ? value : v + value);
                 }
             }
-            Map<String, Number> collected = new HashMap<>();
-            for(Map.Entry<String, Map<String, Long>> i: areadetails.entrySet()) {
-                for (Map.Entry<String, Long> j: i.getValue().entrySet()) {
-                    collected.put(String.format("%s:%s", i.getKey(), j.getKey()), j.getValue());
-                }
-            }
-            return collected;
         } catch (FileNotFoundException e) {
             return Collections.emptyMap();
         } catch (IOException e) {
             throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
         }
+        long endParse = System.nanoTime();
+        Map<String, Number> collected = new HashMap<>();
+        for(Map.Entry<String, Map<String, Long>> i: areadetails.entrySet()) {
+            for (Map.Entry<String, Long> j: i.getValue().entrySet()) {
+                collected.put(String.format("%s:%s", i.getKey(), j.getKey()), j.getValue());
+            }
+        }
+        collected.put("parsingTime", 1e-9 * (endParse - startParse));
+        return collected;
     }
 
     @Override
