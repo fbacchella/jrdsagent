@@ -8,10 +8,11 @@ import org.slf4j.event.Level;
 
 import jrds.factories.ProbeBean;
 
-@ProbeBean({"index", "pattern", "exeName"})
+@ProbeBean({"index", "pattern", "exeName", "kernelThreadName"})
 public class ProcessInfo extends RMIIndexed {
     private String pattern;
     private String exeName;
+    private String kernelThreadName;
     private boolean self = false;
 
     @Override
@@ -88,6 +89,14 @@ public class ProcessInfo extends RMIIndexed {
 
     public void setExeName(String exeName) {
         this.exeName = exeName;
+    }
+
+    public String getKernelThreadName() {
+        return kernelThreadName;
+    }
+
+    public void setKernelThreadName(String kernelThreadName) {
+        this.kernelThreadName = kernelThreadName;
     }
 
 }

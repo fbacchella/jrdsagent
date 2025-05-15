@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -30,26 +29,93 @@ public abstract class AbstractProcessParser extends LProbe {
 
     private static final int USER_HZ = 100;
 
-    private static final Pattern PIDDIRPATTERN = Pattern.compile("^(\\d+)$");
-    private static final Predicate<String> PID_PREDICATE = PIDDIRPATTERN.asPredicate();
-
     private static class QueryValues {
         int count = 0;
         long mostRecentTick = 0;
         Map<String, Number> retValues = new HashMap<>();
+
+        @Override
+        public String toString() {
+            return "QueryValues{" + "count=" + count + ", mostRecentTick=" + mostRecentTick + ", retValues=" + retValues + '}';
+        }
+    }
+
+    private class Matchers {
+        final Matcher cmdMatcher;
+        final Matcher exeMatcher;
+        final Matcher kernelMatcher;
+        Matchers(Pattern kernelThreadFilter, Pattern exeFilter, Pattern cmdFilter) {
+            cmdMatcher = cmdFilter != null ? cmdFilter.matcher("") : null;
+            exeMatcher = exeFilter != null ? exeFilter.matcher("") : null;
+            kernelMatcher = kernelThreadFilter != null ? kernelThreadFilter.matcher("") : null;
+
+        }
+        boolean isKernelMatcher() {
+            return kernelMatcher != null && cmdMatcher == null && exeMatcher == null;
+        }
+        boolean isProcessMatcher() {
+            return kernelMatcher == null && (cmdMatcher != null || exeMatcher != null);
+        }
+
+        private synchronized boolean matchKernelThread(Path pidDir) {
+            try {
+                CharSequence comm = readLine(pidDir.resolve("comm"));
+                return kernelMatcher.reset(comm).matches();
+            } catch (IOException e) {
+                return false;
+            } finally {
+                // Matcher.reset() don't drop the previous searched text
+                kernelMatcher.reset("");
+            }
+        }
+
+        private synchronized boolean matchRegularProcess(Path pidDir) {
+            if (exeMatcher != null) {
+                try {
+                    Path exePath = pidDir.resolve("exe").toAbsolutePath().toRealPath();
+                    if (! exeMatcher.reset(exePath.toString()).matches()) {
+                        return false;
+                    }
+                } catch (IOException e) {
+                    // Some exe link are broken and can't be read
+                    return false;
+                } finally {
+                    // Matcher.reset() don't drop the previous searched text
+                    exeMatcher.reset("");
+                }
+            }
+            if (cmdMatcher != null && Files.isRegularFile(pidDir.resolve("cmdline"))) {
+                try {
+                    CharSequence cmdLine = getCmdLine(pidDir);
+                    if (cmdLine != null && cmdLine.length() > 0 && cmdLine.charAt(cmdLine.length() - 1) == ' ') {
+                        cmdLine = cmdLine.subSequence(0, cmdLine.length() -1);
+                    }
+                    if (! cmdMatcher.reset(cmdLine).matches()) {
+                        return false;
+                    }
+                } finally {
+                    // Matcher.reset() don't drop the previous searched text
+                    cmdMatcher.reset("");
+                }
+            }
+            return true;
+        }
     }
 
     private Pattern cmdFilter = null;
     private Pattern exeFilter = null;
+    private Pattern kernelThreadFilter = null;
     private String index = null;
+    private Matchers matchers = null;
 
     public Boolean configure(String index) {
         this.index = index;
         // Backward compatibility where index is also cmdFilter
-        if (cmdFilter == null && exeFilter == null) {
+        if (cmdFilter == null && exeFilter == null && kernelThreadFilter == null) {
             cmdFilter = Pattern.compile(index);
         }
-        return true;
+        matchers = new Matchers(kernelThreadFilter, exeFilter, cmdFilter);
+        return matchers.isProcessMatcher() || matchers.isKernelMatcher();
     }
 
     /**
@@ -68,6 +134,8 @@ public abstract class AbstractProcessParser extends LProbe {
             exeFilter = Pattern.compile(value);
         } else if ("pattern".equals(specific) && value != null) {
             this.cmdFilter = Pattern.compile(value);
+        } else if ("kernelThreadName".equals(specific) && value != null) {
+            this.kernelThreadFilter = Pattern.compile(value);
         } else if ("index".equals(specific) && value != null) {
             this.index = value;
         } else {
@@ -83,34 +151,21 @@ public abstract class AbstractProcessParser extends LProbe {
 
     public Map<String, Number> query() {
         QueryValues values = new QueryValues();
-        Matcher cmdMatcher = cmdFilter != null ? cmdFilter.matcher("") : null;
-        Matcher exeMatcher = exeFilter != null ? exeFilter.matcher("") : null;
-        processPids(p -> processQueryData(p, cmdMatcher, exeMatcher, values));
+        processPids(p -> processQueryData(p, values));
         values.retValues.put("uptime", computeUpTime(values.mostRecentTick));
         values.retValues.put("count", values.count);
         return values.retValues;
     }
 
-    void processQueryData(Path pidDir, Matcher cmdMatcher, Matcher exeMatcher, QueryValues values) {
-        if (! isProcDir(pidDir)) {
-            return;
+    void processQueryData(Path pidDir, QueryValues values) {
+        boolean matched = false;
+        boolean isRegularProcess = Files.isRegularFile(pidDir.resolve("exe")) && Files.isRegularFile(pidDir.resolve("cmdline"));
+        if (isRegularProcess  && matchers.isProcessMatcher()) {
+            matched = matchers.matchRegularProcess(pidDir);
+        } else if (matchers.isKernelMatcher()){
+            matched = matchers.matchKernelThread(pidDir);
         }
-        if (exeMatcher != null) {
-            try {
-                Path exePath = pidDir.resolve("exe").toAbsolutePath().toRealPath();
-                if (! exeMatcher.reset(exePath.toString()).matches()) {
-                    return;
-                }
-            } catch (IOException e) {
-                // Some exe link are broken and can't be read
-                return;
-            }
-        }
-        CharSequence cmdLine = getCmdLine(pidDir);
-        if (cmdLine != null && cmdLine.length() > 0 && cmdLine.charAt(cmdLine.length() - 1) == ' ') {
-            cmdLine = cmdLine.subSequence(0, cmdLine.length() -1);
-        }
-        if (cmdLine != null && (cmdMatcher == null || cmdMatcher.reset(cmdLine).matches())) {
+        if (matched) {
             Map<String, Number> bufferMap = parseProc(pidDir);
             long startTimeTick = getProcUptime(bufferMap);
             if (startTimeTick >= 0) {
@@ -124,26 +179,48 @@ public abstract class AbstractProcessParser extends LProbe {
     }
 
     private void processPids(Consumer<Path> process) {
-        if (cmdFilter == null && exeFilter == null) {
+        if (matchers == null) {
             String jvmName = ManagementFactory.getRuntimeMXBean().getName();
             int separator = jvmName.indexOf(AROBE);
             if (separator >= 0) {
                 process.accept(PROC_PATH.resolve(jvmName.substring(0, separator)));
             }
-        } else  if (Files.isDirectory(PROC_PATH)) {
+        } else if (Files.isDirectory(PROC_PATH)) {
+            Matcher pidDirMatcher = Pattern.compile("^\\d+$").matcher("");
             try (Stream<Path> procFiles = Files.list(PROC_PATH)) {
-                procFiles.filter(this::isProcDir)
+                procFiles.filter(p -> isProcDir(p, pidDirMatcher))
                          .forEach(process);
             } catch (IOException e) {
-                //
+                throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
             }
         }
     }
 
-    private boolean isProcDir(Path p) {
-        return Files.isDirectory(p) &&
-            PID_PREDICATE.test(p.getFileName().toString()) &&
-            Files.isSymbolicLink(p.resolve("exe"));
+    private boolean isProcDir(Path p, Matcher pidDirMatcher) {
+        try {
+            if (! Files.isDirectory(p)) {
+                return false;
+            }
+            try {
+                if (! pidDirMatcher.reset(p.getFileName().toString()).matches()) {
+                    return false;
+                }
+            } finally {
+                // Matcher.reset() don'd drop the previous searched text
+                pidDirMatcher.reset("");
+            }
+            boolean isRegularProcess = Files.isRegularFile(p.resolve("exe")) && Files.isRegularFile(p.resolve("cmdline"));
+            boolean isKernelThread = Files.isRegularFile(p.resolve("comm"));
+            if (isRegularProcess && matchers.isProcessMatcher()) {
+                return true;
+            } else if (! isRegularProcess && isKernelThread && matchers.isKernelMatcher()){
+                return true;
+            } else {
+                return false;
+            }
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 
     protected CharSequence getCmdLine(Path pidDir) {
@@ -163,7 +240,7 @@ public abstract class AbstractProcessParser extends LProbe {
             // The last character is an extra null byte
             // Some command don't have a cmdline
             return buffer.substring(0, Math.max(buffer.length() - 1, 0));
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             // A file not found is not a problem just return null
             return null;
         } catch (IOException e) {
