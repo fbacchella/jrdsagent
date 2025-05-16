@@ -4,6 +4,10 @@
     <name>ProcessSmaps</name>
     <probeName>prsmaps-${index}</probeName>
     <probeClass>jrds.probe.ProcessInfo</probeClass>
+    <customattr name="smapsFile"/>
+    <defaultargs>
+        <attr name="smapsFile">smaps</attr>
+    </defaultargs>
     <specific name="remote">jrds.agent.linux.ProcSmaps</specific>
     <ds>
         <dsName>parsingTime</dsName>
