@@ -1,15 +1,16 @@
 package jrds.agent;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeoutException;
 
 public abstract class LProbe {
 
@@ -46,7 +47,10 @@ public abstract class LProbe {
     }
 
     protected BufferedReader newAsciiReader(Path file) throws IOException {
-        return Files.newBufferedReader(file, StandardCharsets.US_ASCII);
+        byte[] byteBuffer = Files.readAllBytes(file);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteBuffer);
+        InputStreamReader inputStreamReader = new InputStreamReader(byteArrayInputStream, StandardCharsets.US_ASCII);
+        return new BufferedReader(inputStreamReader);
     }
 
     protected Iterable<CharSequence> readLines(Path path) throws IOException {
@@ -54,11 +58,14 @@ public abstract class LProbe {
     }
 
     protected Iterable<CharSequence> readLines(Path path, int skip) throws IOException {
-        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.US_ASCII)){
-            List<CharSequence> content = reader.lines().skip(skip).map(CharSequence.class::cast).collect(Collectors.toList());
-            return content::iterator;
+        try {
+            AsciiCharSequence content = AsciiCharSequence.of(path, null);
+            return content.readLines(skip);
+        } catch (TimeoutException e) {
+            // Unreachable since timeout value is null
+            return null;
         }
-     }
+    }
 
     protected CharSequence readLine(Path path) throws IOException {
         try (BufferedReader reader = newAsciiReader(path)){
