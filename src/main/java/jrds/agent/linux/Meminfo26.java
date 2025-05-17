@@ -1,13 +1,19 @@
 package jrds.agent.linux;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import jrds.agent.AsciiCharSequence;
+import jrds.agent.CollectException;
 
 public class Meminfo26 extends LProbeProc {
 
@@ -19,11 +25,22 @@ public class Meminfo26 extends LProbeProc {
         return "meminfo";
     }
 
-    public Map<String, Number> parse(BufferedReader r) throws IOException {
+    @Override
+    public Map<String, Number> query() {
+        AsciiCharSequence content;
+        long startRead = System.nanoTime();
+        try {
+            content = AsciiCharSequence.of(getStatFile());
+        } catch (FileNotFoundException e) {
+            return Collections.emptyMap();
+        } catch (TimeoutException | IOException e) {
+            throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
+        }
+        long endRead = System.nanoTime();
+
         Map<String, Number> retValues = new HashMap<>();
-        String line;
         Matcher m = linePattern.matcher("");
-        while ((line = r.readLine()) != null) {
+        for (CharSequence line: content.readLines()) {
             m.reset(line);
             if (m.matches()) {
                 String key = m.group(1);
@@ -44,7 +61,14 @@ public class Meminfo26 extends LProbeProc {
         for (String hugePage_key: HUGE_VALUE_KEYS) {
             retValues.computeIfPresent(hugePage_key, (k, v) -> v.longValue() * pgSize);
         }
+        retValues.put("parsingTime", 1e-9 * (endRead - startRead));
         return retValues;
+    }
+
+    @Override
+    public Map<String, Number> parse(BufferedReader r) throws IOException {
+        // Unused
+        return Map.of();
     }
 
 }

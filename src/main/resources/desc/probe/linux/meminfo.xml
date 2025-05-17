@@ -8,6 +8,10 @@
     <specific name="remoteSpecifics">statFile</specific>
     <specific name="statFile">/proc/meminfo</specific>
     <ds>
+        <dsName>parsingTime</dsName>
+        <dsType>gauge</dsType>
+    </ds>
+    <ds>
         <dsName>MemTotal</dsName>
         <dsType>gauge</dsType>
         <defaultValue>0</defaultValue>
