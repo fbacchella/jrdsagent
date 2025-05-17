@@ -46,7 +46,7 @@ public class RProbeActor {
 
     public Map<String,Number> query(String name) throws NameNotFoundException {
         LProbe p =  probeMap.get(name);
-        if(p != null) {
+        if (p != null) {
             Map<String,Number> collected = p.query();
             // Remove NaN, it brake Jolokia
             Map<String,Number> retValue = new HashMap<>(collected.size());
@@ -139,7 +139,7 @@ public class RProbeActor {
     private Map.Entry<String, Map<String, Number>> batchQuery(String name) {
         try {
             Map<String, Number> probeValues = query(name);
-            return  Map.entry(name, probeValues);
+            return Map.entry(name, probeValues);
         } catch (NameNotFoundException e) {
             return null;
         }

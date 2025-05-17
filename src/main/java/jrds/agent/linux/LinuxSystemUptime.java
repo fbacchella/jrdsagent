@@ -16,8 +16,8 @@ import jrds.agent.SystemUptime;
 
 public class LinuxSystemUptime extends SystemUptime {
 
+    protected static final Pattern SPACE_SPLIT = Pattern.compile("\\s+");
     private static final Path UPTIMEFILE = Path.of("/proc/uptime");
-    private static final Pattern SPACE_SPLIT = Pattern.compile(" ");
 
     @Override
     public long getSystemUptime() {
