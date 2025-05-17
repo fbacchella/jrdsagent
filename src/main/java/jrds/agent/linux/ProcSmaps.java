@@ -1,19 +1,24 @@
 package jrds.agent.linux;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
+import jrds.agent.AsciiCharSequence;
 import jrds.agent.CollectException;
 
 public class ProcSmaps extends AbstractProcessParser {
@@ -27,37 +32,69 @@ public class ProcSmaps extends AbstractProcessParser {
     private static final Set<String> IGNORE = Set.of("KernelPageSize", "MMUPageSize");
 
     private String smapsFile = "smaps";
+    private Instant lastFailure = null;
+    private TemporalAmount sleepTime = Duration.of(5, ChronoUnit.MINUTES);
+    private Duration readTimeout = Duration.ofMillis(100);
 
     @Override
     public void setProperty(String specific, String value) {
         if ("smapsFile".equals(specific) && value != null) {
             smapsFile = value;
+        } else if ("sleepTime".equals(specific) && value != null) {
+            sleepTime = readDuration(value);
+        } else if ("readTimeout".equals(specific) && value != null) {
+            readTimeout = readDuration(value);
         } else {
             super.setProperty(specific, value);
         }
     }
 
+    private Duration readDuration(String duration) {
+        Matcher m = Pattern.compile("(\\d+)(ms|s|m)?").matcher(duration);
+        if (m.matches()) {
+            long durationValue = Long.parseLong(m.group(1));
+            TemporalUnit durationUnit = ChronoUnit.SECONDS;
+            if ("ms".equals(m.group(2))) {
+                durationUnit = ChronoUnit.MILLIS;
+            } else if ("m".equals(m.group(2))) {
+                durationUnit = ChronoUnit.MINUTES;
+            }
+            return Duration.of(durationValue, durationUnit);
+        } else {
+            return Duration.parse((duration.toUpperCase().startsWith("PT") ? "" : "PT")  + duration);
+        }
+    }
+
     @Override
     protected Map<String, Number> parseProc(Path pidDir) {
+        // If timeout when reading smaps, introduce a sleep time
+        if (lastFailure != null && lastFailure.plus(sleepTime).isAfter(Instant.now())) {
+            return Map.of();
+        } else {
+            lastFailure = null;
+        }
         Matcher match = LINEPATTERN.matcher("");
         Path smaps = pidDir.resolve(smapsFile);
         Map<String, AtomicLong> mappingRss = new HashMap<>();
         Map<String, AtomicLong> mappingPss = new HashMap<>();
         Map<String, Map<String, Long>> areadetails = new HashMap<>();
-        List<String> lines;
+        AsciiCharSequence content;
         // Fast file read, to release any lock
         long startRead = System.nanoTime();
-        try (BufferedReader r = newAsciiReader(smaps)) {
-            lines = r.lines().collect(Collectors.toList());
+        try {
+            content = AsciiCharSequence.of(smaps, readTimeout);
         } catch (FileNotFoundException e) {
             return Collections.emptyMap();
+        } catch (TimeoutException e) {
+            lastFailure = Instant.now();
+            throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
         } catch (IOException e) {
             throw new CollectException("Collect for " + getName() + " failed: " + e.getMessage(), e);
         }
         long endRead = System.nanoTime();
         Map<String, Long> currentareaddetails = null;
         boolean memfd = false;
-        for (String line: lines) {
+        for (CharSequence line: content.readLines()) {
             match.reset(line);
             if ( !match.matches()) {
                 continue;

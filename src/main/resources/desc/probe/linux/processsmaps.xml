@@ -5,6 +5,8 @@
     <probeName>prsmaps-${index}</probeName>
     <probeClass>jrds.probe.ProcessInfo</probeClass>
     <customattr name="smapsFile"/>
+    <customattr name="sleepTime"/>
+    <customattr name="readTimeout"/>
     <defaultargs>
         <attr name="smapsFile">smaps</attr>
     </defaultargs>
