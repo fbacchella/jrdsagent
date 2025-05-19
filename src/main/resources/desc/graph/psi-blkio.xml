@@ -30,7 +30,7 @@
         <pathelement>SYSTEM</pathelement>
         <pathstring>Processus</pathstring>
         <pathelement>INDEX</pathelement>
-        <pathelement>HOST</pathelement>
         <pathstring>Block IO</pathstring>
+        <pathelement>HOST</pathelement>
     </viewtree>
 </graphdesc>

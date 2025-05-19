@@ -73,7 +73,7 @@
         <pathelement>SYSTEM</pathelement>
         <pathstring>Processus</pathstring>
         <pathelement>INDEX</pathelement>
-        <pathelement>HOST</pathelement>
         <pathstring>CPU Time</pathstring>
+        <pathelement>HOST</pathelement>
     </viewtree>
 </graphdesc>

@@ -27,7 +27,7 @@
         <pathelement>SYSTEM</pathelement>
         <pathstring>Processus</pathstring>
         <pathelement>INDEX</pathelement>
-        <pathelement>HOST</pathelement>
         <pathstring>VM faults</pathstring>
+        <pathelement>HOST</pathelement>
     </viewtree>
 </graphdesc>

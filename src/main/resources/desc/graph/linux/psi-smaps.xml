@@ -59,7 +59,7 @@
         <pathelement>SYSTEM</pathelement>
         <pathstring>Processus</pathstring>
         <pathelement>INDEX</pathelement>
-        <pathelement>HOST</pathelement>
         <pathstring>Detailled memory usage</pathstring>
+        <pathelement>HOST</pathelement>
     </viewtree>
 </graphdesc>
